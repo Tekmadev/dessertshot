@@ -1,44 +1,34 @@
-import type { Metadata } from "next";
-import {
-  Cormorant_Garamond,
-  DM_Serif_Display,
-  Plus_Jakarta_Sans,
-  Dancing_Script,
-} from "next/font/google";
+import type { Metadata, Viewport } from "next";
+import { Fraunces, Inter_Tight } from "next/font/google";
+import { LenisProvider } from "@/components/layout/LenisProvider";
 import "./globals.css";
 
-const cormorant = Cormorant_Garamond({
-  variable: "--font-heading",
+const fraunces = Fraunces({
+  variable: "--font-fraunces",
   subsets: ["latin"],
-  weight: ["300", "400", "500", "600", "700"],
+  display: "swap",
+  axes: ["SOFT", "WONK", "opsz"],
+  style: ["normal", "italic"],
+});
+
+const interTight = Inter_Tight({
+  variable: "--font-inter-tight",
+  subsets: ["latin"],
   display: "swap",
 });
 
-const dmSerif = DM_Serif_Display({
-  variable: "--font-display",
-  subsets: ["latin"],
-  weight: ["400"],
-  display: "swap",
-});
-
-const plusJakarta = Plus_Jakarta_Sans({
-  variable: "--font-body",
-  subsets: ["latin"],
-  weight: ["300", "400", "500", "600", "700"],
-  display: "swap",
-});
-
-const dancing = Dancing_Script({
-  variable: "--font-accent",
-  subsets: ["latin"],
-  weight: ["400", "600", "700"],
-  display: "swap",
-});
+const SITE_URL = "https://dessertshot.ca";
 
 export const metadata: Metadata = {
-  title: "Dessert Shot | Handcrafted Dessert Cups · Hamilton & GTA",
+  metadataBase: new URL(SITE_URL),
+  title: {
+    default: "Dessert Shot. Layered cups, made by hand in Hamilton.",
+    template: "%s . Dessert Shot",
+  },
   description:
-    "Artisan layered dessert cups crafted with love in Hamilton, Ontario. Mango, Strawberry, Ferrero, Kinder Bueno, Biscoff, Dubai Chocolate & more. Order packages of 6, 12, or 24.",
+    "Hand layered dessert cups baked in Hamilton, Ontario. Real fruit, real cream, ridiculous detail. Order packages of 6, 12, or 24 across the GTA.",
+  applicationName: "Dessert Shot",
+  authors: [{ name: "Dessert Shot" }],
   keywords: [
     "dessert cups Hamilton",
     "dessert cups GTA",
@@ -50,22 +40,40 @@ export const metadata: Metadata = {
     "Biscoff dessert cups",
     "mango cheesecake cup",
     "custom dessert orders Hamilton",
+    "Toronto dessert delivery",
+    "wedding dessert cups",
   ],
-  authors: [{ name: "Dessert Shot" }],
   openGraph: {
-    title: "Dessert Shot | Handcrafted Dessert Cups",
-    description: "Beautiful layered dessert cups for every occasion.",
-    url: "https://dessertshot.ca",
+    title: "Dessert Shot. Layered cups, made by hand.",
+    description:
+      "Hand layered dessert cups baked in Hamilton, Ontario. Real fruit, real cream, ridiculous detail.",
+    url: SITE_URL,
     siteName: "Dessert Shot",
     locale: "en_CA",
     type: "website",
   },
   twitter: {
     card: "summary_large_image",
-    title: "Dessert Shot | Handcrafted Dessert Cups",
-    description: "Beautiful layered dessert cups for every occasion.",
+    title: "Dessert Shot. Layered cups, made by hand.",
+    description: "Hand layered dessert cups baked in Hamilton, Ontario.",
   },
-  metadataBase: new URL("https://dessertshot.ca"),
+  robots: {
+    index: true,
+    follow: true,
+    googleBot: {
+      index: true,
+      follow: true,
+      "max-image-preview": "large",
+      "max-snippet": -1,
+    },
+  },
+  alternates: { canonical: "/" },
+};
+
+export const viewport: Viewport = {
+  themeColor: "#fce4e7",
+  width: "device-width",
+  initialScale: 1,
 };
 
 export default function RootLayout({
@@ -75,17 +83,19 @@ export default function RootLayout({
 }>) {
   return (
     <html
-      lang="en"
-      className={`
-        ${cormorant.variable}
-        ${dmSerif.variable}
-        ${plusJakarta.variable}
-        ${dancing.variable}
-        h-full antialiased
-      `}
+      lang="en-CA"
+      className={`${fraunces.variable} ${interTight.variable} h-full`}
     >
-      <body className="min-h-full flex flex-col bg-ivory overflow-x-hidden">
-        {children}
+      <head>
+        <link rel="preconnect" href="https://fonts.googleapis.com" />
+        <link
+          rel="preconnect"
+          href="https://fonts.gstatic.com"
+          crossOrigin="anonymous"
+        />
+      </head>
+      <body className="min-h-full bg-bone text-ink antialiased">
+        <LenisProvider>{children}</LenisProvider>
       </body>
     </html>
   );

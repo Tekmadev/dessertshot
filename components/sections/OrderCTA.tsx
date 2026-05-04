@@ -1,20 +1,18 @@
 "use client";
 
-import { useRef, useState } from "react";
-import { useGSAP } from "@gsap/react";
-import gsap from "gsap";
-import { ScrollTrigger } from "gsap/ScrollTrigger";
+import { useState } from "react";
+import { motion } from "motion/react";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { z } from "zod";
-import { Send, CheckCircle } from "lucide-react";
+import { CheckCircle } from "lucide-react";
+import { copy } from "@/lib/copy";
+import { EASE_CINEMA } from "@/lib/constants";
 import { InstagramIcon } from "@/components/ui/InstagramIcon";
-
-gsap.registerPlugin(ScrollTrigger);
 
 const schema = z.object({
   name: z.string().min(2, "Please enter your full name"),
-  email: z.string().email("Please enter a valid email"),
+  email: z.email("Please enter a valid email"),
   phone: z.string().optional(),
   packageSize: z.enum(["1", "6", "12", "24"]),
   flavors: z.string().min(3, "Please describe your flavour preferences"),
@@ -25,30 +23,16 @@ const schema = z.object({
 type FormData = z.infer<typeof schema>;
 
 export default function OrderCTA() {
-  const sectionRef = useRef<HTMLDivElement>(null);
-  const leftRef = useRef<HTMLDivElement>(null);
-  const formRef = useRef<HTMLDivElement>(null);
   const [submitted, setSubmitted] = useState(false);
   const [loading, setLoading] = useState(false);
 
-  const { register, handleSubmit, formState: { errors } } = useForm<FormData>({
+  const {
+    register,
+    handleSubmit,
+    formState: { errors },
+  } = useForm<FormData>({
     resolver: zodResolver(schema),
   });
-
-  useGSAP(
-    () => {
-      gsap.fromTo(leftRef.current, { opacity: 0, x: -50 }, {
-        opacity: 1, x: 0, duration: 1.1, ease: "expo.out",
-        scrollTrigger: { trigger: sectionRef.current, start: "top 75%" },
-      });
-      gsap.fromTo(formRef.current, { opacity: 0, x: 50 }, {
-        opacity: 1, x: 0, duration: 1.1, ease: "expo.out",
-        scrollTrigger: { trigger: sectionRef.current, start: "top 75%" },
-        delay: 0.15,
-      });
-    },
-    { scope: sectionRef }
-  );
 
   const onSubmit = async (data: FormData) => {
     setLoading(true);
@@ -66,234 +50,259 @@ export default function OrderCTA() {
     }
   };
 
-  const inputStyle = {
-    width: "100%",
-    padding: "0.75rem 1rem",
-    borderRadius: "0.75rem",
-    border: "1.5px solid var(--color-border)",
-    backgroundColor: "var(--color-cream)",
-    color: "var(--color-ink)",
-    fontFamily: "var(--font-body)",
-    fontSize: "0.9rem",
-    outline: "none",
-    transition: "border-color 0.2s",
-  };
-
-  const labelStyle = {
-    display: "block",
-    fontSize: "0.8rem",
-    fontWeight: 600,
-    marginBottom: "0.4rem",
-    color: "var(--color-ink-soft)",
-    textTransform: "uppercase" as const,
-    letterSpacing: "0.08em",
-    fontFamily: "var(--font-body)",
-  };
-
   return (
     <section
-      ref={sectionRef}
       id="contact"
-      className="py-24 px-6"
-      style={{ backgroundColor: "var(--color-ivory)" }}
+      aria-label="Place an order"
+      className="relative py-32 md:py-44 bg-bone hairline-top"
     >
-      <div className="max-w-7xl mx-auto">
-        <div className="grid grid-cols-1 lg:grid-cols-2 gap-16 items-start">
-          {/* Left: Info */}
-          <div ref={leftRef} className="flex flex-col gap-8">
+      <div className="mx-auto max-w-[1400px] px-6 md:px-10">
+        <div className="grid grid-cols-1 lg:grid-cols-12 gap-12 lg:gap-20">
+          {/* Left side */}
+          <div className="lg:col-span-5 flex flex-col gap-10">
             <div>
-              <span
-                className="inline-block text-sm font-semibold uppercase tracking-widest mb-4 px-4 py-1.5 rounded-full"
-                style={{ color: "var(--color-amber-500)", backgroundColor: "var(--color-amber-100)", fontFamily: "var(--font-body)" }}
+              <motion.div
+                initial={{ opacity: 0, y: 16 }}
+                whileInView={{ opacity: 1, y: 0 }}
+                viewport={{ once: true, margin: "-20% 0px" }}
+                transition={{ duration: 0.9, ease: EASE_CINEMA }}
+                className="font-mono text-[11px] tracking-[0.2em] uppercase text-ink/50 mb-6"
               >
-                Place Your Order
-              </span>
-              <h2
-                className="font-heading text-4xl md:text-5xl mb-4"
-                style={{ color: "var(--color-choco-600)" }}
+                {copy.cta.kicker}
+              </motion.div>
+              <motion.h2
+                initial={{ y: 24, opacity: 0 }}
+                whileInView={{ y: 0, opacity: 1 }}
+                viewport={{ once: true, margin: "-20% 0px" }}
+                transition={{ duration: 1, ease: EASE_CINEMA }}
+                className="font-display text-ink leading-[0.96] tracking-[-0.035em]"
+                style={{ fontSize: "clamp(40px, 6vw, 96px)" }}
               >
-                Let&apos;s make something{" "}
-                <span className="italic" style={{ color: "var(--color-amber-500)" }}>
-                  sweet
-                </span>
-              </h2>
-              <p className="text-base leading-relaxed" style={{ color: "var(--color-muted)" }}>
-                Fill out the form with your order details and we&apos;ll be in
-                touch within 24 hours to confirm your order and arrange pickup
-                or delivery.
-              </p>
-            </div>
-
-            {/* Contact options */}
-            <div className="flex flex-col gap-4">
-              {[
-                {
-                  icon: <InstagramIcon size={20} />,
-                  label: "Instagram DM",
-                  value: "@dessertshot.ca",
-                  href: "https://instagram.com/dessertshot.ca",
-                  color: "var(--color-strawberry)",
-                },
-                {
-                  icon: <Send size={20} />,
-                  label: "Email",
-                  value: "hello@dessertshot.ca",
-                  href: "mailto:hello@dessertshot.ca",
-                  color: "var(--color-amber-500)",
-                },
-              ].map((opt) => (
-                <a
-                  key={opt.label}
-                  href={opt.href}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="flex items-center gap-4 p-4 rounded-2xl transition-all hover:-translate-y-1"
+                {copy.cta.heading}
+                <br />
+                <em
+                  className="italic"
                   style={{
-                    backgroundColor: "var(--color-cream)",
-                    border: "1.5px solid var(--color-border)",
-                    boxShadow: "var(--shadow-warm)",
+                    color: "var(--color-ember)",
+                    fontVariationSettings: "'SOFT' 50, 'WONK' 1",
                   }}
                 >
-                  <div
-                    className="w-11 h-11 rounded-xl flex items-center justify-center flex-shrink-0"
-                    style={{ backgroundColor: `${opt.color}18`, color: opt.color }}
-                  >
-                    {opt.icon}
-                  </div>
-                  <div>
-                    <div className="text-xs uppercase tracking-widest font-semibold" style={{ color: "var(--color-muted)", fontFamily: "var(--font-body)" }}>
-                      {opt.label}
-                    </div>
-                    <div className="font-medium" style={{ color: "var(--color-choco-600)", fontFamily: "var(--font-body)" }}>
-                      {opt.value}
-                    </div>
-                  </div>
-                </a>
-              ))}
+                  {copy.cta.headingItalic}
+                </em>
+              </motion.h2>
+              <p className="mt-7 max-w-[44ch] text-[17px] leading-[1.55] text-ink/70">
+                {copy.cta.body}
+              </p>
             </div>
 
-            {/* Delivery note */}
-            <div
-              className="rounded-2xl p-5"
-              style={{ backgroundColor: "var(--color-amber-50)", border: "1.5px solid var(--color-amber-200)" }}
-            >
-              <p className="text-sm leading-relaxed" style={{ color: "var(--color-choco-500)", fontFamily: "var(--font-body)" }}>
-                🚗 <strong>Delivery available</strong> across Hamilton and the Greater Toronto Area.
-                <br />
-                📦 <strong>Pickup</strong> available in Hamilton, Ontario.
-                <br />
-                ⏱️ Please allow <strong>48 hours notice</strong> for all orders.
-              </p>
+            <div className="flex flex-col gap-3">
+              <a
+                href="https://instagram.com/dessertshot"
+                className="group flex items-center justify-between gap-4 hairline-top hairline-bottom py-5"
+              >
+                <div className="flex items-center gap-4">
+                  <InstagramIcon className="w-5 h-5 text-ink" />
+                  <div>
+                    <div className="font-mono text-[10px] tracking-[0.2em] uppercase text-ink/45">
+                      Instagram
+                    </div>
+                    <div className="font-display text-[20px] tracking-[-0.02em] text-ink">
+                      @dessertshot
+                    </div>
+                  </div>
+                </div>
+                <span className="font-mono text-[11px] tracking-[0.18em] uppercase text-ink/45 group-hover:text-ember transition-colors">
+                  Open
+                </span>
+              </a>
+              <a
+                href="mailto:hello@dessertshot.ca"
+                className="group flex items-center justify-between gap-4 hairline-bottom py-5"
+              >
+                <div>
+                  <div className="font-mono text-[10px] tracking-[0.2em] uppercase text-ink/45">
+                    Email
+                  </div>
+                  <div className="font-display text-[20px] tracking-[-0.02em] text-ink">
+                    hello@dessertshot.ca
+                  </div>
+                </div>
+                <span className="font-mono text-[11px] tracking-[0.18em] uppercase text-ink/45 group-hover:text-ember transition-colors">
+                  Send
+                </span>
+              </a>
+            </div>
+
+            <div className="font-mono text-[11px] tracking-[0.18em] uppercase text-ink/55 leading-[1.7]">
+              Pickup free in Hamilton.
+              <br />
+              Delivery Saturdays across the GTA.
+              <br />
+              48 hours minimum notice.
             </div>
           </div>
 
-          {/* Right: Form */}
-          <div ref={formRef}>
+          {/* Form */}
+          <motion.div
+            initial={{ opacity: 0, y: 30 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true, margin: "-15% 0px" }}
+            transition={{ duration: 1, ease: EASE_CINEMA, delay: 0.15 }}
+            className="lg:col-span-7"
+          >
             {submitted ? (
               <div
-                className="rounded-3xl p-12 text-center flex flex-col items-center gap-4"
-                style={{
-                  backgroundColor: "var(--color-cream)",
-                  border: "1.5px solid var(--color-border)",
-                  boxShadow: "var(--shadow-warm-lg)",
-                }}
+                className="bg-bone-soft p-12 md:p-16 flex flex-col gap-5 hairline-top hairline-bottom"
+                style={{ backgroundColor: "var(--color-bone-soft)" }}
               >
-                <CheckCircle size={56} style={{ color: "var(--color-pistachio)" }} />
-                <h3 className="font-heading text-3xl" style={{ color: "var(--color-choco-600)" }}>
-                  Order request sent!
+                <CheckCircle
+                  size={36}
+                  strokeWidth={1.5}
+                  style={{ color: "var(--color-ember)" }}
+                />
+                <h3 className="font-display text-[40px] md:text-[56px] tracking-[-0.03em] leading-[0.98] text-ink">
+                  Got it.
                 </h3>
-                <p style={{ color: "var(--color-muted)", fontFamily: "var(--font-body)" }}>
-                  We&apos;ll reach out within 24 hours to confirm your order. Thank you! 🍮
+                <p className="text-[17px] leading-[1.55] text-ink/70 max-w-[44ch]">
+                  We will confirm your order within the day. Check your email,
+                  the reply will come from hello@dessertshot.ca.
                 </p>
               </div>
             ) : (
               <form
                 onSubmit={handleSubmit(onSubmit)}
-                className="rounded-3xl p-8 flex flex-col gap-5"
-                style={{
-                  backgroundColor: "var(--color-cream)",
-                  border: "1.5px solid var(--color-border)",
-                  boxShadow: "var(--shadow-warm-lg)",
-                }}
+                className="bg-bone-soft p-8 md:p-12 flex flex-col gap-7 hairline-top hairline-bottom"
+                style={{ backgroundColor: "var(--color-bone-soft)" }}
               >
-                {/* Name + Email */}
-                <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-                  <div>
-                    <label style={labelStyle}>Full Name *</label>
-                    <input {...register("name")} style={inputStyle} placeholder="Your name" />
-                    {errors.name && <p className="text-xs mt-1" style={{ color: "var(--color-strawberry)" }}>{errors.name.message}</p>}
-                  </div>
-                  <div>
-                    <label style={labelStyle}>Email *</label>
-                    <input {...register("email")} type="email" style={inputStyle} placeholder="your@email.com" />
-                    {errors.email && <p className="text-xs mt-1" style={{ color: "var(--color-strawberry)" }}>{errors.email.message}</p>}
-                  </div>
+                <div className="grid grid-cols-1 sm:grid-cols-2 gap-6">
+                  <Field label="Name" error={errors.name?.message}>
+                    <input
+                      {...register("name")}
+                      className="form-input"
+                      placeholder="Your full name"
+                    />
+                  </Field>
+                  <Field label="Email" error={errors.email?.message}>
+                    <input
+                      {...register("email")}
+                      type="email"
+                      className="form-input"
+                      placeholder="you@email.com"
+                    />
+                  </Field>
                 </div>
 
-                {/* Phone + Package */}
-                <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-                  <div>
-                    <label style={labelStyle}>Phone (optional)</label>
-                    <input {...register("phone")} type="tel" style={inputStyle} placeholder="(xxx) xxx-xxxx" />
-                  </div>
-                  <div>
-                    <label style={labelStyle}>Package Size *</label>
-                    <select {...register("packageSize")} style={inputStyle}>
-                      <option value="1">1 Cup — $7.50</option>
-                      <option value="6">6 Cups — $42.00</option>
-                      <option value="12">12 Cups — $78.00</option>
-                      <option value="24">24 Cups — $144.00</option>
+                <div className="grid grid-cols-1 sm:grid-cols-2 gap-6">
+                  <Field label="Phone (optional)" error={undefined}>
+                    <input
+                      {...register("phone")}
+                      type="tel"
+                      className="form-input"
+                      placeholder="(xxx) xxx-xxxx"
+                    />
+                  </Field>
+                  <Field label="Box size" error={undefined}>
+                    <select {...register("packageSize")} className="form-input">
+                      <option value="6">6 cups . $39</option>
+                      <option value="12">12 cups . $72</option>
+                      <option value="24">24 cups . $132</option>
+                      <option value="1">Single cup . $7.50</option>
                     </select>
-                  </div>
+                  </Field>
                 </div>
 
-                {/* Flavors */}
-                <div>
-                  <label style={labelStyle}>Flavour Preferences *</label>
+                <Field label="Flavours" error={errors.flavors?.message}>
                   <input
                     {...register("flavors")}
-                    style={inputStyle}
-                    placeholder="e.g. 4x Mango, 4x Ferrero, 4x Dubai Chocolate"
+                    className="form-input"
+                    placeholder="4 Mango, 4 Ferrero, 4 Dubai Chocolate"
                   />
-                  {errors.flavors && <p className="text-xs mt-1" style={{ color: "var(--color-strawberry)" }}>{errors.flavors.message}</p>}
-                </div>
+                </Field>
 
-                {/* Date */}
-                <div>
-                  <label style={labelStyle}>Desired Date *</label>
-                  <input {...register("date")} type="date" style={inputStyle} />
-                  {errors.date && <p className="text-xs mt-1" style={{ color: "var(--color-strawberry)" }}>{errors.date.message}</p>}
-                </div>
+                <Field label="Pickup date" error={errors.date?.message}>
+                  <input
+                    {...register("date")}
+                    type="date"
+                    className="form-input"
+                  />
+                </Field>
 
-                {/* Notes */}
-                <div>
-                  <label style={labelStyle}>Additional Notes</label>
+                <Field label="Notes (optional)" error={undefined}>
                   <textarea
                     {...register("notes")}
                     rows={3}
-                    style={{ ...inputStyle, resize: "vertical" }}
-                    placeholder="Allergies, event details, custom requests..."
+                    className="form-input"
+                    placeholder="Allergies, event details, anything we should know"
+                    style={{ resize: "vertical" }}
                   />
-                </div>
+                </Field>
 
-                {/* Submit */}
                 <button
                   type="submit"
                   disabled={loading}
-                  className="w-full py-4 rounded-full font-semibold text-white transition-all duration-300 hover:scale-[1.02] disabled:opacity-60"
-                  style={{
-                    backgroundColor: "var(--color-amber-400)",
-                    fontFamily: "var(--font-body)",
-                    fontSize: "1rem",
-                  }}
+                  className="group inline-flex items-center justify-between gap-6 px-7 py-5 rounded-full text-[15px] tracking-[-0.01em] text-bone-soft transition-all duration-500 ease-cinema disabled:opacity-60"
+                  style={{ backgroundColor: "var(--color-ember)" }}
                 >
-                  {loading ? "Sending..." : "Send Order Request →"}
+                  <span>{loading ? "Sending" : "Send order request"}</span>
+                  <span className="font-mono text-[10px] tracking-[0.18em] uppercase opacity-70">
+                    {loading ? "..." : "Reply by tomorrow"}
+                  </span>
                 </button>
               </form>
             )}
-          </div>
+          </motion.div>
         </div>
       </div>
+
+      <style jsx global>{`
+        .form-input {
+          width: 100%;
+          padding: 0.85rem 1rem;
+          background: transparent;
+          border: 0;
+          border-bottom: 1px solid var(--color-ink-15);
+          color: var(--color-ink);
+          font-family: var(--font-sans);
+          font-size: 16px;
+          letter-spacing: -0.005em;
+          outline: none;
+          transition: border-color 600ms cubic-bezier(0.16, 1, 0.3, 1);
+        }
+        .form-input:focus {
+          border-bottom-color: var(--color-ember);
+        }
+        .form-input::placeholder {
+          color: var(--color-ink-40);
+        }
+        select.form-input {
+          appearance: none;
+          background: transparent;
+        }
+      `}</style>
     </section>
+  );
+}
+
+function Field({
+  label,
+  error,
+  children,
+}: {
+  label: string;
+  error: string | undefined;
+  children: React.ReactNode;
+}) {
+  return (
+    <label className="flex flex-col gap-2">
+      <span className="font-mono text-[10px] tracking-[0.22em] uppercase text-ink/55">
+        {label}
+      </span>
+      {children}
+      {error ? (
+        <span className="font-mono text-[10px] tracking-[0.18em] uppercase text-ember">
+          {error}
+        </span>
+      ) : null}
+    </label>
   );
 }

@@ -1,133 +1,129 @@
 "use client";
 
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useState } from "react";
 import Link from "next/link";
 import { ShoppingBag, Menu, X } from "lucide-react";
 import { useCartStore } from "@/store/cartStore";
 
+const NAV = [
+  { href: "/#flavors", label: "Flavours" },
+  { href: "/#builder", label: "How a cup is built" },
+  { href: "/#packages", label: "Packages" },
+  { href: "/menu", label: "Menu" },
+];
+
 export default function Navbar() {
   const [scrolled, setScrolled] = useState(false);
   const [mobileOpen, setMobileOpen] = useState(false);
-  const cartCount = useCartStore((s) => s.items.reduce((acc, i) => acc + i.quantity, 0));
+  const cartCount = useCartStore((s) =>
+    s.items.reduce((acc, i) => acc + i.quantity, 0)
+  );
 
   useEffect(() => {
-    const handler = () => setScrolled(window.scrollY > 60);
+    const handler = () => setScrolled(window.scrollY > 24);
+    handler();
     window.addEventListener("scroll", handler, { passive: true });
     return () => window.removeEventListener("scroll", handler);
   }, []);
 
-  const navLinks = [
-    { href: "#flavors", label: "Flavours" },
-    { href: "#how-its-made", label: "How It's Made" },
-    { href: "#packages", label: "Packages" },
-    { href: "#about", label: "Our Story" },
-    { href: "#contact", label: "Order" },
-  ];
-
   return (
     <>
       <header
-        className={`
-          fixed top-0 left-0 right-0 z-50 transition-all duration-500
-          ${scrolled
-            ? "glass-warm shadow-warm py-3"
-            : "bg-transparent py-5"
-          }
-        `}
+        className={`fixed top-0 left-0 right-0 z-50 transition-all duration-700 ease-cinema ${
+          scrolled
+            ? "py-3 glass-bone border-b border-ink/10"
+            : "py-5 bg-transparent"
+        }`}
       >
-        <div className="max-w-7xl mx-auto px-6 flex items-center justify-between">
-          {/* Logo */}
-          <Link href="/" className="flex items-center gap-2 group">
-            <div className="relative">
-              <span
-                className="font-accent text-2xl font-bold transition-all duration-300"
-                style={{ color: scrolled ? "var(--color-choco-600)" : "var(--color-choco-600)" }}
-              >
-                Dessert Shot
-              </span>
-              <span
-                className="absolute -bottom-0.5 left-0 h-0.5 w-0 group-hover:w-full transition-all duration-500 ease-out-expo rounded-full"
-                style={{ backgroundColor: "var(--color-amber-400)" }}
-              />
-            </div>
+        <div className="mx-auto max-w-[1400px] px-6 md:px-10 flex items-center justify-between gap-6">
+          <Link
+            href="/"
+            className="group flex items-baseline gap-1 font-display text-[22px] tracking-[-0.025em] text-ink"
+          >
+            <span>Dessert</span>
+            <span
+              className="italic"
+              style={{ fontVariationSettings: "'SOFT' 50, 'WONK' 1", color: "var(--color-ember)" }}
+            >
+              Shot
+            </span>
+            <span className="text-ember translate-y-[-0.2em]">.</span>
           </Link>
 
-          {/* Desktop Nav */}
-          <nav className="hidden md:flex items-center gap-8">
-            {navLinks.map((link) => (
+          <nav className="hidden lg:flex items-center gap-9">
+            {NAV.map((link) => (
               <Link
                 key={link.href}
                 href={link.href}
-                className="relative text-sm font-medium tracking-wide group transition-colors duration-200"
-                style={{ color: "var(--color-ink-soft)", fontFamily: "var(--font-body)" }}
+                className="group relative text-[14px] tracking-[-0.01em] text-ink/75 hover:text-ink transition-colors"
               >
                 {link.label}
                 <span
-                  className="absolute -bottom-1 left-0 h-0.5 w-0 group-hover:w-full transition-all duration-300 rounded-full"
-                  style={{ backgroundColor: "var(--color-amber-400)" }}
+                  aria-hidden="true"
+                  className="absolute left-0 right-0 -bottom-1 h-px bg-ember origin-left scale-x-0 group-hover:scale-x-100 transition-transform duration-500 ease-cinema"
                 />
               </Link>
             ))}
           </nav>
 
-          {/* Right actions */}
-          <div className="flex items-center gap-4">
-            {/* Cart */}
+          <div className="flex items-center gap-3">
             <Link
               href="/order"
-              className="relative flex items-center justify-center w-10 h-10 rounded-full transition-all duration-200 hover:scale-110"
-              style={{
-                backgroundColor: "var(--color-amber-400)",
-                color: "white",
-              }}
-              aria-label="Cart"
+              className="hidden md:inline-flex items-center gap-3 px-5 py-2.5 rounded-full text-[14px] tracking-[-0.01em] transition-all duration-500 ease-cinema bg-ink text-bone-soft hover:scale-[1.02]"
+              style={{ backgroundColor: "var(--color-ink)" }}
             >
-              <ShoppingBag size={18} strokeWidth={2} />
-              {cartCount > 0 && (
-                <span
-                  className="absolute -top-1 -right-1 w-5 h-5 rounded-full text-xs font-bold flex items-center justify-center"
-                  style={{
-                    backgroundColor: "var(--color-choco-600)",
-                    color: "white",
-                  }}
-                >
-                  {cartCount}
-                </span>
-              )}
+              Order
+              <span className="font-mono text-[10px] opacity-70 tracking-[0.18em] uppercase">
+                {cartCount > 0 ? `${cartCount} in box` : "GTA"}
+              </span>
             </Link>
 
-            {/* Mobile menu toggle */}
+            <Link
+              href="/order"
+              className="relative md:hidden flex items-center justify-center w-10 h-10 rounded-full bg-ink text-bone-soft"
+              style={{ backgroundColor: "var(--color-ink)" }}
+              aria-label="Cart"
+            >
+              <ShoppingBag size={16} strokeWidth={2} />
+              {cartCount > 0 ? (
+                <span className="absolute -top-1 -right-1 w-5 h-5 rounded-full bg-ember text-bone-soft text-[10px] font-mono flex items-center justify-center">
+                  {cartCount}
+                </span>
+              ) : null}
+            </Link>
+
             <button
-              className="md:hidden flex items-center justify-center w-10 h-10 rounded-full transition-colors"
-              style={{ color: "var(--color-choco-600)" }}
+              className="lg:hidden flex items-center justify-center w-10 h-10 rounded-full text-ink"
               onClick={() => setMobileOpen((o) => !o)}
               aria-label="Toggle menu"
             >
-              {mobileOpen ? <X size={22} /> : <Menu size={22} />}
+              {mobileOpen ? <X size={20} /> : <Menu size={20} />}
             </button>
           </div>
         </div>
       </header>
 
-      {/* Mobile Drawer */}
       <div
-        className={`
-          fixed inset-0 z-40 flex flex-col justify-center items-center gap-8
-          transition-all duration-500 md:hidden
-          ${mobileOpen ? "opacity-100 pointer-events-auto" : "opacity-0 pointer-events-none"}
-        `}
-        style={{ backgroundColor: "rgba(255, 248, 239, 0.97)", backdropFilter: "blur(20px)" }}
+        className={`fixed inset-0 z-40 flex flex-col justify-center items-start gap-6 px-10 transition-all duration-500 lg:hidden ${
+          mobileOpen
+            ? "opacity-100 pointer-events-auto"
+            : "opacity-0 pointer-events-none"
+        }`}
+        style={{
+          background: "rgba(244, 236, 219, 0.97)",
+          backdropFilter: "blur(20px)",
+        }}
       >
-        {navLinks.map((link, i) => (
+        {NAV.map((link, i) => (
           <Link
             key={link.href}
             href={link.href}
             onClick={() => setMobileOpen(false)}
-            className="font-heading text-4xl font-semibold transition-all duration-200 hover:opacity-60"
+            className="font-display text-5xl tracking-[-0.03em] text-ink"
             style={{
-              color: "var(--color-choco-600)",
-              transitionDelay: mobileOpen ? `${i * 60}ms` : "0ms",
+              transitionDelay: mobileOpen ? `${100 + i * 60}ms` : "0ms",
               transform: mobileOpen ? "translateY(0)" : "translateY(20px)",
+              transition: "transform 600ms cubic-bezier(0.16,1,0.3,1)",
             }}
           >
             {link.label}
@@ -136,10 +132,10 @@ export default function Navbar() {
         <Link
           href="/order"
           onClick={() => setMobileOpen(false)}
-          className="mt-4 px-8 py-4 rounded-full font-semibold text-white text-lg transition-transform hover:scale-105"
-          style={{ backgroundColor: "var(--color-amber-400)" }}
+          className="mt-4 inline-flex items-center gap-4 px-7 py-4 rounded-full text-[15px] text-bone-soft"
+          style={{ backgroundColor: "var(--color-ember)" }}
         >
-          Order Now
+          Place an Order
         </Link>
       </div>
     </>

@@ -1,4 +1,4 @@
-// Custom Instagram SVG — lucide-react v1.x removed this icon
+// Custom Instagram SVG since lucide-react v1.x removed this icon
 export function InstagramIcon({ size = 20, className = "" }: { size?: number; className?: string }) {
   return (
     <svg

@@ -43,7 +43,7 @@ export async function POST(request: NextRequest) {
     };
     const totalPrice = prices[packageSize] ?? 0;
 
-    // Get current user (optional — works for anonymous too)
+    // Get current user (optional, works for anonymous too)
     const { data: { user } } = await supabase.auth.getUser();
 
     const { data, error } = await supabase

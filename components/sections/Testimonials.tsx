@@ -1,212 +1,100 @@
 "use client";
 
-import { useRef, useState } from "react";
-import { useGSAP } from "@gsap/react";
-import gsap from "gsap";
-import { ScrollTrigger } from "gsap/ScrollTrigger";
-import { Star, ChevronLeft, ChevronRight } from "lucide-react";
-
-gsap.registerPlugin(ScrollTrigger);
-
-const TESTIMONIALS = [
-  {
-    name: "Sarah M.",
-    location: "Hamilton, ON",
-    rating: 5,
-    text: "I ordered the dozen for my daughter's birthday and everyone was absolutely blown away. The mango cups disappeared in seconds! Will definitely be ordering again.",
-    flavor: "Mango Dream",
-    emoji: "🥭",
-  },
-  {
-    name: "Priya K.",
-    location: "Mississauga, ON",
-    rating: 5,
-    text: "The Dubai Chocolate cup is something else entirely. I've had desserts from fancy restaurants and this honestly competes. The pistachio cream is so silky.",
-    flavor: "Dubai Chocolate",
-    emoji: "💚",
-  },
-  {
-    name: "Jessica T.",
-    location: "Toronto, ON",
-    rating: 5,
-    text: "Ordered the Event Box for my bridal shower — 24 cups with a mix of flavours. My guests wouldn't stop talking about them. Presentation was stunning!",
-    flavor: "Mixed Box",
-    emoji: "🎊",
-  },
-  {
-    name: "Amara O.",
-    location: "Brampton, ON",
-    rating: 5,
-    text: "The Ferrero Royale is my weakness. The Nutella layer is genuinely thick and the Ferrero on top is the perfect touch. I've reordered three times now.",
-    flavor: "Ferrero Royale",
-    emoji: "🎁",
-  },
-  {
-    name: "Rachel B.",
-    location: "Burlington, ON",
-    rating: 5,
-    text: "Best dessert cups I've ever had. The layers are so well balanced — not too sweet, not too heavy. The Biscoff one is a masterpiece.",
-    flavor: "Biscoff Bliss",
-    emoji: "🍪",
-  },
-];
+import { motion } from "motion/react";
+import { copy, TESTIMONIALS } from "@/lib/copy";
+import { EASE_CINEMA } from "@/lib/constants";
 
 export default function Testimonials() {
-  const sectionRef = useRef<HTMLDivElement>(null);
-  const headingRef = useRef<HTMLDivElement>(null);
-  const [active, setActive] = useState(0);
-
-  useGSAP(
-    () => {
-      gsap.fromTo(
-        headingRef.current,
-        { opacity: 0, y: 40 },
-        {
-          opacity: 1, y: 0, duration: 1, ease: "expo.out",
-          scrollTrigger: { trigger: headingRef.current, start: "top 85%" },
-        }
-      );
-    },
-    { scope: sectionRef }
-  );
-
-  const prev = () => setActive((a) => (a === 0 ? TESTIMONIALS.length - 1 : a - 1));
-  const next = () => setActive((a) => (a === TESTIMONIALS.length - 1 ? 0 : a + 1));
-  const t = TESTIMONIALS[active];
-
   return (
     <section
-      ref={sectionRef}
-      className="py-24 px-6"
-      style={{ backgroundColor: "var(--color-cream)" }}
+      id="testimonials"
+      aria-label="What people say"
+      className="relative py-32 md:py-44 bg-bone-soft hairline-bottom"
     >
-      <div className="max-w-4xl mx-auto">
-        {/* Heading */}
-        <div ref={headingRef} className="text-center mb-14">
-          <span
-            className="inline-block text-sm font-semibold uppercase tracking-widest mb-4 px-4 py-1.5 rounded-full"
-            style={{ color: "var(--color-amber-500)", backgroundColor: "var(--color-amber-100)", fontFamily: "var(--font-body)" }}
-          >
-            Love Notes
-          </span>
-          <h2 className="font-heading text-5xl md:text-6xl" style={{ color: "var(--color-choco-600)" }}>
-            What our customers say
-          </h2>
-        </div>
-
-        {/* Testimonial card */}
-        <div
-          className="relative rounded-3xl p-10 text-center"
-          style={{
-            backgroundColor: "var(--color-ivory-deep)",
-            border: "1.5px solid var(--color-border)",
-            boxShadow: "var(--shadow-warm-lg)",
-          }}
-        >
-          {/* Quote mark */}
-          <div
-            className="font-heading text-9xl leading-none absolute top-4 left-8 select-none pointer-events-none opacity-10"
-            style={{ color: "var(--color-amber-400)" }}
-          >
-            "
-          </div>
-
-          {/* Stars */}
-          <div className="flex justify-center gap-1 mb-6">
-            {Array.from({ length: t.rating }).map((_, i) => (
-              <Star key={i} size={18} fill="var(--color-amber-400)" color="var(--color-amber-400)" />
-            ))}
-          </div>
-
-          {/* Text */}
-          <blockquote
-            className="font-heading text-2xl md:text-3xl leading-relaxed mb-8 relative z-10"
-            style={{ color: "var(--color-choco-600)" }}
-          >
-            &ldquo;{t.text}&rdquo;
-          </blockquote>
-
-          {/* Flavor tag */}
-          <div
-            className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full text-sm mb-6"
-            style={{
-              backgroundColor: "var(--color-amber-100)",
-              color: "var(--color-amber-600)",
-              fontFamily: "var(--font-body)",
-            }}
-          >
-            <span>{t.emoji}</span>
-            <span>{t.flavor}</span>
-          </div>
-
-          {/* Author */}
-          <div>
-            <p className="font-semibold" style={{ color: "var(--color-choco-600)", fontFamily: "var(--font-body)" }}>
-              {t.name}
-            </p>
-            <p className="text-sm" style={{ color: "var(--color-muted)", fontFamily: "var(--font-body)" }}>
-              {t.location}
-            </p>
-          </div>
-
-          {/* Nav buttons */}
-          <div className="flex items-center justify-center gap-4 mt-8">
-            <button
-              onClick={prev}
-              className="w-11 h-11 rounded-full flex items-center justify-center transition-all hover:scale-110"
-              style={{
-                backgroundColor: "var(--color-cream)",
-                border: "1.5px solid var(--color-border)",
-                color: "var(--color-choco-500)",
-              }}
+      <div className="mx-auto max-w-[1400px] px-6 md:px-10">
+        <div className="grid grid-cols-1 md:grid-cols-12 gap-12 mb-16 md:mb-20">
+          <div className="md:col-span-7">
+            <motion.div
+              initial={{ opacity: 0, y: 16 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              viewport={{ once: true, margin: "-20% 0px" }}
+              transition={{ duration: 0.9, ease: EASE_CINEMA }}
+              className="font-mono text-[11px] tracking-[0.2em] uppercase text-ink/50 mb-6"
             >
-              <ChevronLeft size={18} />
-            </button>
-
-            {/* Dots */}
-            <div className="flex gap-2">
-              {TESTIMONIALS.map((_, i) => (
-                <button
-                  key={i}
-                  onClick={() => setActive(i)}
-                  className="rounded-full transition-all duration-300"
-                  style={{
-                    width: i === active ? "24px" : "8px",
-                    height: "8px",
-                    backgroundColor:
-                      i === active ? "var(--color-amber-400)" : "var(--color-border)",
-                  }}
-                />
-              ))}
-            </div>
-
-            <button
-              onClick={next}
-              className="w-11 h-11 rounded-full flex items-center justify-center transition-all hover:scale-110"
-              style={{
-                backgroundColor: "var(--color-cream)",
-                border: "1.5px solid var(--color-border)",
-                color: "var(--color-choco-500)",
-              }}
+              {copy.testimonials.kicker}
+            </motion.div>
+            <motion.h2
+              initial={{ y: 24, opacity: 0 }}
+              whileInView={{ y: 0, opacity: 1 }}
+              viewport={{ once: true, margin: "-20% 0px" }}
+              transition={{ duration: 1, ease: EASE_CINEMA }}
+              className="font-display text-ink leading-[0.96] tracking-[-0.035em] max-w-[18ch]"
+              style={{ fontSize: "clamp(40px, 6vw, 96px)" }}
             >
-              <ChevronRight size={18} />
-            </button>
+              {copy.testimonials.heading}
+            </motion.h2>
           </div>
         </div>
 
-        {/* Instagram CTA */}
-        <div className="text-center mt-10">
-          <a
-            href="https://instagram.com/dessertshot.ca"
-            target="_blank"
-            rel="noopener noreferrer"
-            className="inline-flex items-center gap-2 text-sm font-medium transition-opacity hover:opacity-70"
-            style={{ color: "var(--color-amber-500)", fontFamily: "var(--font-body)" }}
-          >
-            See more on Instagram @dessertshot.ca →
-          </a>
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-px bg-ink/12 hairline-top hairline-bottom">
+          {TESTIMONIALS.map((t, i) => (
+            <Card key={i} index={i} testimonial={t} />
+          ))}
         </div>
       </div>
     </section>
+  );
+}
+
+function Card({
+  index,
+  testimonial,
+}: {
+  index: number;
+  testimonial: (typeof TESTIMONIALS)[number];
+}) {
+  return (
+    <motion.figure
+      initial={{ opacity: 0, y: 24 }}
+      whileInView={{ opacity: 1, y: 0 }}
+      viewport={{ once: true, margin: "-15% 0px" }}
+      transition={{ duration: 0.9, ease: EASE_CINEMA, delay: index * 0.06 }}
+      className="bg-bone-soft p-10 md:p-14 flex flex-col gap-8"
+    >
+      <div className="flex items-center gap-2">
+        {Array.from({ length: testimonial.rating }).map((_, i) => (
+          <span
+            key={i}
+            className="text-ember text-lg"
+            style={{ color: "var(--color-ember)" }}
+          >
+            ★
+          </span>
+        ))}
+      </div>
+      <blockquote
+        className="font-display text-[26px] md:text-[34px] leading-[1.15] tracking-[-0.025em] text-ink"
+      >
+        &ldquo;{testimonial.text}&rdquo;
+      </blockquote>
+      <figcaption className="flex items-center justify-between gap-6 hairline-top pt-6 mt-auto">
+        <div>
+          <div className="font-display text-[18px] tracking-[-0.02em] text-ink">
+            {testimonial.name}
+          </div>
+          <div className="font-mono text-[10px] tracking-[0.2em] uppercase text-ink/50 mt-1">
+            {testimonial.location}
+          </div>
+        </div>
+        <div className="text-right">
+          <div className="font-mono text-[10px] tracking-[0.2em] uppercase text-ink/45">
+            Ordered
+          </div>
+          <div className="font-display italic text-[16px] tracking-[-0.01em] text-ember mt-1">
+            {testimonial.flavor}
+          </div>
+        </div>
+      </figcaption>
+    </motion.figure>
   );
 }

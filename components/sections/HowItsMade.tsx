@@ -1,190 +1,94 @@
 "use client";
 
-import { useRef } from "react";
-import { useGSAP } from "@gsap/react";
-import gsap from "gsap";
-import { ScrollTrigger } from "gsap/ScrollTrigger";
-
-gsap.registerPlugin(ScrollTrigger);
-
-const STEPS = [
-  {
-    number: "01",
-    emoji: "🍪",
-    title: "The Base",
-    description:
-      "We hand-press a layer of golden biscuit crumble — buttery, perfectly textured, the foundation of every great cup.",
-    color: "#C49050",
-    bgColor: "rgba(196, 144, 80, 0.1)",
-  },
-  {
-    number: "02",
-    emoji: "🍦",
-    title: "The Cream",
-    description:
-      "Our signature cream cheese blend is mixed fresh with your chosen flavour — fruit, chocolate, pistachio, or spice.",
-    color: "#F5A623",
-    bgColor: "rgba(245, 166, 35, 0.1)",
-  },
-  {
-    number: "03",
-    emoji: "✨",
-    title: "The Flavour Layer",
-    description:
-      "A concentrated layer of the star ingredient — real mango coulis, dark ganache, Nutella, or Biscoff spread — poured right on top.",
-    color: "#D4700A",
-    bgColor: "rgba(212, 112, 10, 0.1)",
-  },
-  {
-    number: "04",
-    emoji: "🎀",
-    title: "The Finishing Touch",
-    description:
-      "Each cup is crowned with its signature topping — fresh fruit, a Ferrero Rocher, gold dust, or a Biscoff cookie.",
-    color: "#8B4513",
-    bgColor: "rgba(139, 69, 19, 0.1)",
-  },
-];
+import { motion } from "motion/react";
+import { HOW_STEPS } from "@/lib/copy";
+import { EASE_CINEMA } from "@/lib/constants";
 
 export default function HowItsMade() {
-  const sectionRef = useRef<HTMLDivElement>(null);
-  const headingRef = useRef<HTMLDivElement>(null);
-  const stepsRef = useRef<(HTMLDivElement | null)[]>([]);
-  const lineRef = useRef<HTMLDivElement>(null);
-
-  useGSAP(
-    () => {
-      // Heading
-      gsap.fromTo(
-        headingRef.current,
-        { opacity: 0, y: 40 },
-        {
-          opacity: 1, y: 0, duration: 1, ease: "expo.out",
-          scrollTrigger: { trigger: headingRef.current, start: "top 85%" },
-        }
-      );
-
-      // Progress line draw
-      gsap.fromTo(
-        lineRef.current,
-        { scaleY: 0, transformOrigin: "top center" },
-        {
-          scaleY: 1, duration: 2, ease: "expo.out",
-          scrollTrigger: {
-            trigger: sectionRef.current,
-            start: "top 60%",
-            end: "bottom 80%",
-            scrub: 1,
-          },
-        }
-      );
-
-      // Steps stagger in
-      stepsRef.current.forEach((step, i) => {
-        if (!step) return;
-        gsap.fromTo(
-          step,
-          {
-            opacity: 0,
-            x: i % 2 === 0 ? -50 : 50,
-            scale: 0.95,
-          },
-          {
-            opacity: 1, x: 0, scale: 1, duration: 0.9, ease: "expo.out",
-            scrollTrigger: { trigger: step, start: "top 85%" },
-            delay: i * 0.05,
-          }
-        );
-      });
-    },
-    { scope: sectionRef }
-  );
-
   return (
     <section
-      ref={sectionRef}
-      id="how-its-made"
-      className="py-24 px-6"
-      style={{ backgroundColor: "var(--color-ivory)" }}
+      id="how"
+      aria-label="How it works"
+      className="relative py-32 md:py-44 bg-bone-soft hairline-top hairline-bottom"
     >
-      <div className="max-w-4xl mx-auto">
-        {/* Heading */}
-        <div ref={headingRef} className="text-center mb-16">
-          <span
-            className="inline-block text-sm font-semibold uppercase tracking-widest mb-4 px-4 py-1.5 rounded-full"
-            style={{ color: "var(--color-amber-500)", backgroundColor: "var(--color-amber-100)", fontFamily: "var(--font-body)" }}
+      <div className="mx-auto max-w-[1400px] px-6 md:px-10">
+        <div className="grid grid-cols-1 md:grid-cols-12 gap-12 md:gap-20 mb-20">
+          <div className="md:col-span-5">
+            <motion.div
+              initial={{ opacity: 0, y: 16 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              viewport={{ once: true, margin: "-20% 0px" }}
+              transition={{ duration: 0.9, ease: EASE_CINEMA }}
+              className="font-mono text-[11px] tracking-[0.2em] uppercase text-ink/50 mb-6"
+            >
+              The order flow
+            </motion.div>
+            <motion.h2
+              initial={{ y: 24, opacity: 0 }}
+              whileInView={{ y: 0, opacity: 1 }}
+              viewport={{ once: true, margin: "-20% 0px" }}
+              transition={{ duration: 1, ease: EASE_CINEMA }}
+              className="font-display text-ink leading-[0.96] tracking-[-0.035em]"
+              style={{ fontSize: "clamp(40px, 6vw, 96px)" }}
+            >
+              Three steps,{" "}
+              <em
+                className="italic"
+                style={{
+                  color: "var(--color-ember)",
+                  fontVariationSettings: "'SOFT' 50, 'WONK' 1",
+                }}
+              >
+                no surprises.
+              </em>
+            </motion.h2>
+          </div>
+          <motion.p
+            initial={{ y: 24, opacity: 0 }}
+            whileInView={{ y: 0, opacity: 1 }}
+            viewport={{ once: true, margin: "-20% 0px" }}
+            transition={{ duration: 1, ease: EASE_CINEMA, delay: 0.15 }}
+            className="md:col-span-6 md:col-start-7 self-end max-w-[52ch] text-[18px] md:text-[20px] leading-[1.55] tracking-[-0.005em] text-ink/70"
           >
-            The Craft
-          </span>
-          <h2 className="font-heading text-5xl md:text-6xl mb-4" style={{ color: "var(--color-choco-600)" }}>
-            Built layer by layer
-          </h2>
-          <p className="text-lg" style={{ color: "var(--color-muted)" }}>
-            Every cup follows the same sacred ritual — four layers, assembled
-            in order, each one essential.
-          </p>
+            We confirm the order the same day, bake the morning of, and hand it
+            off in a sealed cooler. The whole flow is built so the cup arrives
+            tasting like it did when it left the kitchen.
+          </motion.p>
         </div>
 
-        {/* Steps with connector line */}
-        <div className="relative">
-          {/* Vertical connector line */}
-          <div
-            className="absolute left-8 top-8 bottom-8 w-px"
-            style={{ backgroundColor: "var(--color-border)" }}
-          >
-            <div
-              ref={lineRef}
-              className="absolute inset-0"
-              style={{ background: `linear-gradient(to bottom, var(--color-amber-400), var(--color-choco-400))` }}
-            />
-          </div>
-
-          <div className="flex flex-col gap-8">
-            {STEPS.map((step, i) => (
-              <div
-                key={step.number}
-                ref={(el) => { stepsRef.current[i] = el; }}
-                className="relative flex items-start gap-8"
-              >
-                {/* Step circle */}
-                <div
-                  className="relative z-10 flex-shrink-0 w-16 h-16 rounded-full flex items-center justify-center text-2xl shadow-warm"
-                  style={{ backgroundColor: step.bgColor, border: `2px solid ${step.color}40` }}
-                >
-                  {step.emoji}
-                </div>
-
-                {/* Content card */}
-                <div
-                  className="flex-1 rounded-2xl p-6"
-                  style={{
-                    backgroundColor: step.bgColor,
-                    border: `1.5px solid ${step.color}22`,
-                  }}
-                >
-                  <div className="flex items-center gap-3 mb-2">
-                    <span
-                      className="text-xs font-bold uppercase tracking-widest"
-                      style={{ color: step.color, fontFamily: "var(--font-body)" }}
-                    >
-                      Step {step.number}
-                    </span>
-                  </div>
-                  <h3
-                    className="font-heading text-2xl mb-2"
-                    style={{ color: "var(--color-choco-600)" }}
-                  >
-                    {step.title}
-                  </h3>
-                  <p className="text-base leading-relaxed" style={{ color: "var(--color-muted)" }}>
-                    {step.description}
-                  </p>
-                </div>
-              </div>
-            ))}
-          </div>
+        <div className="flex flex-col">
+          {HOW_STEPS.map((step, i) => (
+            <Step key={i} step={step} />
+          ))}
         </div>
       </div>
     </section>
+  );
+}
+
+function Step({ step }: { step: (typeof HOW_STEPS)[number] }) {
+  return (
+    <motion.div
+      initial={{ y: 30, opacity: 0 }}
+      whileInView={{ y: 0, opacity: 1 }}
+      viewport={{ once: true, margin: "-20% 0px" }}
+      transition={{ duration: 1, ease: EASE_CINEMA, delay: 0.05 }}
+      className="grid grid-cols-1 md:grid-cols-12 gap-6 md:gap-12 hairline-top py-10 md:py-14"
+    >
+      <div className="md:col-span-2 font-mono text-[11px] tracking-[0.2em] uppercase text-ember">
+        {step.kicker}
+      </div>
+      <div className="md:col-span-10">
+        <h3
+          className="font-display tracking-[-0.025em] text-ink leading-[1.02] max-w-[20ch]"
+          style={{ fontSize: "clamp(28px, 3.6vw, 52px)" }}
+        >
+          {step.title}
+        </h3>
+        <p className="mt-5 max-w-[60ch] text-[17px] md:text-[19px] leading-[1.55] tracking-[-0.005em] text-ink/70">
+          {step.body}
+        </p>
+      </div>
+    </motion.div>
   );
 }

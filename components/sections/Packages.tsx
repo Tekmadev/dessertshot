@@ -1,287 +1,179 @@
 "use client";
 
-import { useRef, useState } from "react";
-import { useGSAP } from "@gsap/react";
-import gsap from "gsap";
-import { ScrollTrigger } from "gsap/ScrollTrigger";
-import { Check, Star } from "lucide-react";
+import { motion } from "motion/react";
+import { useState } from "react";
+import { Check } from "lucide-react";
+import { copy, PACKAGES } from "@/lib/copy";
+import { EASE_CINEMA } from "@/lib/constants";
 import { useCartStore } from "@/store/cartStore";
 
-gsap.registerPlugin(ScrollTrigger);
-
-type PackageSize = 1 | 6 | 12 | 24;
-
-type Package = {
-  size: PackageSize;
-  label: string;
-  pricePerCup: number;
-  totalPrice: number;
-  tag?: string;
-  tagColor?: string;
-  featured?: boolean;
-  perks: string[];
-  emoji: string;
-  description: string;
-};
-
-const PACKAGES: Package[] = [
-  {
-    size: 1,
-    label: "Single Cup",
-    emoji: "🍮",
-    pricePerCup: 7.50,
-    totalPrice: 7.50,
-    description: "Try your favourite flavour, one perfect cup at a time.",
-    perks: [
-      "Choose any flavour",
-      "Freshly assembled",
-      "Perfect for tasting",
-    ],
-  },
-  {
-    size: 6,
-    label: "Half Dozen",
-    emoji: "🎁",
-    pricePerCup: 7.00,
-    totalPrice: 42.00,
-    tag: "Fan Favourite",
-    tagColor: "var(--color-strawberry)",
-    description: "Great for sharing with family or a small gathering.",
-    perks: [
-      "Mix & match flavours",
-      "Freshly assembled",
-      "Gift-ready packaging",
-      "Save $3 vs single",
-    ],
-  },
-  {
-    size: 12,
-    label: "Full Dozen",
-    emoji: "✨",
-    pricePerCup: 6.50,
-    totalPrice: 78.00,
-    tag: "Best Value",
-    tagColor: "var(--color-amber-500)",
-    featured: true,
-    description: "The party starter. Every occasion deserves a full dozen.",
-    perks: [
-      "Mix & match flavours",
-      "Priority preparation",
-      "Gift-ready packaging",
-      "Free flavour recommendation",
-      "Save $12 vs single",
-    ],
-  },
-  {
-    size: 24,
-    label: "The Event Box",
-    emoji: "🎊",
-    pricePerCup: 6.00,
-    totalPrice: 144.00,
-    tag: "Events & Parties",
-    tagColor: "var(--color-blueberry)",
-    description: "For weddings, baby showers, birthdays & corporate events.",
-    perks: [
-      "Full flavour customization",
-      "Custom label option",
-      "Priority booking",
-      "Event delivery available",
-      "Presentation tray included",
-      "Save $36 vs single",
-    ],
-  },
-];
-
 export default function Packages() {
-  const sectionRef = useRef<HTMLDivElement>(null);
-  const headingRef = useRef<HTMLDivElement>(null);
-  const cardRefs = useRef<(HTMLDivElement | null)[]>([]);
   const addItem = useCartStore((s) => s.addItem);
-  const [addedIndex, setAddedIndex] = useState<number | null>(null);
+  const [addedId, setAddedId] = useState<number | null>(null);
 
-  useGSAP(
-    () => {
-      gsap.fromTo(
-        headingRef.current,
-        { opacity: 0, y: 40 },
-        {
-          opacity: 1, y: 0, duration: 1, ease: "expo.out",
-          scrollTrigger: { trigger: headingRef.current, start: "top 85%" },
-        }
-      );
-
-      cardRefs.current.forEach((card, i) => {
-        if (!card) return;
-        gsap.fromTo(
-          card,
-          { opacity: 0, y: 60, rotateX: 5 },
-          {
-            opacity: 1, y: 0, rotateX: 0, duration: 0.9, ease: "expo.out",
-            scrollTrigger: { trigger: card, start: "top 88%" },
-            delay: i * 0.1,
-          }
-        );
-      });
-    },
-    { scope: sectionRef }
-  );
-
-  const handleAddToCart = (pkg: Package, index: number) => {
+  const handleAdd = (pkg: (typeof PACKAGES)[number]) => {
     addItem({
       id: `package-${pkg.size}`,
-      name: `Dessert Shot Package`,
+      name: pkg.label,
       flavor: "Mixed",
-      packageSize: pkg.size,
-      price: pkg.totalPrice,
+      packageSize: pkg.size as 6 | 12 | 24,
+      price: pkg.total,
       quantity: 1,
     });
-    setAddedIndex(index);
-    setTimeout(() => setAddedIndex(null), 2000);
+    setAddedId(pkg.size);
+    window.setTimeout(() => setAddedId(null), 1800);
   };
 
   return (
     <section
-      ref={sectionRef}
       id="packages"
-      className="py-24 px-6"
-      style={{ backgroundColor: "var(--color-ivory-deep)" }}
+      aria-label="Packages"
+      className="relative py-32 md:py-44 bg-bone hairline-bottom"
     >
-      <div className="max-w-7xl mx-auto">
-        {/* Heading */}
-        <div ref={headingRef} className="text-center mb-14">
-          <span
-            className="inline-block text-sm font-semibold uppercase tracking-widest mb-4 px-4 py-1.5 rounded-full"
-            style={{ color: "var(--color-amber-500)", backgroundColor: "var(--color-amber-100)", fontFamily: "var(--font-body)" }}
+      <div className="mx-auto max-w-[1400px] px-6 md:px-10">
+        <div className="grid grid-cols-1 md:grid-cols-12 gap-12 mb-16 md:mb-20">
+          <div className="md:col-span-7">
+            <motion.div
+              initial={{ opacity: 0, y: 16 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              viewport={{ once: true, margin: "-20% 0px" }}
+              transition={{ duration: 0.9, ease: EASE_CINEMA }}
+              className="font-mono text-[11px] tracking-[0.2em] uppercase text-ink/50 mb-6"
+            >
+              {copy.packages.kicker}
+            </motion.div>
+            <motion.h2
+              initial={{ y: 24, opacity: 0 }}
+              whileInView={{ y: 0, opacity: 1 }}
+              viewport={{ once: true, margin: "-20% 0px" }}
+              transition={{ duration: 1, ease: EASE_CINEMA }}
+              className="font-display text-ink leading-[0.96] tracking-[-0.04em]"
+              style={{ fontSize: "clamp(48px, 7vw, 112px)" }}
+            >
+              {copy.packages.heading}
+              <br />
+              <em
+                className="italic"
+                style={{
+                  color: "var(--color-ember)",
+                  fontVariationSettings: "'SOFT' 50, 'WONK' 1",
+                }}
+              >
+                {copy.packages.headingItalic}
+              </em>
+            </motion.h2>
+          </div>
+          <motion.p
+            initial={{ y: 24, opacity: 0 }}
+            whileInView={{ y: 0, opacity: 1 }}
+            viewport={{ once: true, margin: "-20% 0px" }}
+            transition={{ duration: 1, ease: EASE_CINEMA, delay: 0.15 }}
+            className="md:col-span-5 self-end max-w-[44ch] text-[17px] md:text-[19px] leading-[1.55] text-ink/70"
           >
-            Packages & Pricing
-          </span>
-          <h2 className="font-heading text-5xl md:text-6xl mb-4" style={{ color: "var(--color-choco-600)" }}>
-            Choose your package
-          </h2>
-          <p className="text-lg max-w-lg mx-auto" style={{ color: "var(--color-muted)" }}>
-            From a single indulgent cup to a full event box — every package
-            includes freshly made cups assembled just for you.
-          </p>
+            {copy.packages.body}
+          </motion.p>
         </div>
 
-        {/* Package cards */}
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-px bg-ink/15 hairline-top hairline-bottom">
           {PACKAGES.map((pkg, i) => (
-            <div
+            <PackageCard
               key={pkg.size}
-              ref={(el) => { cardRefs.current[i] = el; }}
-              className="relative rounded-3xl overflow-hidden transition-all duration-300 hover:-translate-y-2"
-              style={{
-                backgroundColor: pkg.featured ? "var(--color-choco-600)" : "var(--color-cream)",
-                border: pkg.featured
-                  ? "2px solid var(--color-amber-400)"
-                  : "1.5px solid var(--color-border)",
-                boxShadow: pkg.featured ? "var(--shadow-glow-amber)" : "var(--shadow-warm)",
-              }}
-            >
-              {/* Featured star */}
-              {pkg.featured && (
-                <div className="absolute top-4 right-4">
-                  <Star size={16} fill="var(--color-amber-400)" color="var(--color-amber-400)" />
-                </div>
-              )}
-
-              {/* Tag */}
-              {pkg.tag && (
-                <div
-                  className="px-3 py-1 text-xs font-semibold text-white"
-                  style={{ backgroundColor: pkg.tagColor }}
-                >
-                  {pkg.tag}
-                </div>
-              )}
-
-              <div className="p-6 flex flex-col gap-4 h-full">
-                {/* Header */}
-                <div>
-                  <div className="text-4xl mb-2">{pkg.emoji}</div>
-                  <h3
-                    className="font-heading text-2xl"
-                    style={{ color: pkg.featured ? "var(--color-amber-300)" : "var(--color-choco-600)" }}
-                  >
-                    {pkg.label}
-                  </h3>
-                  <p
-                    className="text-sm mt-1"
-                    style={{ color: pkg.featured ? "var(--color-choco-200)" : "var(--color-muted)" }}
-                  >
-                    {pkg.description}
-                  </p>
-                </div>
-
-                {/* Pricing */}
-                <div>
-                  <div
-                    className="font-heading text-4xl font-semibold"
-                    style={{ color: pkg.featured ? "white" : "var(--color-choco-600)" }}
-                  >
-                    ${pkg.totalPrice.toFixed(2)}
-                  </div>
-                  <div
-                    className="text-sm"
-                    style={{ color: pkg.featured ? "var(--color-amber-300)" : "var(--color-amber-500)" }}
-                  >
-                    ${pkg.pricePerCup.toFixed(2)} per cup
-                    {pkg.size > 1 && (
-                      <span style={{ color: pkg.featured ? "var(--color-choco-200)" : "var(--color-muted)" }}>
-                        {" "}· {pkg.size} cups
-                      </span>
-                    )}
-                  </div>
-                </div>
-
-                {/* Perks */}
-                <ul className="flex flex-col gap-2 flex-1">
-                  {pkg.perks.map((perk) => (
-                    <li key={perk} className="flex items-start gap-2 text-sm">
-                      <Check
-                        size={14}
-                        className="flex-shrink-0 mt-0.5"
-                        style={{ color: pkg.featured ? "var(--color-amber-400)" : "var(--color-amber-500)" }}
-                      />
-                      <span style={{ color: pkg.featured ? "var(--color-choco-100)" : "var(--color-muted)" }}>
-                        {perk}
-                      </span>
-                    </li>
-                  ))}
-                </ul>
-
-                {/* CTA */}
-                <button
-                  onClick={() => handleAddToCart(pkg, i)}
-                  className="w-full py-3.5 rounded-full font-semibold text-sm transition-all duration-300 hover:scale-[1.03] mt-2"
-                  style={{
-                    backgroundColor:
-                      addedIndex === i
-                        ? "var(--color-pistachio)"
-                        : pkg.featured
-                        ? "var(--color-amber-400)"
-                        : "var(--color-choco-600)",
-                    color: "white",
-                    fontFamily: "var(--font-body)",
-                  }}
-                >
-                  {addedIndex === i ? "✓ Added to Order!" : `Order ${pkg.size === 1 ? "Now" : pkg.label}`}
-                </button>
-              </div>
-            </div>
+              pkg={pkg}
+              index={i}
+              added={addedId === pkg.size}
+              onAdd={handleAdd}
+            />
           ))}
         </div>
-
-        {/* Note */}
-        <p className="text-center mt-8 text-sm" style={{ color: "var(--color-muted)", fontFamily: "var(--font-body)" }}>
-          Prices are per order. Mix and match flavours in any package.{" "}
-          <a href="#contact" style={{ color: "var(--color-amber-500)" }}>
-            Contact us
-          </a>{" "}
-          for custom event orders.
-        </p>
       </div>
     </section>
+  );
+}
+
+function PackageCard({
+  pkg,
+  index,
+  added,
+  onAdd,
+}: {
+  pkg: (typeof PACKAGES)[number];
+  index: number;
+  added: boolean;
+  onAdd: (p: (typeof PACKAGES)[number]) => void;
+}) {
+  return (
+    <motion.div
+      initial={{ opacity: 0, y: 30 }}
+      whileInView={{ opacity: 1, y: 0 }}
+      viewport={{ once: true, margin: "-15% 0px" }}
+      transition={{ duration: 0.95, ease: EASE_CINEMA, delay: index * 0.08 }}
+      className={`relative bg-bone p-8 md:p-10 flex flex-col gap-8 ${
+        pkg.featured ? "bg-bone-soft" : ""
+      }`}
+      style={pkg.featured ? { backgroundColor: "var(--color-bone-soft)" } : undefined}
+    >
+      {pkg.featured ? (
+        <div className="absolute top-6 right-6 font-mono text-[10px] tracking-[0.22em] uppercase px-3 py-1 rounded-full bg-ink text-bone-soft" style={{backgroundColor: "var(--color-ink)"}}>
+          Most ordered
+        </div>
+      ) : null}
+
+      <div>
+        <div className="font-mono text-[10px] tracking-[0.22em] uppercase text-ink/45">
+          The {pkg.size} cup box
+        </div>
+        <h3 className="mt-3 font-display text-[40px] md:text-[56px] leading-[1.0] tracking-[-0.035em] text-ink">
+          {pkg.label}
+        </h3>
+        <p className="mt-2 max-w-[36ch] text-[15px] leading-[1.55] text-ink/65">
+          {pkg.description}
+        </p>
+      </div>
+
+      <div className="flex items-baseline gap-3 hairline-top pt-6">
+        <span
+          className="font-display text-[64px] leading-none tracking-[-0.04em] text-ink"
+        >
+          ${pkg.total.toFixed(0)}
+        </span>
+        <span className="font-mono text-[10px] tracking-[0.18em] uppercase text-ink/45">
+          ${pkg.pricePerCup.toFixed(2)} per cup
+        </span>
+      </div>
+
+      <ul className="flex flex-col gap-3">
+        {pkg.perks.map((perk) => (
+          <li
+            key={perk}
+            className="flex items-start gap-3 text-[15px] text-ink/75 leading-[1.45]"
+          >
+            <Check
+              size={14}
+              strokeWidth={2}
+              className="mt-1 flex-shrink-0"
+              style={{ color: "var(--color-ember)" }}
+            />
+            {perk}
+          </li>
+        ))}
+      </ul>
+
+      <button
+        type="button"
+        onClick={() => onAdd(pkg)}
+        className="mt-auto group inline-flex items-center justify-between gap-6 px-7 py-5 rounded-full text-[15px] tracking-[-0.01em] transition-all duration-500 ease-cinema"
+        style={{
+          backgroundColor: pkg.featured
+            ? "var(--color-ember)"
+            : "var(--color-ink)",
+          color: "var(--color-bone-soft)",
+        }}
+      >
+        <span>{added ? "Added to box" : `Add ${pkg.label}`}</span>
+        <span className="font-mono text-[10px] tracking-[0.18em] uppercase opacity-70">
+          {added ? "Done" : `${pkg.size} cups`}
+        </span>
+      </button>
+    </motion.div>
   );
 }
