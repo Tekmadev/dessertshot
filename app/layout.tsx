@@ -35,11 +35,26 @@ export const metadata: Metadata = {
     siteName: BUSINESS.name,
     locale: BUSINESS.location.locale,
     type: "website",
+    images: [
+      {
+        url: "/dessertshotshowcase.jpg",
+        width: 896,
+        height: 917,
+        alt: `${BUSINESS.name} — hand layered dessert cups`,
+        type: "image/jpeg",
+      },
+    ],
   },
   twitter: {
     card: "summary_large_image",
     title: `${BUSINESS.name}. Layered cups, made by hand.`,
     description: BUSINESS.shortDescription,
+    images: [
+      {
+        url: "/dessertshotshowcase.jpg",
+        alt: `${BUSINESS.name} — hand layered dessert cups`,
+      },
+    ],
   },
   robots: {
     index: true,
