@@ -8,7 +8,8 @@ import { z } from "zod";
 import { CheckCircle } from "lucide-react";
 import emailjs from "@emailjs/browser";
 import { copy } from "@/lib/copy";
-import { EASE_CINEMA, SITE } from "@/lib/constants";
+import { EASE_CINEMA } from "@/lib/constants";
+import { BUSINESS, mailtoLink } from "@/lib/business";
 import { InstagramIcon } from "@/components/ui/InstagramIcon";
 
 const schema = z.object({
@@ -51,7 +52,7 @@ export default function OrderCTA() {
       const templateId = process.env.NEXT_PUBLIC_EMAILJS_TEMPLATE_ID;
       const publicKey = process.env.NEXT_PUBLIC_EMAILJS_PUBLIC_KEY;
       const toEmail =
-        process.env.NEXT_PUBLIC_BUSINESS_EMAIL ?? SITE.email;
+        process.env.NEXT_PUBLIC_BUSINESS_EMAIL ?? BUSINESS.email;
 
       const packageLabels: Record<string, string> = {
         "1": "Single cup",
@@ -141,7 +142,7 @@ export default function OrderCTA() {
 
             <div className="flex flex-col gap-3">
               <a
-                href="https://instagram.com/dessertshot.ca"
+                href={BUSINESS.instagram.url}
                 className="group flex items-center justify-between gap-4 hairline-top hairline-bottom py-5"
               >
                 <div className="flex items-center gap-4">
@@ -151,7 +152,7 @@ export default function OrderCTA() {
                       Instagram
                     </div>
                     <div className="font-display text-[20px] tracking-[-0.02em] text-ink">
-                      @dessertshot.ca
+                      {BUSINESS.instagram.handle}
                     </div>
                   </div>
                 </div>
@@ -160,7 +161,7 @@ export default function OrderCTA() {
                 </span>
               </a>
               <a
-                href="mailto:farhanaakter2612@gmail.com"
+                href={mailtoLink}
                 className="group flex items-center justify-between gap-4 hairline-bottom py-5"
               >
                 <div>
@@ -168,7 +169,7 @@ export default function OrderCTA() {
                     Email
                   </div>
                   <div className="font-display text-[20px] tracking-[-0.02em] text-ink">
-                    farhanaakter2612@gmail.com
+                    {BUSINESS.email}
                   </div>
                 </div>
                 <span className="font-mono text-[11px] tracking-[0.18em] uppercase text-ink/45 group-hover:text-ember transition-colors">
@@ -178,11 +179,11 @@ export default function OrderCTA() {
             </div>
 
             <div className="font-mono text-[11px] tracking-[0.18em] uppercase text-ink/55 leading-[1.7]">
-              Pickup free in Hamilton.
+              {BUSINESS.fulfillment.pickup}
               <br />
-              Delivery Saturdays across the GTA.
+              {BUSINESS.fulfillment.delivery}
               <br />
-              48 hours minimum notice.
+              {BUSINESS.fulfillment.notice}
             </div>
           </div>
 
@@ -209,7 +210,7 @@ export default function OrderCTA() {
                 </h3>
                 <p className="text-[17px] leading-[1.55] text-ink/70 max-w-[44ch]">
                   We will confirm your order within the day. Check your email,
-                  the reply will come from farhanaakter2612@gmail.com.
+                  the reply will come from {BUSINESS.email}.
                 </p>
               </div>
             ) : (

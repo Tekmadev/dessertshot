@@ -1,6 +1,7 @@
 import type { Metadata, Viewport } from "next";
 import { Fraunces, Inter_Tight } from "next/font/google";
 import { LenisProvider } from "@/components/layout/LenisProvider";
+import { BUSINESS } from "@/lib/business";
 import "./globals.css";
 
 const fraunces = Fraunces({
@@ -17,45 +18,28 @@ const interTight = Inter_Tight({
   display: "swap",
 });
 
-const SITE_URL = "https://dessertshot.ca";
-
 export const metadata: Metadata = {
-  metadataBase: new URL(SITE_URL),
+  metadataBase: new URL(BUSINESS.url),
   title: {
-    default: "Dessert Shot. Layered cups, made by hand in Hamilton.",
-    template: "%s . Dessert Shot",
+    default: `${BUSINESS.name}. ${BUSINESS.tagline}`,
+    template: `%s . ${BUSINESS.name}`,
   },
-  description:
-    "Hand layered dessert cups baked in Hamilton, Ontario. Real fruit, real cream, ridiculous detail. Order packages of 6, 12, or 24 across the GTA.",
-  applicationName: "Dessert Shot",
-  authors: [{ name: "Dessert Shot" }],
-  keywords: [
-    "dessert cups Hamilton",
-    "dessert cups GTA",
-    "dessert shot",
-    "layered dessert cups",
-    "Kinder Bueno dessert",
-    "Ferrero dessert",
-    "Dubai chocolate dessert",
-    "Biscoff dessert cups",
-    "mango cheesecake cup",
-    "custom dessert orders Hamilton",
-    "Toronto dessert delivery",
-    "wedding dessert cups",
-  ],
+  description: BUSINESS.description,
+  applicationName: BUSINESS.name,
+  authors: [{ name: BUSINESS.name }],
+  keywords: [...BUSINESS.seoKeywords],
   openGraph: {
-    title: "Dessert Shot. Layered cups, made by hand.",
-    description:
-      "Hand layered dessert cups baked in Hamilton, Ontario. Real fruit, real cream, ridiculous detail.",
-    url: SITE_URL,
-    siteName: "Dessert Shot",
-    locale: "en_CA",
+    title: `${BUSINESS.name}. Layered cups, made by hand.`,
+    description: BUSINESS.description,
+    url: BUSINESS.url,
+    siteName: BUSINESS.name,
+    locale: BUSINESS.location.locale,
     type: "website",
   },
   twitter: {
     card: "summary_large_image",
-    title: "Dessert Shot. Layered cups, made by hand.",
-    description: "Hand layered dessert cups baked in Hamilton, Ontario.",
+    title: `${BUSINESS.name}. Layered cups, made by hand.`,
+    description: BUSINESS.shortDescription,
   },
   robots: {
     index: true,

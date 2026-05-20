@@ -5,6 +5,7 @@ import Link from "next/link";
 import { useRef } from "react";
 import { copy } from "@/lib/copy";
 import { EASE_CINEMA } from "@/lib/constants";
+import { BUSINESS } from "@/lib/business";
 import { CupGlyph } from "@/components/ui/CupGlyph";
 import { ArrowRight } from "lucide-react";
 
@@ -214,7 +215,7 @@ function BackgroundFlair() {
           ◇ Est. 2024
         </span>
         <span className="font-mono text-[10px] tracking-[0.22em] uppercase text-ink/40">
-          ◇ Hamilton, ON
+          ◇ {BUSINESS.location.city}, {BUSINESS.location.provinceShort}
         </span>
       </div>
     </>

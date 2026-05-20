@@ -3,11 +3,11 @@ import Footer from "@/components/layout/Footer";
 import OrderCTA from "@/components/sections/OrderCTA";
 import Packages from "@/components/sections/Packages";
 import type { Metadata } from "next";
+import { BUSINESS } from "@/lib/business";
 
 export const metadata: Metadata = {
   title: "Order",
-  description:
-    "Place your Dessert Shot order. Pickup in Hamilton or delivery across the GTA. Confirmation within the day.",
+  description: `Place your ${BUSINESS.name} order. Pickup in ${BUSINESS.location.city} or delivery across the ${BUSINESS.location.regionShort}. Confirmation within the day.`,
 };
 
 export default function OrderPage() {

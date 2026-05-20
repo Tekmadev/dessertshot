@@ -3,11 +3,11 @@ import Footer from "@/components/layout/Footer";
 import Flavors from "@/components/sections/Flavors";
 import Packages from "@/components/sections/Packages";
 import type { Metadata } from "next";
+import { BUSINESS } from "@/lib/business";
 
 export const metadata: Metadata = {
   title: "Menu",
-  description:
-    "Browse the full Dessert Shot menu. Mango, Strawberry, Blueberry, Kinder Bueno, Ferrero Rocher, Biscoff, Dubai Chocolate.",
+  description: `Browse the full ${BUSINESS.name} menu. Mango, Strawberry, Blueberry, Kinder Bueno, Ferrero Rocher, Biscoff, Dubai Chocolate.`,
 };
 
 export default function MenuPage() {

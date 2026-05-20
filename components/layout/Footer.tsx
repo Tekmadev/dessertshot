@@ -1,5 +1,6 @@
 import Link from "next/link";
 import { InstagramIcon } from "@/components/ui/InstagramIcon";
+import { BUSINESS, mailtoLink } from "@/lib/business";
 
 export default function Footer() {
   return (
@@ -8,7 +9,7 @@ export default function Footer() {
         <div className="grid grid-cols-1 md:grid-cols-12 gap-12 pb-20">
           <div className="md:col-span-7">
             <div className="font-mono text-[11px] tracking-[0.2em] uppercase text-bone-soft/50 mb-8">
-              Hand layered in Hamilton
+              Hand layered in {BUSINESS.location.city}
             </div>
             <h2
               className="font-display tracking-[-0.035em] leading-[0.95]"
@@ -27,8 +28,9 @@ export default function Footer() {
               the morning of.
             </h2>
             <p className="mt-8 max-w-[44ch] text-bone-soft/70 text-[17px] leading-[1.55]">
-              Pickup in Hamilton, delivery across the Greater Toronto Area.
-              Minimum order is one cup. Maximum is whatever your event needs.
+              Pickup in {BUSINESS.location.city}, delivery across the{" "}
+              {BUSINESS.location.region}. Minimum order is one cup. Maximum is
+              whatever your event needs.
             </p>
           </div>
 
@@ -40,12 +42,8 @@ export default function Footer() {
               <FooterLink href="/#builder">How a cup is built</FooterLink>
             </FooterCol>
             <FooterCol title="Contact">
-              <FooterLink href="mailto:farhanaakter2612@gmail.com">
-                farhanaakter2612@gmail.com
-              </FooterLink>
-              <FooterLink href="https://instagram.com/dessertshot.ca">
-                Instagram
-              </FooterLink>
+              <FooterLink href={mailtoLink}>{BUSINESS.email}</FooterLink>
+              <FooterLink href={BUSINESS.instagram.url}>Instagram</FooterLink>
               <FooterLink href="/order">Place an Order</FooterLink>
             </FooterCol>
           </div>
@@ -53,15 +51,16 @@ export default function Footer() {
 
         <div className="border-t border-bone-soft/15 pt-8 flex flex-col md:flex-row md:items-center justify-between gap-6">
           <div className="font-mono text-[11px] tracking-[0.18em] uppercase text-bone-soft/45">
-            © {new Date().getFullYear()} Dessert Shot. Hamilton, Ontario.
+            © {new Date().getFullYear()} {BUSINESS.name}.{" "}
+            {BUSINESS.location.cityFull}.
           </div>
           <Link
-            href="https://instagram.com/dessertshot.ca"
+            href={BUSINESS.instagram.url}
             className="inline-flex items-center gap-2 text-bone-soft/65 hover:text-bone-soft transition-colors"
           >
             <InstagramIcon className="w-4 h-4" />
             <span className="font-mono text-[11px] tracking-[0.18em] uppercase">
-              @dessertshot.ca
+              {BUSINESS.instagram.handle}
             </span>
           </Link>
         </div>

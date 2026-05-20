@@ -4,6 +4,7 @@ import { useEffect, useState } from "react";
 import Link from "next/link";
 import { ShoppingBag, Menu, X } from "lucide-react";
 import { useCartStore } from "@/store/cartStore";
+import { BUSINESS } from "@/lib/business";
 
 const NAV = [
   { href: "/#flavors", label: "Flavours" },
@@ -74,7 +75,9 @@ export default function Navbar() {
             >
               Order
               <span className="font-mono text-[10px] opacity-70 tracking-[0.18em] uppercase">
-                {cartCount > 0 ? `${cartCount} in box` : "GTA"}
+                {cartCount > 0
+                  ? `${cartCount} in box`
+                  : BUSINESS.location.regionShort}
               </span>
             </Link>
 
