@@ -34,12 +34,12 @@ export async function POST(request: NextRequest) {
       notes,
     } = body;
 
-    // Determine price from package size
+    // Determine price from package size — keep in sync with lib/copy.ts PACKAGES
     const prices: Record<string, number> = {
-      "1": 7.50,
-      "6": 42.00,
-      "12": 78.00,
-      "24": 144.00,
+      "1": 7.5,
+      "6": 39.0,
+      "12": 72.0,
+      "24": 132.0,
     };
     const totalPrice = prices[packageSize] ?? 0;
 
@@ -69,20 +69,28 @@ export async function POST(request: NextRequest) {
       return NextResponse.json({ error: "Failed to create order" }, { status: 500 });
     }
 
-    // Track analytics event
-    await supabase.from("analytics_events").insert({
-      session_id: request.headers.get("x-session-id") ?? "anonymous",
-      event_type: "order_submitted",
-      page_path: "/",
-      element_id: "order-form",
-      metadata: {
-        package_size: packageSize,
-        order_id: data.id,
-      },
-      user_agent: request.headers.get("user-agent") ?? undefined,
-    });
+    // Track analytics event — best-effort, must not block order success
+    const { error: analyticsError } = await supabase
+      .from("analytics_events")
+      .insert({
+        session_id: request.headers.get("x-session-id") ?? "anonymous",
+        event_type: "order_submitted",
+        page_path: "/",
+        element_id: "order-form",
+        metadata: {
+          package_size: packageSize,
+          order_id: data.id,
+        },
+        user_agent: request.headers.get("user-agent") ?? undefined,
+      });
+    if (analyticsError) {
+      console.error("Analytics insert error (non-fatal):", analyticsError);
+    }
 
-    return NextResponse.json({ success: true, orderId: data.id }, { status: 201 });
+    return NextResponse.json(
+      { success: true, orderId: data.id },
+      { status: 201 }
+    );
   } catch (err) {
     console.error("Order API error:", err);
     return NextResponse.json({ error: "Internal server error" }, { status: 500 });

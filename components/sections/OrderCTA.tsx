@@ -28,6 +28,7 @@ type FormData = z.infer<typeof schema>;
 export default function OrderCTA() {
   const [submitted, setSubmitted] = useState(false);
   const [loading, setLoading] = useState(false);
+  const [errorMessage, setErrorMessage] = useState<string | null>(null);
 
   const {
     register,
@@ -39,61 +40,100 @@ export default function OrderCTA() {
 
   const onSubmit = async (data: FormData) => {
     setLoading(true);
-    try {
-      const apiPromise = fetch("/api/orders", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(data),
-      }).catch((e) => {
-        console.error("Order API error:", e);
-        return null;
-      });
+    setErrorMessage(null);
 
-      const serviceId = process.env.NEXT_PUBLIC_EMAILJS_SERVICE_ID;
-      const templateId = process.env.NEXT_PUBLIC_EMAILJS_TEMPLATE_ID;
-      const publicKey = process.env.NEXT_PUBLIC_EMAILJS_PUBLIC_KEY;
-      const toEmail =
-        process.env.NEXT_PUBLIC_BUSINESS_EMAIL ?? BUSINESS.email;
+    const packageLabels: Record<string, string> = {
+      "1": "Single cup",
+      "6": "6 cups",
+      "12": "12 cups",
+      "24": "24 cups",
+    };
 
-      const packageLabels: Record<string, string> = {
-        "1": "Single cup",
-        "6": "6 cups",
-        "12": "12 cups",
-        "24": "24 cups",
-      };
+    const dbPromise = (async () => {
+      try {
+        const res = await fetch("/api/orders", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify(data),
+        });
+        if (!res.ok) {
+          const body = await res.json().catch(() => null);
+          console.error("Order API error:", res.status, body);
+          return { ok: false as const };
+        }
+        const json = (await res.json().catch(() => null)) as
+          | { orderId?: string }
+          | null;
+        return { ok: true as const, orderId: json?.orderId };
+      } catch (e) {
+        console.error("Order API exception:", e);
+        return { ok: false as const };
+      }
+    })();
 
-      const emailPromise =
-        serviceId && templateId && publicKey
-          ? emailjs
-              .send(
-                serviceId,
-                templateId,
-                {
-                  to_email: toEmail,
-                  from_name: data.name,
-                  from_email: data.email,
-                  phone: data.phone || "—",
-                  package_size: packageLabels[data.packageSize] ?? data.packageSize,
-                  flavors: data.flavors,
-                  desired_date: data.date,
-                  notes: data.notes || "—",
-                  reply_to: data.email,
-                },
-                { publicKey }
-              )
-              .catch((e) => {
-                console.error("EmailJS error:", e);
-                return null;
-              })
-          : Promise.resolve(null);
+    const serviceId = process.env.NEXT_PUBLIC_EMAILJS_SERVICE_ID;
+    const templateId = process.env.NEXT_PUBLIC_EMAILJS_TEMPLATE_ID;
+    const publicKey = process.env.NEXT_PUBLIC_EMAILJS_PUBLIC_KEY;
+    const toEmail =
+      process.env.NEXT_PUBLIC_BUSINESS_EMAIL ?? BUSINESS.email;
 
-      await Promise.all([apiPromise, emailPromise]);
+    const emailConfigured = Boolean(serviceId && templateId && publicKey);
+
+    const emailPromise = emailConfigured
+      ? emailjs
+          .send(
+            serviceId!,
+            templateId!,
+            {
+              to_email: toEmail,
+              from_name: data.name,
+              from_email: data.email,
+              phone: data.phone || "—",
+              package_size:
+                packageLabels[data.packageSize] ?? data.packageSize,
+              flavors: data.flavors,
+              desired_date: data.date,
+              notes: data.notes || "—",
+              reply_to: data.email,
+            },
+            { publicKey: publicKey! }
+          )
+          .then(() => ({ ok: true as const }))
+          .catch((e) => {
+            console.error("EmailJS error:", e);
+            return { ok: false as const };
+          })
+      : Promise.resolve({ ok: false as const, skipped: true });
+
+    const [dbResult, emailResult] = await Promise.all([
+      dbPromise,
+      emailPromise,
+    ]);
+
+    // Success requires the order to be stored. EmailJS is best-effort —
+    // if the DB has it, the business can recover the order; if email
+    // fails too, we surface a clear error.
+    if (dbResult.ok) {
       setSubmitted(true);
-    } catch (e) {
-      console.error(e);
-    } finally {
-      setLoading(false);
+      if (emailConfigured && !emailResult.ok) {
+        console.warn(
+          "Order saved to database but notification email failed to send."
+        );
+      }
+    } else if (emailResult.ok) {
+      // DB failed but email went through — still consider it received.
+      setSubmitted(true);
+      console.warn(
+        "Order email sent but database write failed. Check Supabase logs."
+      );
+    } else {
+      setErrorMessage(
+        "Something went wrong sending your order. Please try again, or reach us directly at " +
+          BUSINESS.email +
+          "."
+      );
     }
+    setLoading(false);
   };
 
   return (
@@ -315,6 +355,15 @@ export default function OrderCTA() {
                     {loading ? "..." : "Reply by tomorrow"}
                   </span>
                 </button>
+
+                {errorMessage ? (
+                  <p
+                    role="alert"
+                    className="font-mono text-[11px] tracking-[0.05em] leading-[1.6] text-ember"
+                  >
+                    {errorMessage}
+                  </p>
+                ) : null}
               </form>
             )}
           </motion.div>
