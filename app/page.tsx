@@ -7,7 +7,6 @@ import Numbers from "@/components/sections/Numbers";
 import Flavors from "@/components/sections/Flavors";
 import HowItsMade from "@/components/sections/HowItsMade";
 import Packages from "@/components/sections/Packages";
-import Testimonials from "@/components/sections/Testimonials";
 import OrderCTA from "@/components/sections/OrderCTA";
 
 export default function HomePage() {
@@ -22,7 +21,6 @@ export default function HomePage() {
         <Flavors />
         <HowItsMade />
         <Packages />
-        <Testimonials />
         <OrderCTA />
       </main>
       <Footer />
