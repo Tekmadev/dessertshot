@@ -2,8 +2,8 @@
 
 import { useEffect, useState } from "react";
 import Link from "next/link";
-import { ShoppingBag, Menu, X } from "lucide-react";
-import { useCartStore } from "@/store/cartStore";
+import { Menu, X } from "lucide-react";
+import { InstagramIcon } from "@/components/ui/InstagramIcon";
 import { BUSINESS } from "@/lib/business";
 
 const NAV = [
@@ -16,9 +16,6 @@ const NAV = [
 export default function Navbar() {
   const [scrolled, setScrolled] = useState(false);
   const [mobileOpen, setMobileOpen] = useState(false);
-  const cartCount = useCartStore((s) =>
-    s.items.reduce((acc, i) => acc + i.quantity, 0)
-  );
 
   useEffect(() => {
     const handler = () => setScrolled(window.scrollY > 24);
@@ -69,30 +66,28 @@ export default function Navbar() {
 
           <div className="flex items-center gap-3">
             <Link
-              href="/order"
+              href={BUSINESS.instagram.url}
+              target="_blank"
+              rel="noopener noreferrer"
               className="hidden md:inline-flex items-center gap-3 px-5 py-2.5 rounded-full text-[14px] tracking-[-0.01em] transition-all duration-500 ease-cinema bg-ink text-bone-soft hover:scale-[1.02]"
               style={{ backgroundColor: "var(--color-ink)" }}
+              aria-label="Instagram"
             >
-              Order
-              <span className="font-mono text-[10px] opacity-70 tracking-[0.18em] uppercase">
-                {cartCount > 0
-                  ? `${cartCount} in box`
-                  : BUSINESS.location.regionShort}
+              <InstagramIcon size={16} />
+              <span className="font-mono text-[10px] opacity-80 tracking-[0.18em] uppercase">
+                {BUSINESS.instagram.handle}
               </span>
             </Link>
 
             <Link
-              href="/order"
-              className="relative md:hidden flex items-center justify-center w-10 h-10 rounded-full bg-ink text-bone-soft"
+              href={BUSINESS.instagram.url}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="md:hidden flex items-center justify-center w-10 h-10 rounded-full bg-ink text-bone-soft"
               style={{ backgroundColor: "var(--color-ink)" }}
-              aria-label="Cart"
+              aria-label="Instagram"
             >
-              <ShoppingBag size={16} strokeWidth={2} />
-              {cartCount > 0 ? (
-                <span className="absolute -top-1 -right-1 w-5 h-5 rounded-full bg-ember text-bone-soft text-[10px] font-mono flex items-center justify-center">
-                  {cartCount}
-                </span>
-              ) : null}
+              <InstagramIcon size={16} />
             </Link>
 
             <button
@@ -133,12 +128,15 @@ export default function Navbar() {
           </Link>
         ))}
         <Link
-          href="/order"
+          href={BUSINESS.instagram.url}
+          target="_blank"
+          rel="noopener noreferrer"
           onClick={() => setMobileOpen(false)}
-          className="mt-4 inline-flex items-center gap-4 px-7 py-4 rounded-full text-[15px] text-bone-soft"
+          className="mt-4 inline-flex items-center gap-3 px-7 py-4 rounded-full text-[15px] text-bone-soft"
           style={{ backgroundColor: "var(--color-ember)" }}
         >
-          Place an Order
+          <InstagramIcon size={18} />
+          <span>{BUSINESS.instagram.handle}</span>
         </Link>
       </div>
     </>
