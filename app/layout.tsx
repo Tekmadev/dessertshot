@@ -52,6 +52,34 @@ export const metadata: Metadata = {
     },
   },
   alternates: { canonical: "/" },
+  manifest: "/favicondessert/site.webmanifest",
+  icons: {
+    icon: [
+      { url: "/favicondessert/favicon.ico", sizes: "any" },
+      {
+        url: "/favicondessert/favicon-16x16.png",
+        type: "image/png",
+        sizes: "16x16",
+      },
+      {
+        url: "/favicondessert/favicon-32x32.png",
+        type: "image/png",
+        sizes: "32x32",
+      },
+      {
+        url: "/favicondessert/android-chrome-192x192.png",
+        type: "image/png",
+        sizes: "192x192",
+      },
+      {
+        url: "/favicondessert/android-chrome-512x512.png",
+        type: "image/png",
+        sizes: "512x512",
+      },
+    ],
+    apple: "/favicondessert/apple-touch-icon.png",
+    shortcut: "/favicondessert/favicon.ico",
+  },
 };
 
 export const viewport: Viewport = {

@@ -1,0 +1,20 @@
+{
+  "name": "Dessert Shot",
+  "short_name": "Dessert Shot",
+  "icons": [
+    {
+      "src": "/favicondessert/android-chrome-192x192.png",
+      "sizes": "192x192",
+      "type": "image/png"
+    },
+    {
+      "src": "/favicondessert/android-chrome-512x512.png",
+      "sizes": "512x512",
+      "type": "image/png"
+    }
+  ],
+  "theme_color": "#fce4e7",
+  "background_color": "#f4ecdb",
+  "display": "standalone",
+  "start_url": "/"
+}

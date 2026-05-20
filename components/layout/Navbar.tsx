@@ -2,6 +2,7 @@
 
 import { useEffect, useState } from "react";
 import Link from "next/link";
+import Image from "next/image";
 import { Menu, X } from "lucide-react";
 import { InstagramIcon } from "@/components/ui/InstagramIcon";
 import { BUSINESS } from "@/lib/business";
@@ -36,16 +37,29 @@ export default function Navbar() {
         <div className="mx-auto max-w-[1400px] px-6 md:px-10 flex items-center justify-between gap-6">
           <Link
             href="/"
-            className="group flex items-baseline gap-1 font-display text-[22px] tracking-[-0.025em] text-ink"
+            className="group flex items-center gap-2.5 font-display text-[22px] tracking-[-0.025em] text-ink"
           >
-            <span>Dessert</span>
-            <span
-              className="italic"
-              style={{ fontVariationSettings: "'SOFT' 50, 'WONK' 1", color: "var(--color-ember)" }}
-            >
-              Shot
+            <Image
+              src="/logo.png"
+              alt={`${BUSINESS.name} logo`}
+              width={36}
+              height={36}
+              priority
+              className="h-9 w-9 object-contain"
+            />
+            <span className="flex items-baseline gap-1">
+              <span>Dessert</span>
+              <span
+                className="italic"
+                style={{
+                  fontVariationSettings: "'SOFT' 50, 'WONK' 1",
+                  color: "var(--color-ember)",
+                }}
+              >
+                Shot
+              </span>
+              <span className="text-ember translate-y-[-0.2em]">.</span>
             </span>
-            <span className="text-ember translate-y-[-0.2em]">.</span>
           </Link>
 
           <nav className="hidden lg:flex items-center gap-9">

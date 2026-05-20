@@ -1,4 +1,5 @@
 import Link from "next/link";
+import Image from "next/image";
 import { InstagramIcon } from "@/components/ui/InstagramIcon";
 import { BUSINESS, mailtoLink } from "@/lib/business";
 
@@ -8,8 +9,17 @@ export default function Footer() {
       <div className="mx-auto max-w-[1400px] px-6 md:px-10">
         <div className="grid grid-cols-1 md:grid-cols-12 gap-12 pb-20">
           <div className="md:col-span-7">
-            <div className="font-mono text-[11px] tracking-[0.2em] uppercase text-bone-soft/50 mb-8">
-              Hand layered in {BUSINESS.location.city}
+            <div className="flex items-center gap-3 mb-8">
+              <Image
+                src="/logo.png"
+                alt={`${BUSINESS.name} logo`}
+                width={44}
+                height={44}
+                className="h-11 w-11 object-contain"
+              />
+              <span className="font-mono text-[11px] tracking-[0.2em] uppercase text-bone-soft/50">
+                Hand layered in {BUSINESS.location.city}
+              </span>
             </div>
             <h2
               className="font-display tracking-[-0.035em] leading-[0.95]"
