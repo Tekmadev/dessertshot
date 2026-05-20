@@ -4,6 +4,7 @@ export const SITE = {
   name: "Dessert Shot",
   city: "Hamilton, Ontario",
   region: "Greater Toronto Area",
-  email: "hello@dessertshot.ca",
-  instagram: "https://instagram.com/dessertshot",
+  email: "farhanaakter2612@gmail.com",
+  instagram: "https://instagram.com/dessertshot.ca",
+  instagramHandle: "@dessertshot.ca",
 };

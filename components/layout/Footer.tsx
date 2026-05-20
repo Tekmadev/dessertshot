@@ -40,10 +40,10 @@ export default function Footer() {
               <FooterLink href="/#builder">How a cup is built</FooterLink>
             </FooterCol>
             <FooterCol title="Contact">
-              <FooterLink href="mailto:hello@dessertshot.ca">
-                hello@dessertshot.ca
+              <FooterLink href="mailto:farhanaakter2612@gmail.com">
+                farhanaakter2612@gmail.com
               </FooterLink>
-              <FooterLink href="https://instagram.com/dessertshot">
+              <FooterLink href="https://instagram.com/dessertshot.ca">
                 Instagram
               </FooterLink>
               <FooterLink href="/order">Place an Order</FooterLink>
@@ -56,12 +56,12 @@ export default function Footer() {
             © {new Date().getFullYear()} Dessert Shot. Hamilton, Ontario.
           </div>
           <Link
-            href="https://instagram.com/dessertshot"
+            href="https://instagram.com/dessertshot.ca"
             className="inline-flex items-center gap-2 text-bone-soft/65 hover:text-bone-soft transition-colors"
           >
             <InstagramIcon className="w-4 h-4" />
             <span className="font-mono text-[11px] tracking-[0.18em] uppercase">
-              @dessertshot
+              @dessertshot.ca
             </span>
           </Link>
         </div>

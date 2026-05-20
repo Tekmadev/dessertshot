@@ -6,8 +6,9 @@ import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { z } from "zod";
 import { CheckCircle } from "lucide-react";
+import emailjs from "@emailjs/browser";
 import { copy } from "@/lib/copy";
-import { EASE_CINEMA } from "@/lib/constants";
+import { EASE_CINEMA, SITE } from "@/lib/constants";
 import { InstagramIcon } from "@/components/ui/InstagramIcon";
 
 const schema = z.object({
@@ -37,12 +38,55 @@ export default function OrderCTA() {
   const onSubmit = async (data: FormData) => {
     setLoading(true);
     try {
-      const res = await fetch("/api/orders", {
+      const apiPromise = fetch("/api/orders", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify(data),
+      }).catch((e) => {
+        console.error("Order API error:", e);
+        return null;
       });
-      if (res.ok) setSubmitted(true);
+
+      const serviceId = process.env.NEXT_PUBLIC_EMAILJS_SERVICE_ID;
+      const templateId = process.env.NEXT_PUBLIC_EMAILJS_TEMPLATE_ID;
+      const publicKey = process.env.NEXT_PUBLIC_EMAILJS_PUBLIC_KEY;
+      const toEmail =
+        process.env.NEXT_PUBLIC_BUSINESS_EMAIL ?? SITE.email;
+
+      const packageLabels: Record<string, string> = {
+        "1": "Single cup",
+        "6": "6 cups",
+        "12": "12 cups",
+        "24": "24 cups",
+      };
+
+      const emailPromise =
+        serviceId && templateId && publicKey
+          ? emailjs
+              .send(
+                serviceId,
+                templateId,
+                {
+                  to_email: toEmail,
+                  from_name: data.name,
+                  from_email: data.email,
+                  phone: data.phone || "—",
+                  package_size: packageLabels[data.packageSize] ?? data.packageSize,
+                  flavors: data.flavors,
+                  desired_date: data.date,
+                  notes: data.notes || "—",
+                  reply_to: data.email,
+                },
+                { publicKey }
+              )
+              .catch((e) => {
+                console.error("EmailJS error:", e);
+                return null;
+              })
+          : Promise.resolve(null);
+
+      await Promise.all([apiPromise, emailPromise]);
+      setSubmitted(true);
     } catch (e) {
       console.error(e);
     } finally {
@@ -97,7 +141,7 @@ export default function OrderCTA() {
 
             <div className="flex flex-col gap-3">
               <a
-                href="https://instagram.com/dessertshot"
+                href="https://instagram.com/dessertshot.ca"
                 className="group flex items-center justify-between gap-4 hairline-top hairline-bottom py-5"
               >
                 <div className="flex items-center gap-4">
@@ -107,7 +151,7 @@ export default function OrderCTA() {
                       Instagram
                     </div>
                     <div className="font-display text-[20px] tracking-[-0.02em] text-ink">
-                      @dessertshot
+                      @dessertshot.ca
                     </div>
                   </div>
                 </div>
@@ -116,7 +160,7 @@ export default function OrderCTA() {
                 </span>
               </a>
               <a
-                href="mailto:hello@dessertshot.ca"
+                href="mailto:farhanaakter2612@gmail.com"
                 className="group flex items-center justify-between gap-4 hairline-bottom py-5"
               >
                 <div>
@@ -124,7 +168,7 @@ export default function OrderCTA() {
                     Email
                   </div>
                   <div className="font-display text-[20px] tracking-[-0.02em] text-ink">
-                    hello@dessertshot.ca
+                    farhanaakter2612@gmail.com
                   </div>
                 </div>
                 <span className="font-mono text-[11px] tracking-[0.18em] uppercase text-ink/45 group-hover:text-ember transition-colors">
@@ -165,7 +209,7 @@ export default function OrderCTA() {
                 </h3>
                 <p className="text-[17px] leading-[1.55] text-ink/70 max-w-[44ch]">
                   We will confirm your order within the day. Check your email,
-                  the reply will come from hello@dessertshot.ca.
+                  the reply will come from farhanaakter2612@gmail.com.
                 </p>
               </div>
             ) : (
