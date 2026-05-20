@@ -1,6 +1,7 @@
 import Link from "next/link";
 import Image from "next/image";
 import { InstagramIcon } from "@/components/ui/InstagramIcon";
+import { FacebookIcon } from "@/components/ui/FacebookIcon";
 import { BUSINESS, mailtoLink } from "@/lib/business";
 
 export default function Footer() {
@@ -54,6 +55,7 @@ export default function Footer() {
             <FooterCol title="Contact">
               <FooterLink href={mailtoLink}>{BUSINESS.email}</FooterLink>
               <FooterLink href={BUSINESS.instagram.url}>Instagram</FooterLink>
+              <FooterLink href={BUSINESS.facebook.url}>Facebook</FooterLink>
               <FooterLink href="/order">Place an Order</FooterLink>
             </FooterCol>
           </div>
@@ -64,15 +66,28 @@ export default function Footer() {
             © {new Date().getFullYear()} {BUSINESS.name}.{" "}
             {BUSINESS.location.cityFull}.
           </div>
-          <Link
-            href={BUSINESS.instagram.url}
-            className="inline-flex items-center gap-2 text-bone-soft/65 hover:text-bone-soft transition-colors"
-          >
-            <InstagramIcon className="w-4 h-4" />
-            <span className="font-mono text-[11px] tracking-[0.18em] uppercase">
-              {BUSINESS.instagram.handle}
-            </span>
-          </Link>
+          <div className="flex items-center gap-5">
+            <Link
+              href={BUSINESS.instagram.url}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="inline-flex items-center gap-2 text-bone-soft/65 hover:text-bone-soft transition-colors"
+            >
+              <InstagramIcon className="w-4 h-4" />
+              <span className="font-mono text-[11px] tracking-[0.18em] uppercase">
+                {BUSINESS.instagram.handle}
+              </span>
+            </Link>
+            <Link
+              href={BUSINESS.facebook.url}
+              target="_blank"
+              rel="noopener noreferrer"
+              aria-label="Facebook"
+              className="inline-flex items-center text-bone-soft/65 hover:text-bone-soft transition-colors"
+            >
+              <FacebookIcon className="w-4 h-4" />
+            </Link>
+          </div>
         </div>
       </div>
 

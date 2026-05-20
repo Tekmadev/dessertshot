@@ -11,6 +11,7 @@ import { copy } from "@/lib/copy";
 import { EASE_CINEMA } from "@/lib/constants";
 import { BUSINESS, mailtoLink } from "@/lib/business";
 import { InstagramIcon } from "@/components/ui/InstagramIcon";
+import { FacebookIcon } from "@/components/ui/FacebookIcon";
 
 const schema = z.object({
   name: z.string().min(2, "Please enter your full name"),
@@ -153,6 +154,27 @@ export default function OrderCTA() {
                     </div>
                     <div className="font-display text-[20px] tracking-[-0.02em] text-ink">
                       {BUSINESS.instagram.handle}
+                    </div>
+                  </div>
+                </div>
+                <span className="font-mono text-[11px] tracking-[0.18em] uppercase text-ink/45 group-hover:text-ember transition-colors">
+                  Open
+                </span>
+              </a>
+              <a
+                href={BUSINESS.facebook.url}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="group flex items-center justify-between gap-4 hairline-bottom py-5"
+              >
+                <div className="flex items-center gap-4">
+                  <FacebookIcon className="w-5 h-5 text-ink" />
+                  <div>
+                    <div className="font-mono text-[10px] tracking-[0.2em] uppercase text-ink/45">
+                      Facebook
+                    </div>
+                    <div className="font-display text-[20px] tracking-[-0.02em] text-ink">
+                      {BUSINESS.facebook.handle}
                     </div>
                   </div>
                 </div>

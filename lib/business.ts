@@ -20,6 +20,11 @@ export const BUSINESS = {
     url: "https://instagram.com/dessertshot.ca",
   },
 
+  facebook: {
+    handle: "Dessert Shot",
+    url: "https://www.facebook.com/profile.php?id=61561377497519",
+  },
+
   location: {
     city: "Hamilton",
     province: "Ontario",
