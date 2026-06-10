@@ -1,5 +1,6 @@
 import type { Metadata, Viewport } from "next";
 import { Fraunces, Inter_Tight } from "next/font/google";
+import { Analytics } from "@vercel/analytics/next";
 import { LenisProvider } from "@/components/layout/LenisProvider";
 import { BUSINESS } from "@/lib/business";
 import "./globals.css";
@@ -123,6 +124,7 @@ export default function RootLayout({
       </head>
       <body className="min-h-full bg-bone text-ink antialiased">
         <LenisProvider>{children}</LenisProvider>
+        <Analytics />
       </body>
     </html>
   );
