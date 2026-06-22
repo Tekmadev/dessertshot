@@ -132,9 +132,14 @@ function FlavorCard({
           <p className="mt-1 italic text-ink/55 text-[15px]">{flavor.tagline}</p>
         </div>
         <span
-          className="font-mono text-[11px] tracking-[0.18em] uppercase text-ink/55"
+          className="font-mono text-[10px] tracking-[0.18em] uppercase px-3 py-1 rounded-full"
+          style={
+            flavor.tier === "premium"
+              ? { backgroundColor: "var(--color-ember)", color: "var(--color-bone-soft)" }
+              : { border: "1px solid var(--color-ink-15)", color: "var(--color-ink)" }
+          }
         >
-          ${flavor.pricePerCup.toFixed(2)}
+          {flavor.tier === "premium" ? "Premium" : "Classic"}
         </span>
       </div>
 

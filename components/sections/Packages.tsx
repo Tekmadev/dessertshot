@@ -1,27 +1,15 @@
 "use client";
 
 import { motion } from "motion/react";
-import { useState } from "react";
 import { Check } from "lucide-react";
-import { copy, PACKAGES } from "@/lib/copy";
+import { copy, PACKAGES, MENU_PRICES } from "@/lib/copy";
 import { EASE_CINEMA } from "@/lib/constants";
-import { useCartStore } from "@/store/cartStore";
+
+const QUANTITIES: (24 | 48 | 96)[] = [24, 48, 96];
 
 export default function Packages() {
-  const addItem = useCartStore((s) => s.addItem);
-  const [addedId, setAddedId] = useState<number | null>(null);
-
-  const handleAdd = (pkg: (typeof PACKAGES)[number]) => {
-    addItem({
-      id: `package-${pkg.size}`,
-      name: pkg.label,
-      flavor: "Mixed",
-      packageSize: pkg.size as 6 | 12 | 24,
-      price: pkg.total,
-      quantity: 1,
-    });
-    setAddedId(pkg.size);
-    window.setTimeout(() => setAddedId(null), 1800);
+  const scrollToOrder = () => {
+    document.getElementById("contact")?.scrollIntoView({ behavior: "smooth" });
   };
 
   return (
@@ -74,32 +62,132 @@ export default function Packages() {
           </motion.p>
         </div>
 
+        {/* Size cards */}
+        <div className="grid grid-cols-1 lg:grid-cols-2 gap-px bg-ink/15 hairline-top hairline-bottom mb-16">
+          <SizeBlock
+            cupSize="2oz"
+            label="Mini Shots"
+            subtitle="2 oz · tasting size"
+            description="Light, elegant, perfect for events where guests try everything on the table."
+            index={0}
+            onOrder={scrollToOrder}
+          />
+          <SizeBlock
+            cupSize="5oz"
+            label="Dessert Cups"
+            subtitle="5 oz · full serving"
+            description="The full experience. Every layer lands the way it was built."
+            index={1}
+            onOrder={scrollToOrder}
+          />
+        </div>
+
+        {/* Pack info cards */}
         <div className="grid grid-cols-1 md:grid-cols-3 gap-px bg-ink/15 hairline-top hairline-bottom">
           {PACKAGES.map((pkg, i) => (
-            <PackageCard
-              key={pkg.size}
-              pkg={pkg}
-              index={i}
-              added={addedId === pkg.size}
-              onAdd={handleAdd}
-            />
+            <PackCard key={pkg.size} pkg={pkg} index={i} onOrder={scrollToOrder} />
           ))}
         </div>
+
+        <motion.p
+          initial={{ opacity: 0 }}
+          whileInView={{ opacity: 1 }}
+          viewport={{ once: true }}
+          transition={{ duration: 1, ease: EASE_CINEMA, delay: 0.3 }}
+          className="mt-8 font-mono text-[10px] tracking-[0.18em] uppercase text-ink/45 leading-[1.8]"
+        >
+          Minimum order 24 cups · Flavours packed in sets of 5 · Mix Classic and Premium in the same box
+        </motion.p>
       </div>
     </section>
   );
 }
 
-function PackageCard({
+function SizeBlock({
+  cupSize,
+  label,
+  subtitle,
+  description,
+  index,
+  onOrder,
+}: {
+  cupSize: "2oz" | "5oz";
+  label: string;
+  subtitle: string;
+  description: string;
+  index: number;
+  onOrder: () => void;
+}) {
+  const prices = MENU_PRICES[cupSize];
+
+  return (
+    <motion.div
+      initial={{ opacity: 0, y: 24 }}
+      whileInView={{ opacity: 1, y: 0 }}
+      viewport={{ once: true, margin: "-15% 0px" }}
+      transition={{ duration: 0.95, ease: EASE_CINEMA, delay: index * 0.08 }}
+      className="bg-bone p-8 md:p-10 flex flex-col gap-8"
+    >
+      <div>
+        <div className="font-mono text-[10px] tracking-[0.22em] uppercase text-ink/45 mb-2">
+          {subtitle}
+        </div>
+        <h3
+          className="font-display leading-[1.0] tracking-[-0.035em] text-ink"
+          style={{ fontSize: "clamp(36px, 4vw, 56px)" }}
+        >
+          {label}
+        </h3>
+        <p className="mt-3 max-w-[40ch] text-[15px] leading-[1.55] text-ink/65">
+          {description}
+        </p>
+      </div>
+
+      {/* Price grid */}
+      <div className="hairline-top pt-6 flex flex-col gap-0">
+        <div className="grid grid-cols-3 gap-0 mb-3">
+          <div />
+          <div className="font-mono text-[9px] tracking-[0.2em] uppercase text-ink/40 text-center">Classic</div>
+          <div className="font-mono text-[9px] tracking-[0.2em] uppercase text-ink/40 text-center">Premium</div>
+        </div>
+        {QUANTITIES.map((qty) => (
+          <div key={qty} className="grid grid-cols-3 gap-0 py-3 hairline-top">
+            <div className="font-mono text-[10px] tracking-[0.18em] uppercase text-ink/55 self-center">
+              {qty} cups
+            </div>
+            <div className="font-display text-[22px] tracking-[-0.025em] text-ink text-center">
+              ${prices.classic[qty]}
+            </div>
+            <div className="font-display text-[22px] tracking-[-0.025em] text-center" style={{ color: "var(--color-ember)" }}>
+              ${prices.premium[qty]}
+            </div>
+          </div>
+        ))}
+      </div>
+
+      <button
+        type="button"
+        onClick={onOrder}
+        className="mt-auto inline-flex items-center justify-between gap-6 px-7 py-5 rounded-full text-[15px] tracking-[-0.01em] transition-all duration-500 ease-cinema text-bone-soft"
+        style={{ backgroundColor: "var(--color-ink)" }}
+      >
+        <span>Order {label}</span>
+        <span className="font-mono text-[10px] tracking-[0.18em] uppercase opacity-60">
+          From ${Math.min(prices.classic[24], prices.premium[24])}
+        </span>
+      </button>
+    </motion.div>
+  );
+}
+
+function PackCard({
   pkg,
   index,
-  added,
-  onAdd,
+  onOrder,
 }: {
   pkg: (typeof PACKAGES)[number];
   index: number;
-  added: boolean;
-  onAdd: (p: (typeof PACKAGES)[number]) => void;
+  onOrder: () => void;
 }) {
   return (
     <motion.div
@@ -107,20 +195,21 @@ function PackageCard({
       whileInView={{ opacity: 1, y: 0 }}
       viewport={{ once: true, margin: "-15% 0px" }}
       transition={{ duration: 0.95, ease: EASE_CINEMA, delay: index * 0.08 }}
-      className={`relative bg-bone p-8 md:p-10 flex flex-col gap-8 ${
-        pkg.featured ? "bg-bone-soft" : ""
-      }`}
+      className="relative bg-bone p-8 md:p-10 flex flex-col gap-8"
       style={pkg.featured ? { backgroundColor: "var(--color-bone-soft)" } : undefined}
     >
       {pkg.featured ? (
-        <div className="absolute top-6 right-6 font-mono text-[10px] tracking-[0.22em] uppercase px-3 py-1 rounded-full bg-ink text-bone-soft" style={{backgroundColor: "var(--color-ink)"}}>
-          Most ordered
+        <div
+          className="absolute top-6 right-6 font-mono text-[10px] tracking-[0.22em] uppercase px-3 py-1 rounded-full text-bone-soft"
+          style={{ backgroundColor: "var(--color-ink)" }}
+        >
+          Most popular
         </div>
       ) : null}
 
       <div>
         <div className="font-mono text-[10px] tracking-[0.22em] uppercase text-ink/45">
-          The {pkg.size} cup box
+          {pkg.size} cups
         </div>
         <h3 className="mt-3 font-display text-[40px] md:text-[56px] leading-[1.0] tracking-[-0.035em] text-ink">
           {pkg.label}
@@ -128,17 +217,6 @@ function PackageCard({
         <p className="mt-2 max-w-[36ch] text-[15px] leading-[1.55] text-ink/65">
           {pkg.description}
         </p>
-      </div>
-
-      <div className="flex items-baseline gap-3 hairline-top pt-6">
-        <span
-          className="font-display text-[64px] leading-none tracking-[-0.04em] text-ink"
-        >
-          ${pkg.total.toFixed(0)}
-        </span>
-        <span className="font-mono text-[10px] tracking-[0.18em] uppercase text-ink/45">
-          ${pkg.pricePerCup.toFixed(2)} per cup
-        </span>
       </div>
 
       <ul className="flex flex-col gap-3">
@@ -160,18 +238,15 @@ function PackageCard({
 
       <button
         type="button"
-        onClick={() => onAdd(pkg)}
-        className="mt-auto group inline-flex items-center justify-between gap-6 px-7 py-5 rounded-full text-[15px] tracking-[-0.01em] transition-all duration-500 ease-cinema"
+        onClick={onOrder}
+        className="mt-auto group inline-flex items-center justify-between gap-6 px-7 py-5 rounded-full text-[15px] tracking-[-0.01em] transition-all duration-500 ease-cinema text-bone-soft"
         style={{
-          backgroundColor: pkg.featured
-            ? "var(--color-ember)"
-            : "var(--color-ink)",
-          color: "var(--color-bone-soft)",
+          backgroundColor: pkg.featured ? "var(--color-ember)" : "var(--color-ink)",
         }}
       >
-        <span>{added ? "Added to box" : `Add ${pkg.label}`}</span>
+        <span>Order {pkg.size} cups</span>
         <span className="font-mono text-[10px] tracking-[0.18em] uppercase opacity-70">
-          {added ? "Done" : `${pkg.size} cups`}
+          Place request
         </span>
       </button>
     </motion.div>

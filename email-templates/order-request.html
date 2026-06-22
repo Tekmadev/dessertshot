@@ -56,7 +56,7 @@
               </div>
               <div class="h1" style="font-family:'Fraunces', Georgia, 'Times New Roman', serif; font-weight:500; font-size:48px; line-height:0.98; letter-spacing:-0.035em; color:#3a1d28;">
                 {{from_name}} wants
-                <em style="font-style:italic; color:#d04864; font-variation-settings:'SOFT' 50, 'WONK' 1;">{{package_size}}</em>.
+                <em style="font-style:italic; color:#d04864; font-variation-settings:'SOFT' 50, 'WONK' 1;">{{cup_size}}</em>.
               </div>
               <p style="font-family:'Inter Tight', system-ui, sans-serif; font-size:16px; line-height:1.55; color:rgba(58,29,40,0.7); margin: 22px 0 0 0;">
                 A new order request just arrived from the website. Details below, reply by the end of the day so we can confirm.
@@ -119,9 +119,28 @@
                   <td style="padding: 0 28px 24px 28px;">
                     <table role="presentation" width="100%" border="0" cellspacing="0" cellpadding="0" class="stacked">
                       <tr>
+                        <td colspan="2" style="vertical-align:top; padding-bottom:18px;">
+                          <div style="font-family:'Inter Tight', system-ui, sans-serif; font-size:10px; letter-spacing:0.2em; text-transform:uppercase; color:rgba(58,29,40,0.45); margin-bottom:8px;">Timing</div>
+                          <div style="font-family:'Inter Tight', system-ui, sans-serif; font-size:16px; line-height:1.5; color:#3a1d28; padding: 14px 16px; background-color:#fce4e7; border-left: 2px solid #d04864;">
+                            {{urgency}}
+                          </div>
+                        </td>
+                      </tr>
+                      <tr>
                         <td width="50%" style="vertical-align:top; padding-right:16px;">
-                          <div style="font-family:'Inter Tight', system-ui, sans-serif; font-size:10px; letter-spacing:0.2em; text-transform:uppercase; color:rgba(58,29,40,0.45); margin-bottom:6px;">Box size</div>
-                          <div style="font-family:'Fraunces', Georgia, serif; font-size:24px; letter-spacing:-0.02em; color:#3a1d28; font-style:italic; font-variation-settings:'SOFT' 50, 'WONK' 1;">{{package_size}}</div>
+                          <div style="font-family:'Inter Tight', system-ui, sans-serif; font-size:10px; letter-spacing:0.2em; text-transform:uppercase; color:rgba(58,29,40,0.45); margin-bottom:6px;">Cup size</div>
+                          <div style="font-family:'Fraunces', Georgia, serif; font-size:24px; letter-spacing:-0.02em; color:#3a1d28; font-style:italic; font-variation-settings:'SOFT' 50, 'WONK' 1;">{{cup_size}}</div>
+                        </td>
+                        <td width="50%" style="vertical-align:top; padding-left:16px;">
+                          <div style="font-family:'Inter Tight', system-ui, sans-serif; font-size:10px; letter-spacing:0.2em; text-transform:uppercase; color:rgba(58,29,40,0.45); margin-bottom:6px;">Tier</div>
+                          <div style="font-family:'Fraunces', Georgia, serif; font-size:24px; letter-spacing:-0.02em; color:#d04864;">{{tier}}</div>
+                        </td>
+                      </tr>
+                      <tr><td colspan="2" style="height:18px; line-height:18px; font-size:0;">&nbsp;</td></tr>
+                      <tr>
+                        <td width="50%" style="vertical-align:top; padding-right:16px;">
+                          <div style="font-family:'Inter Tight', system-ui, sans-serif; font-size:10px; letter-spacing:0.2em; text-transform:uppercase; color:rgba(58,29,40,0.45); margin-bottom:6px;">Pack</div>
+                          <div style="font-family:'Fraunces', Georgia, serif; font-size:24px; letter-spacing:-0.02em; color:#3a1d28;">{{package_size}}</div>
                         </td>
                         <td width="50%" style="vertical-align:top; padding-left:16px;">
                           <div style="font-family:'Inter Tight', system-ui, sans-serif; font-size:10px; letter-spacing:0.2em; text-transform:uppercase; color:rgba(58,29,40,0.45); margin-bottom:6px;">Pickup date</div>

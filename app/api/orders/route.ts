@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from "next/server";
 import { createServerClient } from "@supabase/ssr";
 import { cookies } from "next/headers";
+import { MENU_PRICES } from "@/lib/copy";
 
 async function getSupabase() {
   const url = process.env.NEXT_PUBLIC_SUPABASE_URL;
@@ -26,30 +27,39 @@ export async function POST(request: NextRequest) {
     console.log("[orders] POST received", {
       hasName: Boolean(body?.name),
       hasEmail: Boolean(body?.email),
-      packageSize: body?.packageSize,
+      cupSize: body?.cupSize,
+      packQty: body?.packQty,
+      tier: body?.tier,
     });
     const supabase = await getSupabase();
 
-    const {
-      name,
-      email,
-      phone,
-      packageSize,
-      flavors,
-      date,
-      notes,
-    } = body;
+    const { name, email, phone, cupSize, packQty, tier, flavors, date, notes, urgency } = body;
+    const isRush = urgency === "urgent";
 
-    // Determine price from package size — keep in sync with lib/copy.ts PACKAGES
-    const prices: Record<string, number> = {
-      "1": 7.5,
-      "6": 39.0,
-      "12": 72.0,
-      "24": 132.0,
-    };
-    const totalPrice = prices[packageSize] ?? 0;
+    // Validate and calculate price server-side from the authoritative MENU_PRICES table
+    const validCupSizes = ["2oz", "5oz"] as const;
+    const validTiers = ["classic", "premium"] as const;
+    const validQtys = [24, 48, 96] as const;
 
-    // Get current user (optional, works for anonymous too)
+    const cupSizeValid = validCupSizes.includes(cupSize);
+    const tierValid = validTiers.includes(tier);
+    const qtyNum = parseInt(packQty, 10);
+    const qtyValid = (validQtys as readonly number[]).includes(qtyNum);
+
+    if (!cupSizeValid || !tierValid || !qtyValid) {
+      return NextResponse.json(
+        { error: "Invalid order configuration", cupSize, tier, packQty },
+        { status: 400 }
+      );
+    }
+
+    const totalPrice =
+      MENU_PRICES[cupSize as "2oz" | "5oz"][tier as "classic" | "premium"][
+        qtyNum as 24 | 48 | 96
+      ];
+
+    const flavorNotes = Array.isArray(flavors) ? flavors.join(", ") : String(flavors ?? "");
+
     const { data: { user } } = await supabase.auth.getUser();
 
     const { data, error } = await supabase
@@ -59,8 +69,11 @@ export async function POST(request: NextRequest) {
         customer_name: name,
         customer_email: email,
         customer_phone: phone ?? null,
-        package_size: parseInt(packageSize),
-        flavor_notes: flavors,
+        package_size: qtyNum,
+        cup_size: cupSize,
+        tier,
+        is_rush: isRush,
+        flavor_notes: flavorNotes,
         desired_date: date,
         additional_notes: notes ?? null,
         status: "pending",
@@ -92,7 +105,7 @@ export async function POST(request: NextRequest) {
 
     console.log("[orders] Inserted order id:", data?.id);
 
-    // Track analytics event — best-effort, must not block order success
+    // Analytics event — best-effort, must not block order success
     const { error: analyticsError } = await supabase
       .from("analytics_events")
       .insert({
@@ -101,7 +114,11 @@ export async function POST(request: NextRequest) {
         page_path: "/",
         element_id: "order-form",
         metadata: {
-          package_size: packageSize,
+          cup_size: cupSize,
+          pack_qty: qtyNum,
+          tier,
+          is_rush: isRush,
+          total_price: totalPrice,
           order_id: data.id,
         },
         user_agent: request.headers.get("user-agent") ?? undefined,
@@ -111,7 +128,7 @@ export async function POST(request: NextRequest) {
     }
 
     return NextResponse.json(
-      { success: true, orderId: data.id },
+      { success: true, orderId: data.id, totalPrice },
       { status: 201 }
     );
   } catch (err) {

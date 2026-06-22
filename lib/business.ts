@@ -6,7 +6,7 @@ export const BUSINESS = {
   name: "Dessert Shot",
   tagline: "Layered cups, made by hand in Hamilton.",
   description:
-    "Hand layered dessert cups baked in Hamilton, Ontario. Real fruit, real cream, ridiculous detail. Order packages of 6, 12, or 24 across the GTA.",
+    "Hand layered dessert cups baked in Hamilton, Ontario. Real fruit, real cream, ridiculous detail. Order packs of 24, 48, or 96 across the GTA.",
   shortDescription: "Hand layered dessert cups baked in Hamilton, Ontario.",
 
   domain: "dessertshot.ca",

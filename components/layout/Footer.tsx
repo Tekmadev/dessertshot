@@ -40,7 +40,7 @@ export default function Footer() {
             </h2>
             <p className="mt-8 max-w-[44ch] text-bone-soft/70 text-[17px] leading-[1.55]">
               Pickup in {BUSINESS.location.city}, delivery across the{" "}
-              {BUSINESS.location.region}. Minimum order is one cup. Maximum is
+              {BUSINESS.location.region}. Minimum order is 24 cups. Maximum is
               whatever your event needs.
             </p>
           </div>

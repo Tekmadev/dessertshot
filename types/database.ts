@@ -6,7 +6,9 @@ export type OrderStatus =
   | "ready"
   | "delivered"
   | "cancelled";
-export type PackageSize = 1 | 6 | 12 | 24;
+export type PackageSize = 24 | 48 | 96;
+export type CupSize = "2oz" | "5oz";
+export type FlavorTier = "classic" | "premium";
 export type FulfillmentMethod = "pickup" | "delivery";
 
 export type Database = {
@@ -64,6 +66,9 @@ export type Database = {
           customer_email: string;
           customer_phone: string | null;
           package_size: PackageSize;
+          cup_size: CupSize;
+          tier: FlavorTier;
+          is_rush: boolean;
           flavor_notes: string;
           desired_date: string;
           additional_notes: string | null;

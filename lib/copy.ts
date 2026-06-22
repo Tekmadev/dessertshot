@@ -10,7 +10,7 @@ export const copy = {
       "Real fruit, real cream, biscuit pressed by hand. We layer each cup the morning of pickup so the texture lands the way it should.",
     primaryCta: { label: "Browse Packages", href: "#packages" },
     secondaryCta: { label: "See the Flavours", href: "#flavors" },
-    note: "Pickup in Hamilton or delivery across the GTA. Order by Sunday for the next weekend.",
+    note: "Pickup in Hamilton or delivery across the GTA. Just give us 48 hours notice.",
   },
 
   feature: {
@@ -74,14 +74,14 @@ export const copy = {
     kicker: "The lineup",
     heading: "Seven flavours.",
     headingItalic: "All of them serious.",
-    body: "Pick one, build a mixed box, or let us recommend a six pack for whatever you are doing. Every flavour layers the same way: biscuit, cream, concentrate, finish.",
+    body: "Pick one, build a mixed box, or let us recommend a mix for your 24, 48, or 96 pack. Every flavour layers the same way: biscuit, cream, concentrate, finish.",
   },
 
   packages: {
     kicker: "Choose your box",
     heading: "Boxes priced",
     headingItalic: "for sharing.",
-    body: "The cup price drops as the box gets bigger. Mix flavours freely. We label each cup so the gluten free pistachio does not end up next to the strawberry compote.",
+    body: "The bigger the pack, the better the value. Mix Classic and Premium flavours freely. We label each cup so the gluten free pistachio does not end up next to the strawberry compote.",
   },
 
   testimonials: {
@@ -110,6 +110,7 @@ export const FLAVORS = [
     layers: ["Brown butter biscuit", "Mango cream", "Mango concentrate", "Fresh mango"],
     pricePerCup: 6.5,
     category: "Fruit",
+    tier: "classic" as const,
   },
   {
     id: "strawberry",
@@ -121,6 +122,7 @@ export const FLAVORS = [
     layers: ["Vanilla biscuit", "Rose cream", "Strawberry compote", "Halved strawberries"],
     pricePerCup: 6.5,
     category: "Fruit",
+    tier: "classic" as const,
   },
   {
     id: "blueberry",
@@ -132,6 +134,7 @@ export const FLAVORS = [
     layers: ["Vanilla biscuit", "Blueberry cream", "Wild blueberry", "Fresh berries"],
     pricePerCup: 6.5,
     category: "Fruit",
+    tier: "classic" as const,
   },
   {
     id: "kinder",
@@ -143,6 +146,7 @@ export const FLAVORS = [
     layers: ["Hazelnut biscuit", "Kinder cream", "Dark ganache", "Kinder Bueno"],
     pricePerCup: 7.5,
     category: "Chocolate",
+    tier: "premium" as const,
   },
   {
     id: "ferrero",
@@ -154,6 +158,7 @@ export const FLAVORS = [
     layers: ["Hazelnut crunch", "Chocolate cream", "Hazelnut praline", "Whole Ferrero"],
     pricePerCup: 7.5,
     category: "Chocolate",
+    tier: "premium" as const,
   },
   {
     id: "biscoff",
@@ -165,6 +170,7 @@ export const FLAVORS = [
     layers: ["Biscoff base", "Biscoff cream", "Melted Biscoff", "Biscoff crumb"],
     pricePerCup: 7.0,
     category: "Caramel",
+    tier: "premium" as const,
   },
   {
     id: "dubai",
@@ -176,54 +182,65 @@ export const FLAVORS = [
     layers: ["Dark chocolate shell", "Pistachio kunafa", "Pistachio cream", "Crushed pistachio"],
     pricePerCup: 8.5,
     category: "Premium",
+    tier: "premium" as const,
   },
 ] as const;
 
+// Pricing structure: cup size → tier → pack quantity → price (CAD)
+// Website prices are slightly above Facebook Marketplace to reflect the full-service experience.
+export const MENU_PRICES = {
+  "2oz": {
+    classic: { 24: 45, 48: 88, 96: 168 },
+    premium: { 24: 58, 48: 115, 96: 215 },
+  },
+  "5oz": {
+    classic: { 24: 99, 48: 199, 96: 379 },
+    premium: { 24: 129, 48: 259, 96: 499 },
+  },
+} as const;
+
+export type CupSize = keyof typeof MENU_PRICES;
+export type Tier = "classic" | "premium";
+export type PackQty = 24 | 48 | 96;
+
+export const CLASSIC_FLAVORS = FLAVORS.filter((f) => f.tier === "classic");
+export const PREMIUM_FLAVORS = FLAVORS.filter((f) => f.tier === "premium");
+
 export const PACKAGES = [
   {
-    size: 6,
-    label: "The Six",
-    pricePerCup: 6.5,
-    total: 39.0,
-    saves: 0,
-    description: "A taste of everything. Pick three flavours, two of each.",
+    size: 24,
+    label: "The 24",
+    description: "Weekend gatherings, small parties, office treats.",
     perks: [
-      "Pick three flavours",
-      "Mixed or matched",
-      "Pickup or delivery",
+      "Mix up to 4 flavours",
+      "Packed in sets of 5",
+      "Pickup in Hamilton",
       "Labelled by flavour",
     ],
     featured: false,
   },
   {
-    size: 12,
-    label: "The Dozen",
-    pricePerCup: 6.0,
-    total: 72.0,
-    saves: 6,
-    description: "Our most ordered box. Built for parties, sent to offices, hand carried to first dates.",
+    size: 48,
+    label: "The 48",
+    description: "The most popular size. Built for bigger tables.",
     perks: [
-      "Pick up to four flavours",
-      "Free flavour recommendation",
-      "Gift ready packaging",
+      "Mix up to 6 flavours",
+      "Packed in sets of 5",
+      "Pickup in Hamilton",
       "Priority preparation",
-      "Save six dollars",
+      "Free flavour recommendation",
     ],
     featured: true,
   },
   {
-    size: 24,
-    label: "The Event Box",
-    pricePerCup: 5.5,
-    total: 132.0,
-    saves: 24,
-    description: "For weddings, baby showers, corporate, and any room with thirty guests.",
+    size: 96,
+    label: "The 96",
+    description: "Weddings, baby showers, corporate events.",
     perks: [
-      "Full flavour customization",
+      "Full flavour mix",
       "Custom label option",
+      "Event day pickup",
       "Presentation tray included",
-      "Event day delivery",
-      "Save twenty four dollars",
     ],
     featured: false,
   },
@@ -234,7 +251,7 @@ export const TESTIMONIALS = [
     name: "Aisha",
     location: "Mississauga",
     rating: 5,
-    text: "Ordered the dozen for my sister's bridal shower. Three different aunts asked for the link before the box was empty.",
+    text: "Ordered a box of 24 for my sister's bridal shower. Three different aunts asked for the link before the box was empty.",
     flavor: "Dubai Chocolate",
   },
   {
@@ -255,7 +272,7 @@ export const TESTIMONIALS = [
     name: "Jordan",
     location: "Hamilton",
     rating: 5,
-    text: "Got the event box for an office launch. Ten people, eleven cups, one fight over the last Biscoff.",
+    text: "Got a box of 24 for an office launch. Ten people, way more than enough, one fight over the last Biscoff.",
     flavor: "Biscoff Bliss",
   },
 ];

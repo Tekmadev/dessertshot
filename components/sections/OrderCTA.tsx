@@ -2,28 +2,42 @@
 
 import { useState } from "react";
 import { motion } from "motion/react";
-import { useForm } from "react-hook-form";
+import { useForm, Controller } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { z } from "zod";
 import { CheckCircle } from "lucide-react";
 import emailjs from "@emailjs/browser";
-import { copy } from "@/lib/copy";
+import { copy, MENU_PRICES, CLASSIC_FLAVORS, PREMIUM_FLAVORS } from "@/lib/copy";
 import { EASE_CINEMA } from "@/lib/constants";
 import { BUSINESS, mailtoLink } from "@/lib/business";
 import { InstagramIcon } from "@/components/ui/InstagramIcon";
 import { FacebookIcon } from "@/components/ui/FacebookIcon";
 
 const schema = z.object({
+  cupSize: z.enum(["2oz", "5oz"]),
+  packQty: z.enum(["24", "48", "96"]),
+  tier: z.enum(["classic", "premium"]),
+  flavors: z.array(z.string()).min(1, "Select at least one flavour"),
+  urgency: z.enum(["standard", "urgent"]),
   name: z.string().min(2, "Please enter your full name"),
   email: z.email("Please enter a valid email"),
   phone: z.string().optional(),
-  packageSize: z.enum(["1", "6", "12", "24"]),
-  flavors: z.string().min(3, "Please describe your flavour preferences"),
   date: z.string().min(1, "Please select a desired date"),
   notes: z.string().optional(),
 });
 
 type FormData = z.infer<typeof schema>;
+
+const CUP_SIZES: { value: "2oz" | "5oz"; label: string; sub: string }[] = [
+  { value: "2oz", label: "Mini Shots", sub: "2 oz · tasting size" },
+  { value: "5oz", label: "Dessert Cups", sub: "5 oz · full serving" },
+];
+
+const PACK_QTYS: { value: "24" | "48" | "96"; label: string }[] = [
+  { value: "24", label: "24 cups" },
+  { value: "48", label: "48 cups" },
+  { value: "96", label: "96 cups" },
+];
 
 export default function OrderCTA() {
   const [submitted, setSubmitted] = useState(false);
@@ -33,21 +47,50 @@ export default function OrderCTA() {
   const {
     register,
     handleSubmit,
+    watch,
+    control,
+    setValue,
     formState: { errors },
   } = useForm<FormData>({
     resolver: zodResolver(schema),
+    defaultValues: {
+      cupSize: "5oz",
+      packQty: "24",
+      tier: "classic",
+      flavors: [],
+      urgency: "standard",
+    },
   });
+
+  const cupSize = watch("cupSize");
+  const packQty = watch("packQty");
+  const tier = watch("tier");
+  const flavors = watch("flavors");
+  const urgency = watch("urgency");
+
+  const price = MENU_PRICES[cupSize]?.[tier]?.[parseInt(packQty) as 24 | 48 | 96] ?? 0;
+  const availableFlavors = tier === "classic" ? CLASSIC_FLAVORS : PREMIUM_FLAVORS;
+
+  const toggleFlavor = (name: string) => {
+    const current = flavors ?? [];
+    if (current.includes(name)) {
+      setValue("flavors", current.filter((f) => f !== name), { shouldValidate: true });
+    } else {
+      setValue("flavors", [...current, name], { shouldValidate: true });
+    }
+  };
+
+  // Clear flavors when tier changes so stale selections don't persist
+  const handleTierChange = (newTier: "classic" | "premium") => {
+    setValue("tier", newTier, { shouldValidate: true });
+    setValue("flavors", [], { shouldValidate: false });
+  };
 
   const onSubmit = async (data: FormData) => {
     setLoading(true);
     setErrorMessage(null);
 
-    const packageLabels: Record<string, string> = {
-      "1": "Single cup",
-      "6": "6 cups",
-      "12": "12 cups",
-      "24": "24 cups",
-    };
+    const packLine = `${data.packQty} cups · $${price}`;
 
     const dbPromise = (async () => {
       try {
@@ -61,9 +104,7 @@ export default function OrderCTA() {
           console.error("Order API error:", res.status, body);
           return { ok: false as const };
         }
-        const json = (await res.json().catch(() => null)) as
-          | { orderId?: string }
-          | null;
+        const json = (await res.json().catch(() => null)) as { orderId?: string } | null;
         return { ok: true as const, orderId: json?.orderId };
       } catch (e) {
         console.error("Order API exception:", e);
@@ -74,8 +115,7 @@ export default function OrderCTA() {
     const serviceId = process.env.NEXT_PUBLIC_EMAILJS_SERVICE_ID;
     const templateId = process.env.NEXT_PUBLIC_EMAILJS_TEMPLATE_ID;
     const publicKey = process.env.NEXT_PUBLIC_EMAILJS_PUBLIC_KEY;
-    const toEmail =
-      process.env.NEXT_PUBLIC_BUSINESS_EMAIL ?? BUSINESS.email;
+    const toEmail = process.env.NEXT_PUBLIC_BUSINESS_EMAIL ?? BUSINESS.email;
 
     const emailConfigured = Boolean(serviceId && templateId && publicKey);
 
@@ -89,9 +129,14 @@ export default function OrderCTA() {
               from_name: data.name,
               from_email: data.email,
               phone: data.phone || "—",
-              package_size:
-                packageLabels[data.packageSize] ?? data.packageSize,
-              flavors: data.flavors,
+              cup_size: `${data.cupSize} ${data.cupSize === "2oz" ? "Mini Shots" : "Dessert Cups"}`,
+              tier: data.tier === "classic" ? "Classic" : "Premium",
+              package_size: packLine,
+              urgency:
+                data.urgency === "urgent"
+                  ? "⚡ URGENT — needs it in under 48 hours (rush fee applies)"
+                  : "Standard — 48 hours+ notice",
+              flavors: data.flavors.join(", "),
               desired_date: data.date,
               notes: data.notes || "—",
               reply_to: data.email,
@@ -105,27 +150,16 @@ export default function OrderCTA() {
           })
       : Promise.resolve({ ok: false as const, skipped: true });
 
-    const [dbResult, emailResult] = await Promise.all([
-      dbPromise,
-      emailPromise,
-    ]);
+    const [dbResult, emailResult] = await Promise.all([dbPromise, emailPromise]);
 
-    // Success requires the order to be stored. EmailJS is best-effort —
-    // if the DB has it, the business can recover the order; if email
-    // fails too, we surface a clear error.
     if (dbResult.ok) {
       setSubmitted(true);
       if (emailConfigured && !emailResult.ok) {
-        console.warn(
-          "Order saved to database but notification email failed to send."
-        );
+        console.warn("Order saved but notification email failed.");
       }
     } else if (emailResult.ok) {
-      // DB failed but email went through — still consider it received.
       setSubmitted(true);
-      console.warn(
-        "Order email sent but database write failed. Check Supabase logs."
-      );
+      console.warn("Email sent but database write failed. Check Supabase logs.");
     } else {
       setErrorMessage(
         "Something went wrong sending your order. Please try again, or reach us directly at " +
@@ -184,6 +218,8 @@ export default function OrderCTA() {
             <div className="flex flex-col gap-3">
               <a
                 href={BUSINESS.instagram.url}
+                target="_blank"
+                rel="noopener noreferrer"
                 className="group flex items-center justify-between gap-4 hairline-top hairline-bottom py-5"
               >
                 <div className="flex items-center gap-4">
@@ -259,102 +295,314 @@ export default function OrderCTA() {
           >
             {submitted ? (
               <div
-                className="bg-bone-soft p-12 md:p-16 flex flex-col gap-5 hairline-top hairline-bottom"
+                className="p-12 md:p-16 flex flex-col gap-5 hairline-top hairline-bottom"
                 style={{ backgroundColor: "var(--color-bone-soft)" }}
               >
-                <CheckCircle
-                  size={36}
-                  strokeWidth={1.5}
-                  style={{ color: "var(--color-ember)" }}
-                />
+                <CheckCircle size={36} strokeWidth={1.5} style={{ color: "var(--color-ember)" }} />
                 <h3 className="font-display text-[40px] md:text-[56px] tracking-[-0.03em] leading-[0.98] text-ink">
                   Got it.
                 </h3>
                 <p className="text-[17px] leading-[1.55] text-ink/70 max-w-[44ch]">
-                  We will confirm your order within the day. Check your email,
-                  the reply will come from {BUSINESS.email}.
+                  We will confirm your order within the day. Check your email — the reply will come
+                  from {BUSINESS.email}.
                 </p>
               </div>
             ) : (
               <form
                 onSubmit={handleSubmit(onSubmit)}
-                className="bg-bone-soft p-8 md:p-12 flex flex-col gap-7 hairline-top hairline-bottom"
-                style={{ backgroundColor: "var(--color-bone-soft)" }}
+                className="flex flex-col gap-8"
               >
-                <div className="grid grid-cols-1 sm:grid-cols-2 gap-6">
-                  <Field label="Name" error={errors.name?.message}>
-                    <input
-                      {...register("name")}
-                      className="form-input"
-                      placeholder="Your full name"
+                {/* ── Step 1: Cup size ── */}
+                <FormSection label="Cup size">
+                  <Controller
+                    name="cupSize"
+                    control={control}
+                    render={({ field }) => (
+                      <div className="grid grid-cols-2 gap-3">
+                        {CUP_SIZES.map((s) => (
+                          <button
+                            key={s.value}
+                            type="button"
+                            onClick={() => field.onChange(s.value)}
+                            className="flex flex-col items-start gap-1 p-4 text-left transition-all duration-400 ease-cinema hairline-top hairline-bottom"
+                            style={{
+                              backgroundColor:
+                                field.value === s.value
+                                  ? "var(--color-ink)"
+                                  : "var(--color-bone-soft)",
+                              color:
+                                field.value === s.value
+                                  ? "var(--color-bone-soft)"
+                                  : "var(--color-ink)",
+                            }}
+                          >
+                            <span className="font-display text-[22px] tracking-[-0.025em] leading-tight">
+                              {s.label}
+                            </span>
+                            <span
+                              className="font-mono text-[9px] tracking-[0.2em] uppercase"
+                              style={{
+                                opacity: field.value === s.value ? 0.6 : 0.45,
+                              }}
+                            >
+                              {s.sub}
+                            </span>
+                          </button>
+                        ))}
+                      </div>
+                    )}
+                  />
+                </FormSection>
+
+                {/* ── Step 2: Quantity ── */}
+                <FormSection label="Pack size">
+                  <Controller
+                    name="packQty"
+                    control={control}
+                    render={({ field }) => (
+                      <div className="flex gap-3">
+                        {PACK_QTYS.map((q) => (
+                          <button
+                            key={q.value}
+                            type="button"
+                            onClick={() => field.onChange(q.value)}
+                            className="flex-1 py-4 font-mono text-[10px] tracking-[0.2em] uppercase transition-all duration-400 ease-cinema"
+                            style={{
+                              backgroundColor:
+                                field.value === q.value
+                                  ? "var(--color-ink)"
+                                  : "var(--color-bone-soft)",
+                              color:
+                                field.value === q.value
+                                  ? "var(--color-bone-soft)"
+                                  : "var(--color-ink)",
+                            }}
+                          >
+                            {q.label}
+                          </button>
+                        ))}
+                      </div>
+                    )}
+                  />
+                </FormSection>
+
+                {/* ── Step 3: Tier ── */}
+                <FormSection label="Tier">
+                  <div className="grid grid-cols-2 gap-3">
+                    {(["classic", "premium"] as const).map((t) => {
+                      const tierPrice = MENU_PRICES[cupSize]?.[t]?.[parseInt(packQty) as 24 | 48 | 96] ?? 0;
+                      const flavorNames =
+                        t === "classic"
+                          ? CLASSIC_FLAVORS.map((f) => f.name).join(", ")
+                          : PREMIUM_FLAVORS.map((f) => f.name).join(", ");
+                      return (
+                        <button
+                          key={t}
+                          type="button"
+                          onClick={() => handleTierChange(t)}
+                          className="flex flex-col items-start gap-2 p-4 text-left transition-all duration-400 ease-cinema hairline-top hairline-bottom"
+                          style={{
+                            backgroundColor:
+                              tier === t ? "var(--color-ink)" : "var(--color-bone-soft)",
+                            color:
+                              tier === t ? "var(--color-bone-soft)" : "var(--color-ink)",
+                          }}
+                        >
+                          <div className="flex items-baseline justify-between w-full gap-2">
+                            <span className="font-display text-[22px] tracking-[-0.025em] leading-tight capitalize">
+                              {t}
+                            </span>
+                            <span
+                              className="font-display text-[18px] tracking-[-0.02em]"
+                              style={{ color: tier === t ? "var(--color-ember)" : "var(--color-ember)" }}
+                            >
+                              ${tierPrice}
+                            </span>
+                          </div>
+                          <span
+                            className="font-mono text-[9px] tracking-[0.16em] uppercase leading-[1.6]"
+                            style={{ opacity: tier === t ? 0.55 : 0.4 }}
+                          >
+                            {flavorNames}
+                          </span>
+                        </button>
+                      );
+                    })}
+                  </div>
+                </FormSection>
+
+                {/* ── Step 4: Flavors ── */}
+                <FormSection label="Flavours" error={errors.flavors?.message}>
+                  <div className="flex flex-col gap-1">
+                    <div className="flex flex-wrap gap-2 mb-2">
+                      {availableFlavors.map((f) => {
+                        const selected = (flavors ?? []).includes(f.name);
+                        return (
+                          <button
+                            key={f.id}
+                            type="button"
+                            onClick={() => toggleFlavor(f.name)}
+                            className="px-4 py-2 rounded-full font-mono text-[10px] tracking-[0.18em] uppercase transition-all duration-400 ease-cinema"
+                            style={{
+                              backgroundColor: selected
+                                ? "var(--color-ember)"
+                                : "var(--color-bone-soft)",
+                              color: selected ? "var(--color-bone-soft)" : "var(--color-ink)",
+                            }}
+                          >
+                            {f.name}
+                          </button>
+                        );
+                      })}
+                    </div>
+                    <p className="font-mono text-[9px] tracking-[0.16em] uppercase text-ink/40 leading-[1.7]">
+                      Flavours are packed in sets of 5. Select all you want — we&apos;ll
+                      split evenly unless you specify in notes.
+                    </p>
+                  </div>
+                </FormSection>
+
+                {/* ── Contact ── */}
+                <div className="hairline-top pt-8 flex flex-col gap-6">
+                  <div className="font-mono text-[10px] tracking-[0.22em] uppercase text-ink/45">
+                    Your details
+                  </div>
+
+                  <div className="grid grid-cols-1 sm:grid-cols-2 gap-6">
+                    <Field label="Name" error={errors.name?.message}>
+                      <input
+                        {...register("name")}
+                        className="form-input"
+                        placeholder="Your full name"
+                      />
+                    </Field>
+                    <Field label="Email" error={errors.email?.message}>
+                      <input
+                        {...register("email")}
+                        type="email"
+                        className="form-input"
+                        placeholder="you@email.com"
+                      />
+                    </Field>
+                  </div>
+
+                  <div className="grid grid-cols-1 sm:grid-cols-2 gap-6">
+                    <Field label="Phone (optional)" error={undefined}>
+                      <input
+                        {...register("phone")}
+                        type="tel"
+                        className="form-input"
+                        placeholder="(xxx) xxx-xxxx"
+                      />
+                    </Field>
+                    <Field label="Pickup date" error={errors.date?.message}>
+                      <input
+                        {...register("date")}
+                        type="date"
+                        className="form-input"
+                      />
+                    </Field>
+                  </div>
+
+                  {/* Timing — standard vs urgent (rush fee quoted on reply) */}
+                  <div className="flex flex-col gap-3">
+                    <span className="font-mono text-[10px] tracking-[0.22em] uppercase text-ink/55">
+                      Timing
+                    </span>
+                    <Controller
+                      name="urgency"
+                      control={control}
+                      render={({ field }) => (
+                        <div className="grid grid-cols-2 gap-3">
+                          {[
+                            { value: "standard" as const, label: "Standard", sub: "48 hours+ notice" },
+                            { value: "urgent" as const, label: "Urgent", sub: "Under 48 hours" },
+                          ].map((o) => {
+                            const active = field.value === o.value;
+                            return (
+                              <button
+                                key={o.value}
+                                type="button"
+                                onClick={() => field.onChange(o.value)}
+                                className="flex flex-col items-start gap-1 p-4 text-left transition-all duration-400 ease-cinema hairline-top hairline-bottom"
+                                style={{
+                                  backgroundColor: active
+                                    ? o.value === "urgent"
+                                      ? "var(--color-ember)"
+                                      : "var(--color-ink)"
+                                    : "var(--color-bone-soft)",
+                                  color: active
+                                    ? "var(--color-bone-soft)"
+                                    : "var(--color-ink)",
+                                }}
+                              >
+                                <span className="font-display text-[20px] tracking-[-0.025em] leading-tight">
+                                  {o.label}
+                                </span>
+                                <span
+                                  className="font-mono text-[9px] tracking-[0.2em] uppercase"
+                                  style={{ opacity: active ? 0.7 : 0.45 }}
+                                >
+                                  {o.sub}
+                                </span>
+                              </button>
+                            );
+                          })}
+                        </div>
+                      )}
                     />
-                  </Field>
-                  <Field label="Email" error={errors.email?.message}>
-                    <input
-                      {...register("email")}
-                      type="email"
+                    {urgency === "urgent" ? (
+                      <p
+                        className="font-mono text-[9px] tracking-[0.16em] uppercase leading-[1.7]"
+                        style={{ color: "var(--color-ember)" }}
+                      >
+                        Under 48 hours — a rush fee applies. We&apos;ll confirm it when we reply.
+                      </p>
+                    ) : null}
+                  </div>
+
+                  <Field label="Notes (optional)" error={undefined}>
+                    <textarea
+                      {...register("notes")}
+                      rows={3}
                       className="form-input"
-                      placeholder="you@email.com"
+                      placeholder="Flavour ratios, allergies, event details, anything we should know"
+                      style={{ resize: "vertical" }}
                     />
                   </Field>
                 </div>
 
-                <div className="grid grid-cols-1 sm:grid-cols-2 gap-6">
-                  <Field label="Phone (optional)" error={undefined}>
-                    <input
-                      {...register("phone")}
-                      type="tel"
-                      className="form-input"
-                      placeholder="(xxx) xxx-xxxx"
-                    />
-                  </Field>
-                  <Field label="Box size" error={undefined}>
-                    <select {...register("packageSize")} className="form-input">
-                      <option value="6">6 cups . $39</option>
-                      <option value="12">12 cups . $72</option>
-                      <option value="24">24 cups . $132</option>
-                      <option value="1">Single cup . $7.50</option>
-                    </select>
-                  </Field>
+                {/* Price + Submit */}
+                <div className="flex items-center gap-6 hairline-top pt-6">
+                  <div className="flex flex-col">
+                    <span className="font-mono text-[9px] tracking-[0.2em] uppercase text-ink/40">
+                      Total
+                    </span>
+                    <span className="font-display text-[36px] tracking-[-0.035em] text-ink leading-tight">
+                      ${price}
+                    </span>
+                    {urgency === "urgent" ? (
+                      <span
+                        className="font-mono text-[9px] tracking-[0.16em] uppercase mt-1"
+                        style={{ color: "var(--color-ember)" }}
+                      >
+                        + rush fee on reply
+                      </span>
+                    ) : null}
+                  </div>
+
+                  <button
+                    type="submit"
+                    disabled={loading}
+                    className="flex-1 group inline-flex items-center justify-between gap-6 px-7 py-5 rounded-full text-[15px] tracking-[-0.01em] text-bone-soft transition-all duration-500 ease-cinema disabled:opacity-60"
+                    style={{ backgroundColor: "var(--color-ember)" }}
+                  >
+                    <span>{loading ? "Sending…" : "Send order request"}</span>
+                    <span className="font-mono text-[10px] tracking-[0.18em] uppercase opacity-70">
+                      {loading ? "…" : "Reply by tomorrow"}
+                    </span>
+                  </button>
                 </div>
-
-                <Field label="Flavours" error={errors.flavors?.message}>
-                  <input
-                    {...register("flavors")}
-                    className="form-input"
-                    placeholder="4 Mango, 4 Ferrero, 4 Dubai Chocolate"
-                  />
-                </Field>
-
-                <Field label="Pickup date" error={errors.date?.message}>
-                  <input
-                    {...register("date")}
-                    type="date"
-                    className="form-input"
-                  />
-                </Field>
-
-                <Field label="Notes (optional)" error={undefined}>
-                  <textarea
-                    {...register("notes")}
-                    rows={3}
-                    className="form-input"
-                    placeholder="Allergies, event details, anything we should know"
-                    style={{ resize: "vertical" }}
-                  />
-                </Field>
-
-                <button
-                  type="submit"
-                  disabled={loading}
-                  className="group inline-flex items-center justify-between gap-6 px-7 py-5 rounded-full text-[15px] tracking-[-0.01em] text-bone-soft transition-all duration-500 ease-cinema disabled:opacity-60"
-                  style={{ backgroundColor: "var(--color-ember)" }}
-                >
-                  <span>{loading ? "Sending" : "Send order request"}</span>
-                  <span className="font-mono text-[10px] tracking-[0.18em] uppercase opacity-70">
-                    {loading ? "..." : "Reply by tomorrow"}
-                  </span>
-                </button>
 
                 {errorMessage ? (
                   <p
@@ -396,6 +644,30 @@ export default function OrderCTA() {
         }
       `}</style>
     </section>
+  );
+}
+
+function FormSection({
+  label,
+  error,
+  children,
+}: {
+  label: string;
+  error?: string;
+  children: React.ReactNode;
+}) {
+  return (
+    <div className="flex flex-col gap-3">
+      <span className="font-mono text-[10px] tracking-[0.22em] uppercase text-ink/55">
+        {label}
+      </span>
+      {children}
+      {error ? (
+        <span className="font-mono text-[10px] tracking-[0.18em] uppercase text-ember">
+          {error}
+        </span>
+      ) : null}
+    </div>
   );
 }
 
