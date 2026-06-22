@@ -6,9 +6,9 @@ import { BUSINESS, mailtoLink } from "@/lib/business";
 
 export default function Footer() {
   return (
-    <footer className="relative bg-ink text-bone-soft pt-32 pb-12 overflow-hidden">
+    <footer className="relative bg-ink text-bone-soft pt-20 sm:pt-28 md:pt-32 pb-12 overflow-hidden">
       <div className="mx-auto max-w-[1400px] px-6 md:px-10">
-        <div className="grid grid-cols-1 md:grid-cols-12 gap-12 pb-20">
+        <div className="grid grid-cols-1 md:grid-cols-12 gap-10 md:gap-12 pb-14 md:pb-20">
           <div className="md:col-span-7">
             <div className="flex items-center gap-3 mb-8">
               <Image
@@ -45,7 +45,7 @@ export default function Footer() {
             </p>
           </div>
 
-          <div className="md:col-span-5 grid grid-cols-2 gap-8">
+          <div className="md:col-span-5 grid grid-cols-1 sm:grid-cols-2 gap-8">
             <FooterCol title="Browse">
               <FooterLink href="/menu">Menu</FooterLink>
               <FooterLink href="/#flavors">Flavours</FooterLink>
@@ -83,7 +83,7 @@ export default function Footer() {
               target="_blank"
               rel="noopener noreferrer"
               aria-label="Facebook"
-              className="inline-flex items-center text-bone-soft/65 hover:text-bone-soft transition-colors"
+              className="inline-flex items-center p-2 -m-2 text-bone-soft/65 hover:text-bone-soft transition-colors"
             >
               <FacebookIcon className="w-4 h-4" />
             </Link>
@@ -137,7 +137,7 @@ function FooterLink({
   return (
     <Link
       href={href}
-      className="text-[15px] text-bone-soft/80 hover:text-bone-soft transition-colors"
+      className="inline-flex items-center min-h-[44px] py-1.5 -my-1.5 text-[15px] text-bone-soft/80 hover:text-bone-soft transition-colors break-words"
     >
       {children}
     </Link>

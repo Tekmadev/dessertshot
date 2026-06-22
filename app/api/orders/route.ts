@@ -43,8 +43,15 @@ export async function POST(request: NextRequest) {
     });
     const supabase = await getSupabase();
 
-    const { name, email, phone, cupSize, packQty, items, date, notes, urgency } = body;
+    const { name, email, phone, cupSize, packQty, items, date, notes, urgency, fulfillment, deliveryAddress } = body;
     const isRush = urgency === "urgent";
+    const isDelivery = fulfillment === "delivery";
+    // Fold the delivery address into the notes so the owner can quote the
+    // delivery fee (delivery is "available with an extra charge", quoted on reply).
+    const combinedNotes =
+      isDelivery && deliveryAddress
+        ? `Delivery address: ${deliveryAddress}${notes ? `\n\n${notes}` : ""}`
+        : notes ?? null;
 
     // Validate the configuration server-side; never trust the client's price.
     const validCupSizes = ["2oz", "5oz"] as const;
@@ -129,9 +136,9 @@ export async function POST(request: NextRequest) {
         is_rush: isRush,
         flavor_notes: flavorNotes,
         desired_date: date,
-        additional_notes: notes ?? null,
+        additional_notes: combinedNotes,
         status: "pending",
-        fulfillment_method: "pickup",
+        fulfillment_method: isDelivery ? "delivery" : "pickup",
         total_price: totalPrice,
       })
       .select()
@@ -187,6 +194,7 @@ export async function POST(request: NextRequest) {
           pack_qty: qtyNum,
           tier,
           is_rush: isRush,
+          fulfillment: isDelivery ? "delivery" : "pickup",
           total_price: totalPrice,
           order_id: data.id,
         },

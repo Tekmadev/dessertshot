@@ -21,7 +21,7 @@ export default function Flavors() {
     <section
       id="flavors"
       aria-label="Flavours"
-      className="relative py-32 md:py-44 bg-bone hairline-bottom"
+      className="relative py-20 sm:py-28 md:py-44 bg-bone hairline-bottom"
     >
       <div className="mx-auto max-w-[1400px] px-6 md:px-10">
         <div className="grid grid-cols-1 md:grid-cols-12 gap-12 mb-16 md:mb-24">
@@ -40,8 +40,8 @@ export default function Flavors() {
               whileInView={{ y: 0, opacity: 1 }}
               viewport={{ once: true, margin: "-20% 0px" }}
               transition={{ duration: 1, ease: EASE_CINEMA }}
-              className="font-display text-ink leading-[0.96] tracking-[-0.04em]"
-              style={{ fontSize: "clamp(48px, 8vw, 128px)" }}
+              className="font-display text-ink leading-[0.96] tracking-[-0.04em] break-words"
+              style={{ fontSize: "clamp(38px, 11vw, 128px)" }}
             >
               {copy.flavors.heading}
               <br />
@@ -68,13 +68,13 @@ export default function Flavors() {
         </div>
 
         {/* Filter rail */}
-        <div className="flex flex-wrap items-center gap-2 mb-12 hairline-top pt-8">
+        <div className="flex flex-wrap items-center gap-2.5 sm:gap-2 mb-12 hairline-top pt-8">
           {CATEGORIES.map((c) => (
             <button
               key={c}
               type="button"
               onClick={() => setActive(c)}
-              className={`px-4 py-2 rounded-full font-mono text-[10px] tracking-[0.2em] uppercase transition-all duration-500 ease-cinema ${
+              className={`inline-flex items-center justify-center min-h-[40px] sm:min-h-0 px-4 py-2.5 sm:py-2 rounded-full font-mono text-[11px] sm:text-[10px] tracking-[0.2em] uppercase transition-all duration-500 ease-cinema ${
                 active === c
                   ? "bg-ink text-bone-soft"
                   : "bg-transparent text-ink/60 hover:text-ink"
@@ -86,7 +86,7 @@ export default function Flavors() {
               {c}
             </button>
           ))}
-          <div className="ml-auto font-mono text-[10px] tracking-[0.2em] uppercase text-ink/45">
+          <div className="basis-full text-right mt-2 sm:basis-auto sm:ml-auto sm:mt-0 font-mono text-[10px] tracking-[0.2em] uppercase text-ink/45">
             {filtered.length} on the menu
           </div>
         </div>
@@ -119,7 +119,7 @@ function FlavorCard({
       transition={{ duration: 0.9, ease: EASE_CINEMA, delay: index * 0.04 }}
       onMouseEnter={() => setHover(true)}
       onMouseLeave={() => setHover(false)}
-      className="relative group bg-bone p-8 md:p-10 flex flex-col gap-7 cursor-default"
+      className="relative group bg-bone p-6 sm:p-8 md:p-10 flex flex-col gap-7 cursor-default"
     >
       <div className="flex items-start justify-between">
         <div>
@@ -143,8 +143,8 @@ function FlavorCard({
         </span>
       </div>
 
-      <div className="flex items-center gap-6 min-h-[180px]">
-        <div className="relative">
+      <div className="flex items-center gap-4 sm:gap-6 min-h-[150px] sm:min-h-[180px]">
+        <div className="relative w-[100px] sm:w-[140px] shrink-0">
           <motion.div
             animate={{ scale: hover ? 1.04 : 1, rotate: hover ? -1.5 : 0 }}
             transition={{ duration: 0.7, ease: EASE_CINEMA }}
@@ -156,7 +156,7 @@ function FlavorCard({
           </motion.div>
         </div>
 
-        <ul className="flex-1 flex flex-col gap-1.5">
+        <ul className="flex-1 min-w-0 flex flex-col gap-1.5">
           {flavor.layers.map((l, i) => (
             <li
               key={l}

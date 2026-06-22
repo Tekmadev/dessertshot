@@ -22,7 +22,7 @@ export default function OrderPage() {
             </div>
             <h1
               className="font-display text-ink leading-[0.95] tracking-[-0.04em] max-w-[14ch]"
-              style={{ fontSize: "clamp(56px, 9vw, 144px)" }}
+              style={{ fontSize: "clamp(46px, 12vw, 144px)" }}
             >
               Tell us the date.{" "}
               <em
@@ -35,7 +35,7 @@ export default function OrderPage() {
                 We do the rest.
               </em>
             </h1>
-            <p className="mt-8 max-w-[52ch] text-[17px] md:text-[19px] leading-[1.55] text-ink/70">
+            <p className="mt-6 md:mt-8 max-w-[52ch] text-[17px] md:text-[19px] leading-[1.55] text-ink/70">
               Confirmations arrive within the day. Cups are baked the morning
               of pickup. Custom flavour requests welcome.
             </p>

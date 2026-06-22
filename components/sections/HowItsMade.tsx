@@ -9,7 +9,7 @@ export default function HowItsMade() {
     <section
       id="how"
       aria-label="How it works"
-      className="relative py-32 md:py-44 bg-bone-soft hairline-top hairline-bottom"
+      className="relative py-20 sm:py-28 md:py-44 bg-bone-soft hairline-top hairline-bottom"
     >
       <div className="mx-auto max-w-[1400px] px-6 md:px-10">
         <div className="grid grid-cols-1 md:grid-cols-12 gap-12 md:gap-20 mb-20">
@@ -29,7 +29,7 @@ export default function HowItsMade() {
               viewport={{ once: true, margin: "-20% 0px" }}
               transition={{ duration: 1, ease: EASE_CINEMA }}
               className="font-display text-ink leading-[0.96] tracking-[-0.035em]"
-              style={{ fontSize: "clamp(40px, 6vw, 96px)" }}
+              style={{ fontSize: "clamp(34px, 6vw, 96px)" }}
             >
               Three steps,{" "}
               <em

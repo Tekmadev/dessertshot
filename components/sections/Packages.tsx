@@ -126,7 +126,7 @@ function SizeBlock({
       whileInView={{ opacity: 1, y: 0 }}
       viewport={{ once: true, margin: "-15% 0px" }}
       transition={{ duration: 0.95, ease: EASE_CINEMA, delay: index * 0.08 }}
-      className="bg-bone p-8 md:p-10 flex flex-col gap-8"
+      className="bg-bone p-6 sm:p-8 md:p-10 flex flex-col gap-8"
     >
       <div>
         <div className="font-mono text-[10px] tracking-[0.22em] uppercase text-ink/45 mb-2">
@@ -147,12 +147,12 @@ function SizeBlock({
       <div className="hairline-top pt-6 flex flex-col gap-0">
         <div className="grid grid-cols-3 gap-0 mb-3">
           <div />
-          <div className="font-mono text-[9px] tracking-[0.2em] uppercase text-ink/40 text-center">Classic</div>
-          <div className="font-mono text-[9px] tracking-[0.2em] uppercase text-ink/40 text-center">Premium</div>
+          <div className="font-mono text-[10px] tracking-[0.15em] sm:tracking-[0.2em] uppercase text-ink/40 text-center">Classic</div>
+          <div className="font-mono text-[10px] tracking-[0.15em] sm:tracking-[0.2em] uppercase text-ink/40 text-center">Premium</div>
         </div>
         {QUANTITIES.map((qty) => (
           <div key={qty} className="grid grid-cols-3 gap-0 py-3 hairline-top">
-            <div className="font-mono text-[10px] tracking-[0.18em] uppercase text-ink/55 self-center">
+            <div className="font-mono text-[10px] tracking-[0.12em] sm:tracking-[0.18em] uppercase text-ink/55 self-center">
               {qty} cups
             </div>
             <div className="font-display text-[22px] tracking-[-0.025em] text-ink text-center">
@@ -168,7 +168,7 @@ function SizeBlock({
       <button
         type="button"
         onClick={onOrder}
-        className="mt-auto inline-flex items-center justify-between gap-6 px-7 py-5 rounded-full text-[15px] tracking-[-0.01em] transition-all duration-500 ease-cinema text-bone-soft"
+        className="mt-auto inline-flex items-center justify-between gap-3 sm:gap-6 px-6 sm:px-7 py-5 rounded-full text-[15px] tracking-[-0.01em] transition-all duration-500 ease-cinema text-bone-soft"
         style={{ backgroundColor: "var(--color-ink)" }}
       >
         <span>Order {label}</span>
@@ -195,12 +195,12 @@ function PackCard({
       whileInView={{ opacity: 1, y: 0 }}
       viewport={{ once: true, margin: "-15% 0px" }}
       transition={{ duration: 0.95, ease: EASE_CINEMA, delay: index * 0.08 }}
-      className="relative bg-bone p-8 md:p-10 flex flex-col gap-8"
+      className="relative bg-bone p-6 sm:p-8 md:p-10 flex flex-col gap-8"
       style={pkg.featured ? { backgroundColor: "var(--color-bone-soft)" } : undefined}
     >
       {pkg.featured ? (
         <div
-          className="absolute top-6 right-6 font-mono text-[10px] tracking-[0.22em] uppercase px-3 py-1 rounded-full text-bone-soft"
+          className="absolute top-5 right-5 sm:top-6 sm:right-6 font-mono text-[10px] tracking-[0.22em] uppercase px-3 py-1 rounded-full text-bone-soft"
           style={{ backgroundColor: "var(--color-ink)" }}
         >
           Most popular
@@ -211,7 +211,11 @@ function PackCard({
         <div className="font-mono text-[10px] tracking-[0.22em] uppercase text-ink/45">
           {pkg.size} cups
         </div>
-        <h3 className="mt-3 font-display text-[40px] md:text-[56px] leading-[1.0] tracking-[-0.035em] text-ink">
+        <h3
+          className={`mt-3 font-display text-[40px] md:text-[56px] leading-[1.0] tracking-[-0.035em] text-ink ${
+            pkg.featured ? "pr-20 sm:pr-0" : ""
+          }`}
+        >
           {pkg.label}
         </h3>
         <p className="mt-2 max-w-[36ch] text-[15px] leading-[1.55] text-ink/65">
@@ -239,13 +243,13 @@ function PackCard({
       <button
         type="button"
         onClick={onOrder}
-        className="mt-auto group inline-flex items-center justify-between gap-6 px-7 py-5 rounded-full text-[15px] tracking-[-0.01em] transition-all duration-500 ease-cinema text-bone-soft"
+        className="mt-auto group inline-flex items-center justify-between gap-3 sm:gap-6 px-6 sm:px-7 py-5 rounded-full text-[15px] tracking-[-0.01em] transition-all duration-500 ease-cinema text-bone-soft"
         style={{
           backgroundColor: pkg.featured ? "var(--color-ember)" : "var(--color-ink)",
         }}
       >
         <span>Order {pkg.size} cups</span>
-        <span className="font-mono text-[10px] tracking-[0.18em] uppercase opacity-70">
+        <span className="font-mono text-[10px] tracking-[0.18em] uppercase opacity-70 whitespace-nowrap">
           Place request
         </span>
       </button>

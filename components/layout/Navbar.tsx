@@ -97,7 +97,7 @@ export default function Navbar() {
               href={BUSINESS.instagram.url}
               target="_blank"
               rel="noopener noreferrer"
-              className="md:hidden flex items-center justify-center w-10 h-10 rounded-full bg-ink text-bone-soft"
+              className="md:hidden flex items-center justify-center w-11 h-11 rounded-full bg-ink text-bone-soft"
               style={{ backgroundColor: "var(--color-ink)" }}
               aria-label="Instagram"
             >
@@ -105,7 +105,7 @@ export default function Navbar() {
             </Link>
 
             <button
-              className="lg:hidden flex items-center justify-center w-10 h-10 rounded-full text-ink"
+              className="lg:hidden flex items-center justify-center w-11 h-11 rounded-full text-ink -mr-1"
               onClick={() => setMobileOpen((o) => !o)}
               aria-label="Toggle menu"
             >
@@ -116,7 +116,7 @@ export default function Navbar() {
       </header>
 
       <div
-        className={`fixed inset-0 z-40 flex flex-col justify-center items-start gap-6 px-10 transition-all duration-500 lg:hidden ${
+        className={`fixed inset-x-0 top-0 z-40 min-h-[100svh] h-[100svh] flex flex-col justify-center items-start gap-6 px-7 sm:px-10 pt-24 pb-[max(2rem,env(safe-area-inset-bottom))] transition-all duration-500 lg:hidden ${
           mobileOpen
             ? "opacity-100 pointer-events-auto"
             : "opacity-0 pointer-events-none"
@@ -131,7 +131,7 @@ export default function Navbar() {
             key={link.href}
             href={link.href}
             onClick={() => setMobileOpen(false)}
-            className="font-display text-5xl tracking-[-0.03em] text-ink"
+            className="font-display text-[2.5rem] leading-[1.05] sm:text-5xl tracking-[-0.03em] text-ink py-1.5 -my-1.5"
             style={{
               transitionDelay: mobileOpen ? `${100 + i * 60}ms` : "0ms",
               transform: mobileOpen ? "translateY(0)" : "translateY(20px)",

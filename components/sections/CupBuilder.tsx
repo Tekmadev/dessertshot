@@ -36,10 +36,10 @@ export default function CupBuilder() {
       id="builder"
       aria-label={copy.builder.sectionLabel}
       className="relative bg-bone"
-      style={{ height: "360vh" }}
+      style={{ height: "360svh" }}
     >
-      <div className="sticky top-0 h-screen w-full overflow-hidden">
-        <div className="relative h-full mx-auto max-w-[1400px] px-6 md:px-10 grid grid-cols-1 lg:grid-cols-12 items-center gap-10">
+      <div className="sticky top-0 h-[100svh] w-full overflow-hidden">
+        <div className="relative h-full mx-auto max-w-[1400px] px-6 md:px-10 grid grid-cols-1 lg:grid-cols-12 items-center gap-6 lg:gap-10">
           {/* Section label rail */}
           <div className="absolute left-6 md:left-10 top-10 flex items-center gap-3">
             <span className="font-mono text-[10px] tracking-[0.22em] uppercase text-ink/45">
@@ -50,7 +50,7 @@ export default function CupBuilder() {
 
           {/* Side text */}
           <div className="relative col-span-1 lg:col-span-6 z-10 order-2 lg:order-1">
-            <div className="relative h-[60vh] flex items-center">
+            <div className="relative h-auto lg:h-[60vh] flex items-center">
               <div className="relative w-full">
                 {PHASES.map((p, i) => (
                   <PhraseLayer
@@ -69,7 +69,7 @@ export default function CupBuilder() {
 
           {/* Cup scene */}
           <div className="relative col-span-1 lg:col-span-6 flex items-center justify-center order-1 lg:order-2">
-            <div className="relative">
+            <div className="relative w-[min(78vw,460px)]">
               {/* Soft bed */}
               <div
                 aria-hidden="true"
@@ -84,7 +84,7 @@ export default function CupBuilder() {
               {/* Floor line */}
               <div
                 aria-hidden="true"
-                className="absolute -bottom-8 left-1/2 -translate-x-1/2 w-[120%] h-px bg-ink/15"
+                className="absolute -bottom-8 left-1/2 -translate-x-1/2 w-full md:w-[120%] h-px bg-ink/15"
               />
 
               <CupGlyph
@@ -152,16 +152,16 @@ function PhraseLayer({
       style={{ opacity, y }}
       className="absolute inset-0 flex flex-col justify-center"
     >
-      <div className="font-mono text-[10px] tracking-[0.22em] uppercase text-ember mb-5">
+      <div className="font-mono text-[10px] tracking-[0.22em] uppercase text-ember mb-3 md:mb-5">
         {kicker}
       </div>
       <h3
         className="font-display tracking-[-0.03em] text-ink leading-[1.0]"
-        style={{ fontSize: "clamp(34px, 4.6vw, 64px)" }}
+        style={{ fontSize: "clamp(28px, 4.6vw, 64px)" }}
       >
         {title}
       </h3>
-      <p className="mt-6 max-w-[44ch] text-[17px] md:text-[19px] leading-[1.55] tracking-[-0.005em] text-ink/70">
+      <p className="mt-4 md:mt-6 max-w-[44ch] text-[17px] md:text-[19px] leading-[1.55] tracking-[-0.005em] text-ink/70">
         {body}
       </p>
     </motion.div>

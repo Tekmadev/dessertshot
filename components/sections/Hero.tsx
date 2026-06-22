@@ -48,7 +48,7 @@ export default function Hero() {
 
           <h1
             className="font-display text-ink leading-[0.93] tracking-[-0.04em]"
-            style={{ fontSize: "clamp(56px, 9vw, 144px)" }}
+            style={{ fontSize: "clamp(40px, 11vw, 144px)" }}
           >
             <Line delay={0.0}>{copy.hero.line1}</Line>
             <Line delay={0.2}>
@@ -93,7 +93,7 @@ export default function Hero() {
               </Link>
               <Link
                 href={copy.hero.secondaryCta.href}
-                className="group relative inline-flex items-center gap-2 text-[15px] tracking-[-0.01em] text-ink"
+                className="group relative inline-flex items-center gap-2 py-3 -my-3 text-[15px] tracking-[-0.01em] text-ink"
               >
                 <span className="relative">
                   {copy.hero.secondaryCta.label}
@@ -131,20 +131,22 @@ export default function Hero() {
                   "radial-gradient(circle at center, rgba(208,72,100,0.22) 0%, rgba(208,72,100,0) 70%)",
               }}
             />
-            <CupGlyph
-              size={420}
-              showLabels
-              layers={[
-                { label: "Biscuit", color: "#a86060", height: 22 },
-                { label: "Cream", color: "#fde0e6", height: 38 },
-                { label: "Compote", color: "#d04864", height: 18 },
-                { label: "Topping", color: "#a82a48", height: 18 },
-              ]}
-            />
+            <div className="w-full max-w-[300px] sm:max-w-[360px] lg:max-w-[420px] mx-auto">
+              <CupGlyph
+                size={420}
+                showLabels
+                layers={[
+                  { label: "Biscuit", color: "#a86060", height: 22 },
+                  { label: "Cream", color: "#fde0e6", height: 38 },
+                  { label: "Compote", color: "#d04864", height: 18 },
+                  { label: "Topping", color: "#a82a48", height: 18 },
+                ]}
+              />
+            </div>
 
             {/* Floating tag */}
             <div
-              className="absolute -left-6 md:-left-12 bottom-6 md:bottom-12 px-4 py-3 rounded-2xl bg-bone-soft border border-ink/10"
+              className="absolute -left-2 md:-left-12 bottom-4 md:bottom-12 max-w-[60%] md:max-w-none px-4 py-3 rounded-2xl bg-bone-soft border border-ink/10"
               style={{ boxShadow: "0 24px 60px -20px rgba(58,29,40,0.18)" }}
             >
               <div className="font-mono text-[10px] tracking-[0.18em] uppercase text-ink/55 mb-1">

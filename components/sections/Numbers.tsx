@@ -16,7 +16,7 @@ export default function Numbers() {
     <section
       id="numbers"
       aria-label="By the numbers"
-      className="relative bg-bone py-32 md:py-44 overflow-hidden hairline-top"
+      className="relative bg-bone py-20 sm:py-28 md:py-44 overflow-hidden hairline-top"
     >
       <div className="mx-auto max-w-[1400px] px-6 md:px-10">
         <motion.p
@@ -29,7 +29,7 @@ export default function Numbers() {
           {copy.numbers.intro}
         </motion.p>
 
-        <div className="mt-16 md:mt-24 flex flex-col gap-32 md:gap-44">
+        <div className="mt-12 sm:mt-16 md:mt-24 flex flex-col gap-24 sm:gap-32 md:gap-44">
           {copy.numbers.stats.map((s, i) => (
             <Stat key={i} index={i} stat={s} total={copy.numbers.stats.length} />
           ))}
@@ -79,7 +79,7 @@ function Stat({
         animate={inView ? { y: 0, opacity: 1 } : {}}
         transition={{ duration: 0.8, ease: EASE_CINEMA }}
         className="font-display leading-[0.88] tracking-[-0.045em] text-ink"
-        style={{ fontSize: "clamp(96px, 17vw, 240px)" }}
+        style={{ fontSize: "clamp(72px, 18vw, 240px)" }}
       >
         <motion.span>{display}</motion.span>
       </motion.div>

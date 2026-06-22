@@ -35,11 +35,13 @@ const schema = z
     packQty: z.enum(["24", "48", "96"]),
     items: z.array(flavorItemSchema).min(1, "Select at least one flavour"),
     urgency: z.enum(["standard", "urgent"]),
+    fulfillment: z.enum(["pickup", "delivery"]),
     name: z.string().min(2, "Please enter your full name"),
     email: z.email("Please enter a valid email"),
     phone: z.string().optional(),
     date: z.string().min(1, "Please select a desired date"),
     notes: z.string().optional(),
+    deliveryAddress: z.string().optional(),
   })
   .superRefine((data, ctx) => {
     const packSize = parseInt(data.packQty, 10);
@@ -63,6 +65,13 @@ const schema = z
         code: z.ZodIssueCode.custom,
         path: ["items"],
         message: `Cup counts must total ${packSize} (currently ${totalCups})`,
+      });
+    }
+    if (data.fulfillment === "delivery" && !data.deliveryAddress?.trim()) {
+      ctx.addIssue({
+        code: z.ZodIssueCode.custom,
+        path: ["deliveryAddress"],
+        message: "Add a delivery address so we can quote the fee",
       });
     }
   });
@@ -100,6 +109,7 @@ export default function OrderCTA() {
       packQty: "24",
       items: [],
       urgency: "standard",
+      fulfillment: "pickup",
     },
   });
 
@@ -107,6 +117,7 @@ export default function OrderCTA() {
   const packQty = watch("packQty");
   const items = watch("items") ?? [];
   const urgency = watch("urgency");
+  const fulfillment = watch("fulfillment");
 
   const packSize = parseInt(packQty, 10) as PackQty;
   const totalCups = items.reduce((sum, i) => sum + i.count, 0);
@@ -159,6 +170,10 @@ export default function OrderCTA() {
     const tierLabel = hasClassic && hasPremium ? "Mixed" : hasPremium ? "Premium" : "Classic";
     const flavorSummary = data.items.map((i) => `${i.name} ×${i.count}`).join(", ");
     const packLine = `${data.packQty} cups · $${price}`;
+    const fulfillmentLine =
+      data.fulfillment === "delivery"
+        ? `🚐 Delivery across the GTA (delivery fee applies) — ${data.deliveryAddress?.trim() || "address to confirm"}`
+        : "Pickup in Hamilton (free)";
 
     const dbPromise = (async () => {
       try {
@@ -204,6 +219,7 @@ export default function OrderCTA() {
                 data.urgency === "urgent"
                   ? "⚡ URGENT — needs it in under 48 hours (rush fee applies)"
                   : "Standard — 48 hours+ notice",
+              fulfillment: fulfillmentLine,
               flavors: flavorSummary,
               desired_date: data.date,
               notes: data.notes || "—",
@@ -242,7 +258,7 @@ export default function OrderCTA() {
     <section
       id="contact"
       aria-label="Place an order"
-      className="relative py-32 md:py-44 bg-bone hairline-top"
+      className="relative py-20 sm:py-28 md:py-44 bg-bone hairline-top"
     >
       <div className="mx-auto max-w-[1400px] px-6 md:px-10">
         <div className="grid grid-cols-1 lg:grid-cols-12 gap-12 lg:gap-20">
@@ -330,11 +346,11 @@ export default function OrderCTA() {
                 href={mailtoLink}
                 className="group flex items-center justify-between gap-4 hairline-bottom py-5"
               >
-                <div>
+                <div className="min-w-0 flex-1">
                   <div className="font-mono text-[10px] tracking-[0.2em] uppercase text-ink/45">
                     Email
                   </div>
-                  <div className="font-display text-[20px] tracking-[-0.02em] text-ink">
+                  <div className="font-display text-[20px] tracking-[-0.02em] text-ink truncate">
                     {BUSINESS.email}
                   </div>
                 </div>
@@ -517,19 +533,19 @@ export default function OrderCTA() {
                                 type="button"
                                 onClick={() => (selected ? removeFlavor(f.id) : addFlavor(f))}
                                 disabled={!selected && !canAdd}
-                                className="flex-1 text-left disabled:opacity-35 disabled:cursor-not-allowed"
+                                className="flex-1 min-w-0 text-left disabled:opacity-35 disabled:cursor-not-allowed"
                               >
                                 <span className="font-display text-[18px] tracking-[-0.02em]">
                                   {f.name}
                                 </span>
                               </button>
                               {selected ? (
-                                <div className="flex items-center gap-3">
+                                <div className="flex items-center gap-2 sm:gap-3">
                                   <button
                                     type="button"
                                     onClick={() => stepCount(f.id, -MIN_CUPS_PER_FLAVOR)}
                                     aria-label={`Fewer ${f.name} cups`}
-                                    className="w-7 h-7 rounded-full flex items-center justify-center font-mono text-[15px] leading-none"
+                                    className="w-11 h-11 sm:w-7 sm:h-7 rounded-full flex items-center justify-center font-mono text-[15px] leading-none"
                                     style={{
                                       backgroundColor: "var(--color-bone-soft)",
                                       color: "var(--color-ink)",
@@ -545,7 +561,7 @@ export default function OrderCTA() {
                                     onClick={() => stepCount(f.id, MIN_CUPS_PER_FLAVOR)}
                                     disabled={remaining < MIN_CUPS_PER_FLAVOR}
                                     aria-label={`More ${f.name} cups`}
-                                    className="w-7 h-7 rounded-full flex items-center justify-center font-mono text-[15px] leading-none disabled:opacity-35"
+                                    className="w-11 h-11 sm:w-7 sm:h-7 rounded-full flex items-center justify-center font-mono text-[15px] leading-none disabled:opacity-35"
                                     style={{
                                       backgroundColor: "var(--color-ember)",
                                       color: "var(--color-bone-soft)",
@@ -606,7 +622,7 @@ export default function OrderCTA() {
                         placeholder="(xxx) xxx-xxxx"
                       />
                     </Field>
-                    <Field label="Pickup date" error={errors.date?.message}>
+                    <Field label="Date needed" error={errors.date?.message}>
                       <input
                         {...register("date")}
                         type="date"
@@ -672,6 +688,75 @@ export default function OrderCTA() {
                     ) : null}
                   </div>
 
+                  {/* Fulfillment — pickup (free) vs delivery (fee quoted on reply) */}
+                  <div className="flex flex-col gap-3">
+                    <span className="font-mono text-[10px] tracking-[0.22em] uppercase text-ink/55">
+                      Fulfillment
+                    </span>
+                    <Controller
+                      name="fulfillment"
+                      control={control}
+                      render={({ field }) => (
+                        <div className="grid grid-cols-2 gap-3">
+                          {[
+                            { value: "pickup" as const, label: "Pickup", sub: "Free · Hamilton" },
+                            { value: "delivery" as const, label: "Delivery", sub: "+ fee · GTA" },
+                          ].map((o) => {
+                            const active = field.value === o.value;
+                            return (
+                              <button
+                                key={o.value}
+                                type="button"
+                                onClick={() => field.onChange(o.value)}
+                                className="flex flex-col items-start gap-1 p-4 text-left transition-all duration-400 ease-cinema hairline-top hairline-bottom"
+                                style={{
+                                  backgroundColor: active
+                                    ? o.value === "delivery"
+                                      ? "var(--color-ember)"
+                                      : "var(--color-ink)"
+                                    : "var(--color-bone-soft)",
+                                  color: active
+                                    ? "var(--color-bone-soft)"
+                                    : "var(--color-ink)",
+                                }}
+                              >
+                                <span className="font-display text-[20px] tracking-[-0.025em] leading-tight">
+                                  {o.label}
+                                </span>
+                                <span
+                                  className="font-mono text-[9px] tracking-[0.2em] uppercase"
+                                  style={{ opacity: active ? 0.7 : 0.45 }}
+                                >
+                                  {o.sub}
+                                </span>
+                              </button>
+                            );
+                          })}
+                        </div>
+                      )}
+                    />
+                    {fulfillment === "delivery" ? (
+                      <div className="flex flex-col gap-4">
+                        <p
+                          className="font-mono text-[9px] tracking-[0.16em] uppercase leading-[1.7]"
+                          style={{ color: "var(--color-ember)" }}
+                        >
+                          Delivery across the GTA — a delivery fee applies. We&apos;ll confirm it when we reply.
+                        </p>
+                        <Field
+                          label="Delivery address"
+                          error={errors.deliveryAddress?.message}
+                        >
+                          <input
+                            {...register("deliveryAddress")}
+                            className="form-input"
+                            placeholder="Street, city, postal code"
+                          />
+                        </Field>
+                      </div>
+                    ) : null}
+                  </div>
+
                   <Field label="Notes (optional)" error={undefined}>
                     <textarea
                       {...register("notes")}
@@ -684,7 +769,7 @@ export default function OrderCTA() {
                 </div>
 
                 {/* Price + Submit */}
-                <div className="flex items-center gap-6 hairline-top pt-6">
+                <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:gap-6 hairline-top pt-6">
                   <div className="flex flex-col">
                     <span className="font-mono text-[9px] tracking-[0.2em] uppercase text-ink/40">
                       Total
@@ -692,12 +777,16 @@ export default function OrderCTA() {
                     <span className="font-display text-[36px] tracking-[-0.035em] text-ink leading-tight">
                       ${price}
                     </span>
-                    {urgency === "urgent" ? (
+                    {urgency === "urgent" || fulfillment === "delivery" ? (
                       <span
                         className="font-mono text-[9px] tracking-[0.16em] uppercase mt-1"
                         style={{ color: "var(--color-ember)" }}
                       >
-                        + rush fee on reply
+                        {urgency === "urgent" && fulfillment === "delivery"
+                          ? "+ rush & delivery fees on reply"
+                          : urgency === "urgent"
+                          ? "+ rush fee on reply"
+                          : "+ delivery fee on reply"}
                       </span>
                     ) : null}
                   </div>
@@ -705,11 +794,11 @@ export default function OrderCTA() {
                   <button
                     type="submit"
                     disabled={loading}
-                    className="flex-1 group inline-flex items-center justify-between gap-6 px-7 py-5 rounded-full text-[15px] tracking-[-0.01em] text-bone-soft transition-all duration-500 ease-cinema disabled:opacity-60"
+                    className="w-full sm:flex-1 min-w-0 group inline-flex items-center justify-between gap-6 px-7 py-5 rounded-full text-[15px] tracking-[-0.01em] text-bone-soft transition-all duration-500 ease-cinema disabled:opacity-60"
                     style={{ backgroundColor: "var(--color-ember)" }}
                   >
                     <span>{loading ? "Sending…" : "Send order request"}</span>
-                    <span className="font-mono text-[10px] tracking-[0.18em] uppercase opacity-70">
+                    <span className="hidden sm:inline font-mono text-[10px] tracking-[0.18em] uppercase opacity-70">
                       {loading ? "…" : "Reply by tomorrow"}
                     </span>
                   </button>

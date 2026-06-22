@@ -22,7 +22,7 @@ export default function MenuPage() {
             </div>
             <h1
               className="font-display text-ink leading-[0.95] tracking-[-0.04em] max-w-[16ch]"
-              style={{ fontSize: "clamp(56px, 9vw, 144px)" }}
+              style={{ fontSize: "clamp(44px, 9vw, 144px)" }}
             >
               Every flavour,{" "}
               <em

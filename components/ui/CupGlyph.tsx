@@ -59,7 +59,7 @@ export function CupGlyph({
   return (
     <div
       className="relative"
-      style={{ width: size, height: size * 1.25 }}
+      style={{ width: `min(${size}px, 100%)`, aspectRatio: "200 / 250" }}
       aria-hidden="true"
     >
       <svg
