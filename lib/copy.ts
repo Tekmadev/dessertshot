@@ -203,6 +203,40 @@ export type CupSize = keyof typeof MENU_PRICES;
 export type Tier = "classic" | "premium";
 export type PackQty = 24 | 48 | 96;
 
+// ── Mix-and-match rules ──
+// Flavours are produced in batches, so every flavour in a pack must be ordered
+// in multiples of this minimum. A 24 pack therefore holds at most 4 flavours,
+// a 48 holds 8, a 96 holds 16. Want more flavours? Order another pack.
+export const MIN_CUPS_PER_FLAVOR = 6;
+
+// Largest number of distinct flavours a pack can hold (pack size ÷ minimum).
+export function maxFlavorsForPack(packQty: PackQty): number {
+  return packQty / MIN_CUPS_PER_FLAVOR;
+}
+
+// Per-cup price for a tier at a given cup size and pack quantity. Derived from
+// the pack price so the volume discount tracks the pack size and a single-tier
+// pack always totals exactly its listed price.
+export function perCupPrice(cupSize: CupSize, tier: Tier, packQty: PackQty): number {
+  return MENU_PRICES[cupSize][tier][packQty] / packQty;
+}
+
+export type MixItem = { tier: Tier; count: number };
+
+// Smart mixed-pack total: each cup is priced by its own tier at the pack's
+// volume rate, summed across the mix, then rounded to the nearest dollar.
+export function calcMixTotal(
+  cupSize: CupSize,
+  packQty: PackQty,
+  items: MixItem[]
+): number {
+  const total = items.reduce(
+    (sum, item) => sum + item.count * perCupPrice(cupSize, item.tier, packQty),
+    0
+  );
+  return Math.round(total);
+}
+
 export const CLASSIC_FLAVORS = FLAVORS.filter((f) => f.tier === "classic");
 export const PREMIUM_FLAVORS = FLAVORS.filter((f) => f.tier === "premium");
 
@@ -213,7 +247,7 @@ export const PACKAGES = [
     description: "Weekend gatherings, small parties, office treats.",
     perks: [
       "Mix up to 4 flavours",
-      "Packed in sets of 5",
+      "Minimum 6 cups per flavour",
       "Pickup in Hamilton",
       "Labelled by flavour",
     ],
@@ -224,8 +258,8 @@ export const PACKAGES = [
     label: "The 48",
     description: "The most popular size. Built for bigger tables.",
     perks: [
-      "Mix up to 6 flavours",
-      "Packed in sets of 5",
+      "Mix up to 8 flavours",
+      "Minimum 6 cups per flavour",
       "Pickup in Hamilton",
       "Priority preparation",
       "Free flavour recommendation",
@@ -237,7 +271,7 @@ export const PACKAGES = [
     label: "The 96",
     description: "Weddings, baby showers, corporate events.",
     perks: [
-      "Full flavour mix",
+      "Mix up to 16 flavours",
       "Custom label option",
       "Event day pickup",
       "Presentation tray included",

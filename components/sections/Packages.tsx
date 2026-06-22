@@ -96,7 +96,7 @@ export default function Packages() {
           transition={{ duration: 1, ease: EASE_CINEMA, delay: 0.3 }}
           className="mt-8 font-mono text-[10px] tracking-[0.18em] uppercase text-ink/45 leading-[1.8]"
         >
-          Minimum order 24 cups · Flavours packed in sets of 5 · Mix Classic and Premium in the same box
+          Minimum order 24 cups · Minimum 6 cups per flavour · Mix Classic and Premium in the same box
         </motion.p>
       </div>
     </section>

@@ -7,26 +7,68 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { z } from "zod";
 import { CheckCircle } from "lucide-react";
 import emailjs from "@emailjs/browser";
-import { copy, MENU_PRICES, CLASSIC_FLAVORS, PREMIUM_FLAVORS } from "@/lib/copy";
+import {
+  copy,
+  CLASSIC_FLAVORS,
+  PREMIUM_FLAVORS,
+  MIN_CUPS_PER_FLAVOR,
+  maxFlavorsForPack,
+  perCupPrice,
+  calcMixTotal,
+  type PackQty,
+} from "@/lib/copy";
 import { EASE_CINEMA } from "@/lib/constants";
 import { BUSINESS, mailtoLink } from "@/lib/business";
 import { InstagramIcon } from "@/components/ui/InstagramIcon";
 import { FacebookIcon } from "@/components/ui/FacebookIcon";
 
-const schema = z.object({
-  cupSize: z.enum(["2oz", "5oz"]),
-  packQty: z.enum(["24", "48", "96"]),
+const flavorItemSchema = z.object({
+  id: z.string(),
+  name: z.string(),
   tier: z.enum(["classic", "premium"]),
-  flavors: z.array(z.string()).min(1, "Select at least one flavour"),
-  urgency: z.enum(["standard", "urgent"]),
-  name: z.string().min(2, "Please enter your full name"),
-  email: z.email("Please enter a valid email"),
-  phone: z.string().optional(),
-  date: z.string().min(1, "Please select a desired date"),
-  notes: z.string().optional(),
+  count: z.number().int(),
 });
 
+const schema = z
+  .object({
+    cupSize: z.enum(["2oz", "5oz"]),
+    packQty: z.enum(["24", "48", "96"]),
+    items: z.array(flavorItemSchema).min(1, "Select at least one flavour"),
+    urgency: z.enum(["standard", "urgent"]),
+    name: z.string().min(2, "Please enter your full name"),
+    email: z.email("Please enter a valid email"),
+    phone: z.string().optional(),
+    date: z.string().min(1, "Please select a desired date"),
+    notes: z.string().optional(),
+  })
+  .superRefine((data, ctx) => {
+    const packSize = parseInt(data.packQty, 10);
+    const totalCups = data.items.reduce((sum, i) => sum + i.count, 0);
+    if (data.items.some((i) => i.count < MIN_CUPS_PER_FLAVOR || i.count % MIN_CUPS_PER_FLAVOR !== 0)) {
+      ctx.addIssue({
+        code: z.ZodIssueCode.custom,
+        path: ["items"],
+        message: `Each flavour needs at least ${MIN_CUPS_PER_FLAVOR} cups, in multiples of ${MIN_CUPS_PER_FLAVOR}`,
+      });
+    }
+    if (data.items.length > packSize / MIN_CUPS_PER_FLAVOR) {
+      ctx.addIssue({
+        code: z.ZodIssueCode.custom,
+        path: ["items"],
+        message: `A ${packSize} pack holds at most ${packSize / MIN_CUPS_PER_FLAVOR} flavours`,
+      });
+    }
+    if (totalCups !== packSize) {
+      ctx.addIssue({
+        code: z.ZodIssueCode.custom,
+        path: ["items"],
+        message: `Cup counts must total ${packSize} (currently ${totalCups})`,
+      });
+    }
+  });
+
 type FormData = z.infer<typeof schema>;
+type FlavorItem = z.infer<typeof flavorItemSchema>;
 
 const CUP_SIZES: { value: "2oz" | "5oz"; label: string; sub: string }[] = [
   { value: "2oz", label: "Mini Shots", sub: "2 oz · tasting size" },
@@ -56,40 +98,66 @@ export default function OrderCTA() {
     defaultValues: {
       cupSize: "5oz",
       packQty: "24",
-      tier: "classic",
-      flavors: [],
+      items: [],
       urgency: "standard",
     },
   });
 
   const cupSize = watch("cupSize");
   const packQty = watch("packQty");
-  const tier = watch("tier");
-  const flavors = watch("flavors");
+  const items = watch("items") ?? [];
   const urgency = watch("urgency");
 
-  const price = MENU_PRICES[cupSize]?.[tier]?.[parseInt(packQty) as 24 | 48 | 96] ?? 0;
-  const availableFlavors = tier === "classic" ? CLASSIC_FLAVORS : PREMIUM_FLAVORS;
+  const packSize = parseInt(packQty, 10) as PackQty;
+  const totalCups = items.reduce((sum, i) => sum + i.count, 0);
+  const remaining = packSize - totalCups;
+  const maxFlavors = maxFlavorsForPack(packSize);
+  const price = calcMixTotal(cupSize, packSize, items);
 
-  const toggleFlavor = (name: string) => {
-    const current = flavors ?? [];
-    if (current.includes(name)) {
-      setValue("flavors", current.filter((f) => f !== name), { shouldValidate: true });
-    } else {
-      setValue("flavors", [...current, name], { shouldValidate: true });
-    }
+  const getItem = (id: string) => items.find((i) => i.id === id);
+
+  const addFlavor = (f: { id: string; name: string; tier: "classic" | "premium" }) => {
+    if (getItem(f.id)) return;
+    if (items.length >= maxFlavors) return; // pack already at its flavour limit
+    if (remaining < MIN_CUPS_PER_FLAVOR) return; // not enough cups left for another flavour
+    const next: FlavorItem = { id: f.id, name: f.name, tier: f.tier, count: MIN_CUPS_PER_FLAVOR };
+    setValue("items", [...items, next], { shouldValidate: true });
   };
 
-  // Clear flavors when tier changes so stale selections don't persist
-  const handleTierChange = (newTier: "classic" | "premium") => {
-    setValue("tier", newTier, { shouldValidate: true });
-    setValue("flavors", [], { shouldValidate: false });
+  const removeFlavor = (id: string) => {
+    setValue("items", items.filter((i) => i.id !== id), { shouldValidate: true });
+  };
+
+  const stepCount = (id: string, delta: number) => {
+    const it = getItem(id);
+    if (!it) return;
+    const next = it.count + delta;
+    if (next < MIN_CUPS_PER_FLAVOR) {
+      removeFlavor(id);
+      return;
+    }
+    if (delta > 0 && remaining < MIN_CUPS_PER_FLAVOR) return; // no cups left to add
+    setValue(
+      "items",
+      items.map((i) => (i.id === id ? { ...i, count: next } : i)),
+      { shouldValidate: true }
+    );
+  };
+
+  // Reset the mix when the pack size changes so counts can't exceed the new pack.
+  const handlePackChange = (q: "24" | "48" | "96") => {
+    setValue("packQty", q, { shouldValidate: true });
+    setValue("items", [], { shouldValidate: false });
   };
 
   const onSubmit = async (data: FormData) => {
     setLoading(true);
     setErrorMessage(null);
 
+    const hasClassic = data.items.some((i) => i.tier === "classic");
+    const hasPremium = data.items.some((i) => i.tier === "premium");
+    const tierLabel = hasClassic && hasPremium ? "Mixed" : hasPremium ? "Premium" : "Classic";
+    const flavorSummary = data.items.map((i) => `${i.name} ×${i.count}`).join(", ");
     const packLine = `${data.packQty} cups · $${price}`;
 
     const dbPromise = (async () => {
@@ -130,13 +198,13 @@ export default function OrderCTA() {
               from_email: data.email,
               phone: data.phone || "—",
               cup_size: `${data.cupSize} ${data.cupSize === "2oz" ? "Mini Shots" : "Dessert Cups"}`,
-              tier: data.tier === "classic" ? "Classic" : "Premium",
+              tier: tierLabel,
               package_size: packLine,
               urgency:
                 data.urgency === "urgent"
                   ? "⚡ URGENT — needs it in under 48 hours (rush fee applies)"
                   : "Standard — 48 hours+ notice",
-              flavors: data.flavors.join(", "),
+              flavors: flavorSummary,
               desired_date: data.date,
               notes: data.notes || "—",
               reply_to: data.email,
@@ -365,7 +433,7 @@ export default function OrderCTA() {
                           <button
                             key={q.value}
                             type="button"
-                            onClick={() => field.onChange(q.value)}
+                            onClick={() => handlePackChange(q.value)}
                             className="flex-1 py-4 font-mono text-[10px] tracking-[0.2em] uppercase transition-all duration-400 ease-cinema"
                             style={{
                               backgroundColor:
@@ -386,78 +454,121 @@ export default function OrderCTA() {
                   />
                 </FormSection>
 
-                {/* ── Step 3: Tier ── */}
-                <FormSection label="Tier">
-                  <div className="grid grid-cols-2 gap-3">
-                    {(["classic", "premium"] as const).map((t) => {
-                      const tierPrice = MENU_PRICES[cupSize]?.[t]?.[parseInt(packQty) as 24 | 48 | 96] ?? 0;
-                      const flavorNames =
-                        t === "classic"
-                          ? CLASSIC_FLAVORS.map((f) => f.name).join(", ")
-                          : PREMIUM_FLAVORS.map((f) => f.name).join(", ");
-                      return (
-                        <button
-                          key={t}
-                          type="button"
-                          onClick={() => handleTierChange(t)}
-                          className="flex flex-col items-start gap-2 p-4 text-left transition-all duration-400 ease-cinema hairline-top hairline-bottom"
-                          style={{
-                            backgroundColor:
-                              tier === t ? "var(--color-ink)" : "var(--color-bone-soft)",
-                            color:
-                              tier === t ? "var(--color-bone-soft)" : "var(--color-ink)",
-                          }}
-                        >
-                          <div className="flex items-baseline justify-between w-full gap-2">
-                            <span className="font-display text-[22px] tracking-[-0.025em] leading-tight capitalize">
-                              {t}
-                            </span>
-                            <span
-                              className="font-display text-[18px] tracking-[-0.02em]"
-                              style={{ color: tier === t ? "var(--color-ember)" : "var(--color-ember)" }}
-                            >
-                              ${tierPrice}
-                            </span>
-                          </div>
-                          <span
-                            className="font-mono text-[9px] tracking-[0.16em] uppercase leading-[1.6]"
-                            style={{ opacity: tier === t ? 0.55 : 0.4 }}
-                          >
-                            {flavorNames}
-                          </span>
-                        </button>
-                      );
-                    })}
-                  </div>
-                </FormSection>
-
-                {/* ── Step 4: Flavors ── */}
-                <FormSection label="Flavours" error={errors.flavors?.message}>
-                  <div className="flex flex-col gap-1">
-                    <div className="flex flex-wrap gap-2 mb-2">
-                      {availableFlavors.map((f) => {
-                        const selected = (flavors ?? []).includes(f.name);
-                        return (
-                          <button
-                            key={f.id}
-                            type="button"
-                            onClick={() => toggleFlavor(f.name)}
-                            className="px-4 py-2 rounded-full font-mono text-[10px] tracking-[0.18em] uppercase transition-all duration-400 ease-cinema"
-                            style={{
-                              backgroundColor: selected
-                                ? "var(--color-ember)"
-                                : "var(--color-bone-soft)",
-                              color: selected ? "var(--color-bone-soft)" : "var(--color-ink)",
-                            }}
-                          >
-                            {f.name}
-                          </button>
-                        );
-                      })}
+                {/* ── Step 3: Flavour mix (Classic + Premium together) ── */}
+                <FormSection label="Flavours" error={errors.items?.message}>
+                  <div className="flex flex-col gap-5">
+                    {/* Cup tracker */}
+                    <div
+                      className="flex items-center justify-between p-4 hairline-top hairline-bottom"
+                      style={{ backgroundColor: "var(--color-bone-soft)" }}
+                    >
+                      <div className="flex flex-col">
+                        <span className="font-display text-[26px] tracking-[-0.03em] leading-none text-ink">
+                          {totalCups}
+                          <span className="text-ink/40"> / {packSize}</span>
+                        </span>
+                        <span className="font-mono text-[9px] tracking-[0.2em] uppercase text-ink/45 mt-1">
+                          cups selected
+                        </span>
+                      </div>
+                      <span
+                        className="font-mono text-[10px] tracking-[0.16em] uppercase"
+                        style={{
+                          color: remaining === 0 ? "var(--color-ink)" : "var(--color-ember)",
+                        }}
+                      >
+                        {remaining === 0
+                          ? "Pack complete"
+                          : remaining > 0
+                          ? `${remaining} cup${remaining === 1 ? "" : "s"} left`
+                          : `${-remaining} cup${remaining === -1 ? "" : "s"} over`}
+                      </span>
                     </div>
+
+                    {/* Flavour groups */}
+                    {(
+                      [
+                        { label: "Classic", tier: "classic" as const, list: CLASSIC_FLAVORS },
+                        { label: "Premium", tier: "premium" as const, list: PREMIUM_FLAVORS },
+                      ]
+                    ).map((group) => (
+                      <div key={group.label} className="flex flex-col gap-2">
+                        <span className="font-mono text-[9px] tracking-[0.2em] uppercase text-ink/40">
+                          {group.label} · $
+                          {perCupPrice(cupSize, group.tier, packSize).toFixed(2)}/cup
+                        </span>
+                        {group.list.map((f) => {
+                          const it = getItem(f.id);
+                          const selected = Boolean(it);
+                          const canAdd =
+                            !selected &&
+                            items.length < maxFlavors &&
+                            remaining >= MIN_CUPS_PER_FLAVOR;
+                          return (
+                            <div
+                              key={f.id}
+                              className="flex items-center justify-between gap-3 p-3 transition-all duration-400 ease-cinema hairline-top"
+                              style={{
+                                backgroundColor: selected ? "var(--color-ink)" : "transparent",
+                                color: selected ? "var(--color-bone-soft)" : "var(--color-ink)",
+                              }}
+                            >
+                              <button
+                                type="button"
+                                onClick={() => (selected ? removeFlavor(f.id) : addFlavor(f))}
+                                disabled={!selected && !canAdd}
+                                className="flex-1 text-left disabled:opacity-35 disabled:cursor-not-allowed"
+                              >
+                                <span className="font-display text-[18px] tracking-[-0.02em]">
+                                  {f.name}
+                                </span>
+                              </button>
+                              {selected ? (
+                                <div className="flex items-center gap-3">
+                                  <button
+                                    type="button"
+                                    onClick={() => stepCount(f.id, -MIN_CUPS_PER_FLAVOR)}
+                                    aria-label={`Fewer ${f.name} cups`}
+                                    className="w-7 h-7 rounded-full flex items-center justify-center font-mono text-[15px] leading-none"
+                                    style={{
+                                      backgroundColor: "var(--color-bone-soft)",
+                                      color: "var(--color-ink)",
+                                    }}
+                                  >
+                                    −
+                                  </button>
+                                  <span className="font-mono text-[13px] tracking-[0.05em] w-8 text-center tabular-nums">
+                                    {it!.count}
+                                  </span>
+                                  <button
+                                    type="button"
+                                    onClick={() => stepCount(f.id, MIN_CUPS_PER_FLAVOR)}
+                                    disabled={remaining < MIN_CUPS_PER_FLAVOR}
+                                    aria-label={`More ${f.name} cups`}
+                                    className="w-7 h-7 rounded-full flex items-center justify-center font-mono text-[15px] leading-none disabled:opacity-35"
+                                    style={{
+                                      backgroundColor: "var(--color-ember)",
+                                      color: "var(--color-bone-soft)",
+                                    }}
+                                  >
+                                    +
+                                  </button>
+                                </div>
+                              ) : (
+                                <span className="font-mono text-[9px] tracking-[0.18em] uppercase opacity-45">
+                                  {canAdd ? "Add" : "Full"}
+                                </span>
+                              )}
+                            </div>
+                          );
+                        })}
+                      </div>
+                    ))}
+
                     <p className="font-mono text-[9px] tracking-[0.16em] uppercase text-ink/40 leading-[1.7]">
-                      Flavours are packed in sets of 5. Select all you want — we&apos;ll
-                      split evenly unless you specify in notes.
+                      Minimum {MIN_CUPS_PER_FLAVOR} cups per flavour · up to {maxFlavors} flavour
+                      {maxFlavors === 1 ? "" : "s"} in a {packSize} pack. Mix Classic &amp;
+                      Premium freely — need more flavours? Add another pack.
                     </p>
                   </div>
                 </FormSection>
