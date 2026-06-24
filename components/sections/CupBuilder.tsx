@@ -38,10 +38,10 @@ export default function CupBuilder() {
       className="relative bg-bone"
       style={{ height: "360svh" }}
     >
-      <div className="sticky top-0 h-[100svh] w-full overflow-hidden">
+      <div className="sticky top-0 h-[100svh] w-full overflow-hidden pt-24 lg:pt-0">
         <div className="relative h-full mx-auto max-w-[1400px] px-6 md:px-10 grid grid-cols-1 lg:grid-cols-12 items-center gap-6 lg:gap-10">
           {/* Section label rail */}
-          <div className="absolute left-6 md:left-10 top-10 flex items-center gap-3">
+          <div className="absolute left-6 md:left-10 top-10 hidden lg:flex items-center gap-3">
             <span className="font-mono text-[10px] tracking-[0.22em] uppercase text-ink/45">
               {copy.builder.sectionLabel}
             </span>
@@ -50,7 +50,7 @@ export default function CupBuilder() {
 
           {/* Side text */}
           <div className="relative col-span-1 lg:col-span-6 z-10 order-2 lg:order-1">
-            <div className="relative h-[46svh] lg:h-[60vh] flex items-center">
+            <div className="relative h-[40svh] lg:h-[60vh] flex items-center">
               <div className="relative w-full">
                 {PHASES.map((p, i) => (
                   <PhraseLayer
