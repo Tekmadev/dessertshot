@@ -50,7 +50,7 @@ export default function CupBuilder() {
 
           {/* Side text */}
           <div className="relative col-span-1 lg:col-span-6 z-10 order-2 lg:order-1">
-            <div className="relative h-auto lg:h-[60vh] flex items-center">
+            <div className="relative h-[46svh] lg:h-[60vh] flex items-center">
               <div className="relative w-full">
                 {PHASES.map((p, i) => (
                   <PhraseLayer
@@ -69,7 +69,7 @@ export default function CupBuilder() {
 
           {/* Cup scene */}
           <div className="relative col-span-1 lg:col-span-6 flex items-center justify-center order-1 lg:order-2">
-            <div className="relative w-[min(78vw,460px)]">
+            <div className="relative w-[min(60vw,300px)] lg:w-[min(78vw,460px)]">
               {/* Soft bed */}
               <div
                 aria-hidden="true"

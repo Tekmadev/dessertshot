@@ -119,7 +119,7 @@ export default function Hero() {
           animate={{ opacity: 1, y: 0 }}
           transition={{ delay: 0.7, duration: 1.6, ease: EASE_CINEMA }}
           style={{ y: cupY, rotate: cupRotate }}
-          className="relative col-span-1 lg:col-span-5 flex items-center justify-center"
+          className="relative col-span-1 lg:col-span-5 hidden lg:flex items-center justify-center"
         >
           <div className="relative">
             {/* Soft glow under cup */}
