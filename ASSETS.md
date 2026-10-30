@@ -23,10 +23,14 @@ Rules (brief §4): image-to-video only from the owner's real photos; fidelity ch
 | 11 | Floater: crushed pistachio | Image Background Remover | crop J 1165×717 | 1 | 1 | **Reject** | Kept the wooden board texture; crumbs on wood can't be separated. |
 | — | Tiramisu | — | — | — | 0 | Not attempted | Photo D shows it only top-down inside a packed box; no cup to cut out. Reshoot required. |
 | — | Whole-strawberry floater | — | — | — | 0 | Not attempted | Source is out of focus. |
+| 12 | Dubai hero still, generated (pilot A, B) | GPT Image 2.5 (Flare) | ref = EXIF-free Dubai cut-out on cream; quality high, 2K, 4:5, 2 variants | 5.5 (preflight) | 5.5 | Pending review | Generated shots per the 2026-10-30 decision (DECISIONS.md). Layer order, swirl and toppings follow the reference; glass tumbler instead of the clear plastic cup; no text, logos or hands. Crisper, warmer light. |
+| 13 | Dubai hero still, generated (pilot C, D) | Nano Banana 2.1 | same reference and prompt; 2K, 4:5, 2 variants | 4 (preflight) | 4 | Pending review | Same checks pass. Softer, more natural light. |
 
 Cost of background removal: **1 credit**, measured from the transaction log after the first run (no preview is available for this tool). Balance after these 11 runs: **970**.
 
-**Running total: 11 / 200**
+Generated stills: cost from the tool's free `get_cost` preflight, confirmed against the transaction log. Balance after the pilot: **960.5**.
+
+**Running total: 20.5 of a ~200 budget**
 
 ## Where things are
 - Cleaned masters awaiting approval (EXIF-free WebP, not served): `assets/review/cutouts/`, `assets/review/floaters/`.
