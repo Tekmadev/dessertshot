@@ -32,14 +32,19 @@ Rules (brief §4): image-to-video only from the owner's real photos; fidelity ch
 | 18 | Ferrero Royale stills (a, b) | GPT Image 2.5 | same | 5.5 | 5.5 | **Keep B** (picked in chat) → `public/media/products/ferrero-royale.webp` | Unwrapped hazelnut ball, no gold foil. One variant re-run after a provider rate limit (the failed call wasn't charged). |
 | 19 | Biscoff Bliss stills (a, b) | GPT Image 2.5 | same | 5.5 | 5.5 | **Keep A** (picked in chat) → `public/media/products/biscoff-bliss.webp` | Upright cookie checked zoomed in: ridged edge only, no lettering or logo. Re-run after a provider rate limit (not charged). |
 | 20 | Tiramisu stills (a, b) | GPT Image 2.5 | ref = EXIF-free crop of photo D (top only); high angle | 5.5 | 5.5 | **Keep B** (picked in chat) → `public/media/products/tiramisu.webp` | Square cup and cocoa-and-sugar top as the photo. **The side layers are invented** (no side view exists); acceptable under the generated-shots decision, but the owner should confirm they look like hers. One variant re-run after a rate limit. |
+| 21 | P2 hero clip, take 1 | Kling 3.0 (pro) | start = Dubai still A (job bb7fff55); 5 s, silent; requested 9:16, came out 4:5 (1288×1608, follows the start image) | 8.75 (preflight) | 8.75 | Pending pick | Clear slow push-in with a light sweep; cup, layers, swirl and toppings unchanged in first/middle/last frames. Review copy `assets/review/video/hero-kling.mp4` (1080 wide, no audio, 1.3 MB). |
+| 22 | P2 hero clip, take 2 | MiniMax H3 (2K) | same start; 5 s, 3:4 (1440×1792) | 10 (preflight) | 10 | Pending pick | Barely any camera move; a soft light band passes through the middle. Faithful. Came with an audio track (stripped). Review copy `assets/review/video/hero-minimax.mp4` (1.9 MB). |
+| 23 | P3 tray clip | Kling 3.0 (pro) | start = photo B cropped to the upper-right, 3000×1688, EXIF-free (no googly-eyed cup, no stray cookie); 5 s, 16:9, silent | 8.75 (preflight) | 8.75 | Pending approval | Steady dolly and push across the Dubai, Kinder and Ferrero cups; nothing new appears. The first call was held back by a suggested preset ("IN THE DARK"); re-sent literally as approved, not charged twice. Review copy `assets/review/video/tray-kling.mp4` (1280×720, 1.3 MB). |
 
 Cost of background removal: **1 credit**, measured from the transaction log after the first run (no preview is available for this tool). Balance after these 11 runs: **970**.
 
-Generated stills: cost from the tool's free `get_cost` preflight, confirmed against the transaction log. Balance after the pilot: **960.5**; after the full set: **922**.
+Generated stills: cost from the tool's free `get_cost` preflight, confirmed against the transaction log. Balance after the pilot: **960.5**; after the full set: **922**; after the videos: **894.5**.
 
 All generated stills are saved as WebP review masters in `assets/review/generated/`. The picked variant of each flavour is in `public/media/products/{slug}.webp` (1440×1800, WebP q82, no metadata), ready for the Step 4 pages.
 
-**Running total: 59 of a ~200 budget**
+Video masters stay on Higgsfield (job IDs above); only web-sized review copies are in the repo.
+
+**Running total: 86.5 of a ~200 budget**
 
 ## Where things are
 - Cleaned masters awaiting approval (EXIF-free WebP, not served): `assets/review/cutouts/`, `assets/review/floaters/`.
