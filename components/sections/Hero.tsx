@@ -121,7 +121,7 @@ export default function Hero() {
           style={{ y: cupY, rotate: cupRotate }}
           className="relative col-span-1 lg:col-span-5 hidden lg:flex items-center justify-center"
         >
-          <div className="relative">
+          <div className="relative w-full max-w-[420px]">
             {/* Soft glow under cup */}
             <div
               aria-hidden="true"
