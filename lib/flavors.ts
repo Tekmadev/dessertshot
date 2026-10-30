@@ -7,7 +7,7 @@
  * only — never logos, wrappers or packaging (brief §2.4).
  */
 import type { AllergenId } from "./claims";
-import type { Tier } from "./pricing";
+import type { CupSize, Tier } from "./pricing";
 
 export type FlavorCategory = "Fruit" | "Chocolate" | "Caramel" | "Premium";
 
@@ -32,6 +32,8 @@ export type Flavor = {
   /** CSS colour for this flavour's accent. */
   accent: string;
   allergens: readonly AllergenId[];
+  /** Cup sizes it comes in; omitted means both. */
+  sizes?: readonly CupSize[];
   /** The hero cup (most dramatic cross-section). */
   isHero?: boolean;
   /** Facts still waiting on the owner (brief §10). */
@@ -166,19 +168,22 @@ export const FLAVORS: readonly Flavor[] = [
     id: "tiramisu",
     slug: "tiramisu",
     name: "Tiramisu",
-    // Tier defaults to Classic until the owner confirms (brief §2.1, §10.1).
-    tier: "classic",
+    // Owner, 2026-10-30: Premium, Dessert Cups (5 oz) only, layered like a
+    // typical tiramisu. Layers are named generically on purpose: a typical
+    // tiramisu uses ladyfingers (wheat, egg), which the gluten-free and
+    // eggless claim can't cover until the owner confirms (CONTENT-REVIEW.md).
+    tier: "premium",
     category: "Chocolate",
     tagline: "Cocoa-dusted.",
-    description: "A cocoa-dusted tiramisu cup.",
-    // Layers deliberately left empty — the brief forbids inventing them.
-    layers: [],
-    visualSignature: "Matte cocoa-dusted top.",
+    description: "Tiramisu layered the traditional way, coffee-soaked layers between cream, finished with a cocoa dusting.",
+    layers: ["Coffee-soaked layer", "Tiramisu cream", "Coffee-soaked layer", "Tiramisu cream", "Cocoa dusting"],
+    visualSignature: "Square cup, matte cocoa-dusted top with a light sprinkle of sugar.",
     accent: "var(--color-tiramisu)",
     allergens: ["dairy"],
+    sizes: ["5oz"],
     needsOwnerReview: true,
     reviewNotes:
-      "Tier and price (defaulted to Classic), layers, filter category (defaulted to Chocolate), and whether it comes as both Mini Shots and Dessert Cups are unconfirmed (brief §10.1). The only photo shows it in a square mini cup (photo D) — use that for art direction, but don't claim the cup shape until sizes are confirmed.",
+      "Tier, size and layer style confirmed by the owner (2026-10-30). Still open: what the coffee-soaked layer is made of, whether the gluten-free and eggless claim holds for it, its allergens beyond dairy (q-d-other-allergens), and its filter category (defaulted to Chocolate) (CONTENT-REVIEW.md).",
   },
 ];
 
@@ -193,6 +198,17 @@ export function getFlavorById(id: string): Flavor | undefined {
 
 export function getFlavorBySlug(slug: string): Flavor | undefined {
   return FLAVORS.find((f) => f.slug === slug);
+}
+
+/** Whether a flavour comes in this cup size (Tiramisu is Dessert Cups only). */
+export function comesInSize(f: Pick<Flavor, "sizes">, size: CupSize): boolean {
+  return !f.sizes || f.sizes.includes(size);
+}
+
+/** "Dessert Cups (5 oz) only", or null when it comes in both sizes. */
+export function sizeNote(f: Pick<Flavor, "sizes">): string | null {
+  if (!f.sizes || f.sizes.length !== 1) return null;
+  return f.sizes[0] === "5oz" ? "Dessert Cups (5 oz) only" : "Mini Shots (2 oz) only";
 }
 
 /** Names of flavours that contain tree nuts, in menu order. */

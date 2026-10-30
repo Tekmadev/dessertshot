@@ -92,3 +92,12 @@ One line each: decision — why. Newest at the bottom of each phase.
 - The order-form defaults the owner hasn't confirmed yet (notice counted to 9 AM, rush-fee wording, Saturday note, spam limits) are listed together at the end of `CONTENT-REVIEW.md`.
 - `next dev` is a dry run by default (validated, summarised, never saved or emailed), because there is only one database and one inbox. `ORDER_LIVE=1` opts in.
 - `GET /api/orders` selects explicit columns, so owner-only fields such as `admin_notes` never reach a customer.
+
+## Owner answers, round 1 (2026-10-30)
+- Answers arrive through the review page's `answers` collection and are applied in code, with each one recorded in `CONTENT-REVIEW.md` ("Answers received").
+- Tiramisu: Premium, Dessert Cups (5 oz) only. A flavour can now list the sizes it comes in (`Flavor.sizes`); the shared schema refuses other sizes, so the form, deep links and API all agree. Its layers are named generically (coffee-soaked layer, tiramisu cream, cocoa dusting) because a typical tiramisu's ladyfingers would contradict the gluten-free and eggless claim until the owner says what hers are made with.
+- The 48's "free flavour recommendation" and the 24's "Labelled by flavour" are removed (owner: not offered). The owner's answer overrides the brief's perk list; copy and draft tests now reject both phrases.
+- The 96's "custom label option" stays until the owner answers it directly: her answer was about flavour labels on the cups, and the brief lists the custom label separately.
+- The 48-pack price anomaly stays as is: the owner wants an admin page to manage prices, which is a separate piece of work.
+- Rush fee confirmed (`copy.order.urgent` stays as is). "Real fruit, real cream" and "made the morning of / nothing sits overnight" confirmed and kept.
+- Tiramisu shows "Dessert Cups (5 oz) only" on its flavour card, in the order form and in the drafts that suggest it, so nobody plans a Mini Shots box around it. The homepage's "pressed crumb base" line now reads "a base pressed or soaked by hand"; "Four layers, no shortcuts." stays as the brand line the brief asks to keep.

@@ -35,22 +35,16 @@ export const PACKAGES: readonly Pack[] = [
     size: 24,
     label: "The 24",
     description: "Weekend gatherings, small parties, office treats.",
-    // "Labelled by flavour" is kept from the current site, pending owner
-    // confirmation (CONTENT-REVIEW.md).
-    perks: [mixUpTo(24), minPerFlavour, "Pickup in Hamilton", "Labelled by flavour"],
+    // No flavour labels on the cups for now (owner, 2026-10-30).
+    perks: [mixUpTo(24), minPerFlavour, "Pickup in Hamilton"],
     featured: false,
   },
   {
     size: 48,
     label: "The 48",
     description: "The most popular size. Built for bigger tables.",
-    perks: [
-      mixUpTo(48),
-      minPerFlavour,
-      "Pickup in Hamilton",
-      "Priority preparation",
-      "Free flavour recommendation",
-    ],
+    // No "free flavour recommendation": the owner doesn't offer one (2026-10-30).
+    perks: [mixUpTo(48), minPerFlavour, "Pickup in Hamilton", "Priority preparation"],
     featured: true,
   },
   {

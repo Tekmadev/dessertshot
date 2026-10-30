@@ -7,7 +7,7 @@
  */
 import { z } from "zod";
 import { EVENT_VALUES } from "./events";
-import { getFlavorById } from "./flavors";
+import { comesInSize, getFlavorById, sizeNote } from "./flavors";
 import { isRealCalendarDate, orderTiming } from "./order-timing";
 import { MIN_CUPS_PER_FLAVOR, maxFlavorsForPack, type PackQty } from "./pricing";
 
@@ -77,6 +77,10 @@ export const orderSchema = z
       }
       if (seen.has(item.id)) {
         ctx.addIssue({ code: "custom", path: ["items"], message: `${flavor.name} is listed twice` });
+        break;
+      }
+      if (!comesInSize(flavor, data.cupSize)) {
+        ctx.addIssue({ code: "custom", path: ["items"], message: `${flavor.name} comes in ${sizeNote(flavor)}` });
         break;
       }
       seen.add(item.id);

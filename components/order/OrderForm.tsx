@@ -8,7 +8,14 @@ import { ALLERGENS, allergenNoticeText } from "@/lib/claims";
 import { BUSINESS, mailtoLink } from "@/lib/business";
 import { copy } from "@/lib/copy";
 import { EVENT_TYPES, OTHER_EVENT_VALUE } from "@/lib/events";
-import { CLASSIC_FLAVORS, PREMIUM_FLAVORS, treeNutFlavorNames, type Flavor } from "@/lib/flavors";
+import {
+  CLASSIC_FLAVORS,
+  PREMIUM_FLAVORS,
+  comesInSize,
+  sizeNote,
+  treeNutFlavorNames,
+  type Flavor,
+} from "@/lib/flavors";
 import {
   LAST_ORDER_STORAGE_KEY,
   toStoredOrder,
@@ -19,6 +26,7 @@ import {
   ORDER_PREFILL_EVENT,
   fitItemsToPack,
   hasPrefill,
+  itemsForSize,
   parseOrderPrefill,
   prefilledItems,
   type OrderPrefill,
@@ -32,6 +40,7 @@ import {
   calcMixTotal,
   maxFlavorsForPack,
   perCupPrice,
+  type CupSize,
   type PackQty,
 } from "@/lib/pricing";
 
@@ -127,17 +136,28 @@ export default function OrderForm() {
     [getFieldState, getValues, setValue, trigger]
   );
 
+  // Mini Shots drop any flavour that only comes as a Dessert Cup (Tiramisu).
+  const changeSize = useCallback(
+    (next: CupSize) => {
+      setValue("cupSize", next);
+      setValue("items", itemsForSize(getValues("items") ?? [], next));
+      if (getFieldState("items").error) void trigger("items");
+    },
+    [getFieldState, getValues, setValue, trigger]
+  );
+
   const applyPrefill = useCallback(
     (prefill: OrderPrefill) => {
-      if (prefill.size) setValue("cupSize", prefill.size);
+      if (prefill.size) changeSize(prefill.size);
       if (prefill.pack) changePack(prefill.pack);
       if (prefill.flavours?.length) {
         const pack = prefill.pack ?? (Number(getValues("packQty")) as PackQty);
-        setValue("items", prefilledItems(prefill.flavours, pack));
+        const size = prefill.size ?? getValues("cupSize");
+        setValue("items", prefilledItems(prefill.flavours, pack, size));
       }
       if (prefill.event) setValue("eventType", prefill.event);
     },
-    [changePack, getValues, setValue]
+    [changePack, changeSize, getValues, setValue]
   );
 
   // Deep links (/order?pack=48&flavour=dubai) and same-page pack buttons.
@@ -169,7 +189,7 @@ export default function OrderForm() {
   );
 
   const addFlavor = (f: Flavor) => {
-    if (getItem(f.id) || atFlavorLimit || remaining < MIN_CUPS_PER_FLAVOR) return;
+    if (getItem(f.id) || atFlavorLimit || remaining < MIN_CUPS_PER_FLAVOR || !comesInSize(f, cupSize)) return;
     const next: OrderItem = { id: f.id, name: f.name, tier: f.tier, count: MIN_CUPS_PER_FLAVOR };
     setValue("items", [...items, next], { shouldValidate: Boolean(errors.items) });
   };
@@ -268,7 +288,7 @@ export default function OrderForm() {
                 <ChoiceButton
                   key={s.value}
                   active={field.value === s.value}
-                  onClick={() => field.onChange(s.value)}
+                  onClick={() => (field.value === s.value ? undefined : changeSize(s.value))}
                   label={s.label}
                   sub={s.sub}
                 />
@@ -341,8 +361,10 @@ export default function OrderForm() {
               {group.list.map((f) => {
                 const it = getItem(f.id);
                 const selected = Boolean(it);
-                const canAdd = !selected && !atFlavorLimit && remaining >= MIN_CUPS_PER_FLAVOR;
+                const inSize = comesInSize(f, cupSize);
+                const canAdd = !selected && inSize && !atFlavorLimit && remaining >= MIN_CUPS_PER_FLAVOR;
                 const allergens = f.allergens.map((a) => ALLERGENS[a].short).join(" · ");
+                const note = sizeNote(f);
                 return (
                   <div
                     key={f.id}
@@ -370,6 +392,7 @@ export default function OrderForm() {
                         style={{ opacity: selected ? 0.7 : 0.55 }}
                       >
                         {allergens}
+                        {note ? ` · ${note}` : ""}
                       </span>
                     </button>
                     {selected ? (
@@ -399,7 +422,7 @@ export default function OrderForm() {
                       </div>
                     ) : (
                       <span className="font-mono text-[9px] tracking-[0.18em] uppercase opacity-45">
-                        {canAdd ? "Add" : "Full"}
+                        {canAdd ? "Add" : inSize ? "Full" : "5 oz only"}
                       </span>
                     )}
                   </div>
@@ -567,7 +590,7 @@ export default function OrderForm() {
             rows={3}
             maxLength={2000}
             className="form-input"
-            placeholder="Allergies, event details, a custom label, anything we should know"
+            placeholder="Allergies, event details, anything we should know"
             style={{ resize: "vertical" }}
           />
         </Field>

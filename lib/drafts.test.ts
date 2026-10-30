@@ -1,7 +1,8 @@
 import { describe, expect, it } from "vitest";
 import { DRAFT_TOKENS, PAGE_DRAFTS, draftStrings, type PageDraft } from "./drafts";
 import { EVENT_TYPES, EVENT_VALUES } from "./events";
-import { FLAVORS } from "./flavors";
+import { FLAVORS, comesInSize } from "./flavors";
+import type { CupSize } from "./pricing";
 
 const FIXED_PATHS = new Set(["/", "/menu", "/packages", "/order", "/faq", "/events", "/dessert-cups-hamilton", "/dessert-cups-gta", "/about"]);
 const FLAVOR_SLUGS = new Set(FLAVORS.map((f) => f.slug));
@@ -18,10 +19,15 @@ function linkProblem(href: string): string | null {
   const [path, query] = href.split("?");
   const clean = path.replace(/#.*$/, "");
   if (clean === "/order" && query) {
+    const size = new URLSearchParams(query).get("size") as CupSize | null;
     for (const [k, v] of new URLSearchParams(query)) {
       if (k === "pack" && !["24", "48", "96"].includes(v)) return `bad pack ${v}`;
       if (k === "size" && !["2oz", "5oz"].includes(v)) return `bad size ${v}`;
       if (k === "flavour" && !v.split(",").every((id) => FLAVOR_IDS.has(id))) return `bad flavour ${v}`;
+      if (k === "flavour" && size) {
+        const off = v.split(",").filter((id) => !comesInSize(FLAVORS.find((f) => f.id === id)!, size));
+        if (off.length) return `${off.join(",")} doesn't come in ${size}`;
+      }
       if (k === "event" && !EVENT_VALUES.includes(v)) return `bad event ${v}`;
       if (!["pack", "size", "flavour", "event"].includes(k)) return `unknown param ${k}`;
     }
@@ -86,7 +92,7 @@ describe("page drafts", () => {
   });
 
   it.each(PAGE_DRAFTS)("$path makes no banned claims", (d) => {
-    const banned = [/certified/i, /c(o)?eliac[- ]safe/i, /allergy[- ]safe/i, /\bbest\b/i, /#1\b/, /number one/i, /visit our (shop|store|caf)/i, /\bbak(e|ed|es|ing)\b/i, /better the value|bigger the pack/i];
+    const banned = [/certified/i, /c(o)?eliac[- ]safe/i, /allergy[- ]safe/i, /\bbest\b/i, /#1\b/, /number one/i, /visit our (shop|store|caf)/i, /\bbak(e|ed|es|ing)\b/i, /better the value|bigger the pack/i, /flavou?r recommendation|recommend a mix/i, /labell?ed by flavou?r/i, /priced as a classic/i];
     for (const s of draftStrings(d)) for (const re of banned) expect(s, `${d.slug}: ${re}`).not.toMatch(re);
   });
 

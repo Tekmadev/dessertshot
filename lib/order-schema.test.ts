@@ -1,4 +1,5 @@
 import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
+import { getFlavorById } from "./flavors";
 import { normalizePostalCode, orderSchema, type OrderFormValues } from "./order-schema";
 
 const mango = { id: "mango", name: "Mango Dream", tier: "classic" as const };
@@ -40,11 +41,11 @@ describe("orderSchema", () => {
     expect(orderSchema.safeParse(order()).success).toBe(true);
   });
 
-  it("accepts the Tiramisu card (brief §7.2)", () => {
-    const result = orderSchema.safeParse(
-      order({ items: [{ id: "tiramisu", name: "Tiramisu", tier: "classic", count: 24 }] })
-    );
-    expect(result.success).toBe(true);
+  it("accepts the Tiramisu card as a Premium Dessert Cup, and refuses it as a Mini Shot", () => {
+    const tiramisu = { id: "tiramisu", name: "Tiramisu", tier: "premium" as const, count: 24 };
+    expect(orderSchema.safeParse(order({ items: [tiramisu] })).success).toBe(true);
+    expect(messages(order({ cupSize: "2oz", items: [tiramisu] }))).toContain("Tiramisu comes in Dessert Cups (5 oz) only");
+    expect(messages(order({ items: [{ ...tiramisu, tier: "classic" }] }))).toContain("Unknown flavour in your box");
   });
 
   it("rejects a flavour with fewer than 6 cups", () => {
@@ -63,13 +64,12 @@ describe("orderSchema", () => {
   });
 
   it("rejects more flavours than the pack allows", () => {
-    const five = ["mango", "strawberry", "blueberry", "tiramisu"].map((id, idx) => ({
-      id,
-      name: ["Mango Dream", "Strawberry Fields", "Blueberry Haze", "Tiramisu"][idx],
-      tier: "classic" as const,
-      count: 6,
-    }));
+    const five = ["mango", "strawberry", "blueberry", "tiramisu"].map((id) => {
+      const f = getFlavorById(id)!;
+      return { id, name: f.name, tier: f.tier, count: 6 };
+    });
     const msgs = messages(order({ items: [...five, { ...dubai, count: 6 }] }));
+    expect(msgs).not.toContain("Unknown flavour in your box");
     expect(msgs.some((m) => m.includes("at most 4 flavours"))).toBe(true);
   });
 

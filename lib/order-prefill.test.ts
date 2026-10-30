@@ -1,5 +1,5 @@
 import { describe, expect, it } from "vitest";
-import { fitItemsToPack, hasPrefill, orderHref, parseOrderPrefill, prefilledItems } from "./order-prefill";
+import { fitItemsToPack, hasPrefill, itemsForSize, orderHref, parseOrderPrefill, prefilledItems } from "./order-prefill";
 
 describe("parseOrderPrefill", () => {
   it("reads every supported choice from a deep link", () => {
@@ -28,7 +28,7 @@ describe("parseOrderPrefill", () => {
 
 describe("prefilledItems", () => {
   it("starts each preselected flavour at the minimum, named and tiered from the registry", () => {
-    expect(prefilledItems(["mango", "dubai"], 24)).toEqual([
+    expect(prefilledItems(["mango", "dubai"], 24, "5oz")).toEqual([
       { id: "mango", name: "Mango Dream", tier: "classic", count: 6 },
       { id: "dubai", name: "Dubai Chocolate", tier: "premium", count: 6 },
     ]);
@@ -36,8 +36,18 @@ describe("prefilledItems", () => {
 
   it("never preselects more flavours than the pack holds", () => {
     const ids = ["mango", "strawberry", "blueberry", "tiramisu", "dubai"];
-    expect(prefilledItems(ids, 24)).toHaveLength(4);
-    expect(prefilledItems(ids, 48)).toHaveLength(5);
+    expect(prefilledItems(ids, 24, "5oz")).toHaveLength(4);
+    expect(prefilledItems(ids, 48, "5oz")).toHaveLength(5);
+  });
+});
+
+describe("Tiramisu comes in Dessert Cups only", () => {
+  it("is left out of a Mini Shots deep link and dropped when the size changes to Mini Shots", () => {
+    expect(prefilledItems(["tiramisu", "mango"], 24, "2oz").map((i) => i.id)).toEqual(["mango"]);
+    expect(prefilledItems(["tiramisu", "mango"], 24, "5oz").map((i) => i.id)).toEqual(["tiramisu", "mango"]);
+    const box = prefilledItems(["tiramisu", "mango"], 24, "5oz");
+    expect(itemsForSize(box, "2oz").map((i) => i.id)).toEqual(["mango"]);
+    expect(itemsForSize(box, "5oz")).toEqual(box);
   });
 });
 

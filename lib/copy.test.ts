@@ -29,6 +29,8 @@ const BANNED: [RegExp, string][] = [
   [/visit our (shop|store|caf)/i, "there is no shop yet"],
   [/better the value|bigger the pack/i, "false at 5 oz: the 48 costs more per cup than the 24"],
   [/reply by tomorrow/i, "the brief promises confirmation within the day"],
+  [/flavou?r recommendation|recommend a mix/i, "the owner doesn't offer flavour recommendations (2026-10-30)"],
+  [/labell?ed by flavou?r/i, "no flavour labels on the cups for now (owner, 2026-10-30)"],
   [/farhanaakter/i, "the owner's personal email"],
 ];
 // Copy-only: superlatives (source files legitimately say "best-effort" in comments).
@@ -88,11 +90,11 @@ describe("packs (brief §2.2, §2.3)", () => {
     expect(PACK_RULES_LINE).toContain(`Minimum ${MIN_CUPS_PER_FLAVOR} cups per flavour`);
   });
 
-  it("gives the 48 and 96 exactly the perks the brief lists", () => {
+  it("gives the 48 and 96 the perks the brief lists, minus what the owner doesn't offer", () => {
     const p48 = PACKAGES.find((p) => p.size === 48)!;
     const p96 = PACKAGES.find((p) => p.size === 96)!;
     expect(p48.featured).toBe(true);
-    expect(p48.perks).toEqual(expect.arrayContaining(["Priority preparation", "Free flavour recommendation"]));
+    expect(p48.perks).toContain("Priority preparation");
     expect(p96.perks).toEqual(
       expect.arrayContaining(["Custom label option", "Event day pickup", "Presentation tray included"])
     );

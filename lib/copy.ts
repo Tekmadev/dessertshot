@@ -45,7 +45,7 @@ export const copy = {
   feature: {
     kicker: "What lives in a cup",
     heading: "Four layers, no shortcuts.",
-    body: "Every cup is layered by hand the morning it leaves us: a pressed crumb base, its own cream, the layer that gives it its name, then the finish on top.",
+    body: "Every cup is layered by hand the morning it leaves us: a base pressed or soaked by hand, its own cream, the layer that gives it its name, then the finish on top.",
   },
 
   builder: {
@@ -79,7 +79,7 @@ export const copy = {
     kicker: "The lineup",
     heading: "Eight flavours.",
     headingItalic: "All of them serious.",
-    body: "Pick one, build a mixed box, or ask us to recommend a mix for your 24, 48 or 96 pack. Classic and Premium flavours mix freely in the same box.",
+    body: "Pick one or build a mixed box. Classic and Premium flavours mix freely in the same pack.",
   },
 
   packages: {
@@ -111,8 +111,8 @@ export const copy = {
     deliveryFee: "Delivery fee quoted after we confirm.",
     standard: "48 hours' notice or more.",
     noticeDefault: "Standard orders need 48 hours' notice. Under 48 hours is urgent, subject to availability.",
-    // The rush fee is kept from the current site until the owner answers
-    // CONTENT-REVIEW.md question 6; "subject to availability" is the brief's.
+    // Rush fee confirmed by the owner (2026-10-30); "subject to availability"
+    // is the brief's.
     urgent: "Under 48 hours' notice: urgent, subject to availability. A rush fee applies; we'll confirm it when we reply.",
     notSaturday:
       "Delivery runs on Saturdays. We'll get back to you about your date when we confirm, or you can pick up in Hamilton for free.",

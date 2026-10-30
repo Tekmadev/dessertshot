@@ -3,6 +3,7 @@
 import { motion } from "motion/react";
 import { useState } from "react";
 import { copy, FLAVORS } from "@/lib/copy";
+import { sizeNote } from "@/lib/flavors";
 import { EASE_CINEMA } from "@/lib/constants";
 import { CupGlyph } from "@/components/ui/CupGlyph";
 
@@ -130,6 +131,9 @@ function FlavorCard({
             {flavor.name}
           </h3>
           <p className="mt-1 italic text-ink/55 text-[15px]">{flavor.tagline}</p>
+          {sizeNote(flavor) ? (
+            <p className="mt-2 font-mono text-[10px] tracking-[0.18em] uppercase text-ink/55">{sizeNote(flavor)}</p>
+          ) : null}
         </div>
         <span
           className="font-mono text-[10px] tracking-[0.18em] uppercase px-3 py-1 rounded-full"

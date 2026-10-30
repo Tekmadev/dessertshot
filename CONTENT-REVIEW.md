@@ -6,20 +6,20 @@ Everything on the site that only you can confirm, in one place. Each item names 
 
 | # | Question | Current default | Where it lives |
 |---|---|---|---|
-| 1 | **Tiramisu:** Classic or Premium? What are its layers? Is it sold as Mini Shots, Dessert Cups, or both? Which filter should it sit under? | Classic price, no layers listed, "Chocolate" filter, sold in both sizes | `lib/flavors.ts` |
+| 1 | **Tiramisu:** Classic or Premium? What are its layers? Is it sold as Mini Shots, Dessert Cups, or both? Which filter should it sit under? | ~~Classic price, no layers listed, "Chocolate" filter, sold in both sizes~~ **Answered 2026-10-30: Premium, layered like a typical tiramisu, Dessert Cups (5 oz) only. Still open: its filter (defaults to "Chocolate")** | `lib/flavors.ts` |
 | 2 | **"Gluten-free and eggless":** standard graham crumb, Biscoff cookies and kunafa contain wheat. Is the claim true for every flavour, including Tiramisu? What exact wording do you want? (Never "certified" or "celiac-safe".) | Shown sitewide and in the homepage search description | `lib/claims.ts` (one switch turns it off everywhere) |
 | 3 | **Allergen notice:** "Every cup contains dairy. Kinder Bueno, Ferrero Royale and Dubai Chocolate contain tree nuts, and every cup is made in the same kitchen, so cross-contact with nuts is possible. If you have a severe allergy, message us before you order." Accurate? Anything to add? | As written, in every page footer | `lib/claims.ts` |
-| 4 | **"Real fruit, real cream"** (homepage): are the fruit layers made from real fruit and the creams from real dairy cream? | Shown | `lib/copy.ts` |
-| 5 | **Made the morning of:** is every part (compotes, ganache, kunafa, crumb) made that morning, or are the cups assembled that morning? Can we say "Nothing sits overnight"? | Shown | `lib/copy.ts` |
+| 4 | **"Real fruit, real cream"** (homepage): are the fruit layers made from real fruit and the creams from real dairy cream? | ~~Shown~~ **Answered: yes, kept** | `lib/copy.ts` |
+| 5 | **Made the morning of:** is every part (compotes, ganache, kunafa, crumb) made that morning, or are the cups assembled that morning? Can we say "Nothing sits overnight"? | ~~Shown~~ **Answered: yes, kept** | `lib/copy.ts` |
 
 ## Ordering and packs
 
 | # | Question | Current default | Where it lives |
 |---|---|---|---|
-| 6 | **Rush fee:** do orders with under 48 hours' notice cost extra, or are they only "subject to availability, no guarantee"? | The order form says a rush fee applies, quoted on reply | `components/sections/OrderCTA.tsx` (reworked in Step 3) |
-| 7 | **"Labelled by flavour":** true? For every pack, or only the 24? | Listed as a 24-pack perk only | `lib/packs.ts` |
-| 8 | **Flavour recommendations:** for every pack, or a 48-pack perk only? | "Ask us to recommend a mix for your 24, 48 or 96 pack" | `lib/copy.ts` |
-| 9 | **Pack pricing:** at 5 oz the 48-pack costs slightly more per cup than the 24-pack ($4.15 vs $4.13 Classic, $5.40 vs $5.38 Premium). Intended? | Prices unchanged; no "bigger pack, better value" claim | `lib/pricing.ts` |
+| 6 | **Rush fee:** do orders with under 48 hours' notice cost extra, or are they only "subject to availability, no guarantee"? | ~~The order form says a rush fee applies, quoted on reply~~ **Answered: there is a rush fee, kept** | `components/sections/OrderCTA.tsx` (reworked in Step 3) |
+| 7 | **"Labelled by flavour":** true? For every pack, or only the 24? | ~~Listed as a 24-pack perk only~~ **Answered: no labelling for now, removed** | `lib/packs.ts` |
+| 8 | **Flavour recommendations:** for every pack, or a 48-pack perk only? | ~~"Ask us to recommend a mix for your 24, 48 or 96 pack"~~ **Answered: not offered, removed** | `lib/copy.ts` |
+| 9 | **Pack pricing:** at 5 oz the 48-pack costs slightly more per cup than the 24-pack ($4.15 vs $4.13 Classic, $5.40 vs $5.38 Premium). Intended? | ~~Prices unchanged; no "bigger pack, better value" claim~~ **Answered: later, with an admin page for prices** | `lib/pricing.ts` |
 | 10 | **Biggest order:** is there a maximum number of cups for one date? | "Maximum is whatever your event needs" | `components/layout/Footer.tsx` |
 | 11 | **Custom requests:** OK to say "Custom requests welcome: add them to your notes"? | Shown on /order | `app/order/page.tsx` |
 
@@ -74,7 +74,7 @@ The 13 page drafts (`content/drafts/`) raised 289 questions; they were merged in
 | `q-d-price-examples` | Is it OK for pages to show sample prices (for example about $229 for a 48 of Dessert Cups, half Classic and half Premium) and per-cup prices, and do those totals match what you would quote? Do your prices include HST? | Several pages show estimated totals for sample mixes, and the wedding page shows per-cup prices, all worked out from your current prices, marked before delivery and silent on tax. | 6 |
 | `q-d-mini-shots` | Do Mini Shots have the same layers and toppings as Dessert Cups, and is every flavour other than Tiramisu sold in both sizes? Do Mini Shots come in different cups? | Pages no longer say size is the only difference, and they describe toppings and colours from the full Dessert Cups. | 4 |
 | `q-d-custom-options` | Which specific changes can customers ask for, if any: rose petals added to or left off Dubai Chocolate, a colour to match a theme or school colours, or a particular cup style? Is it right that no flavour is truly blue (the pages describe Blueberry Haze as lilac)? | Pages mention that some Dubai Chocolate cups have rose petals, say each flavour's colours are fixed and that no cup is a true blue, and promise no changes. | 5 |
-| `q-d-recommend-how` | How should customers ask for a flavour recommendation (in the order notes or by message), and can it take a colour theme into account? | Pages tell customers to ask for the recommendation in their request, the bridal shower page asks for colours, guest count and allergies in the notes, and no page promises colour matching. | 4 |
+| ~~`q-d-recommend-how`~~ **Closed by question 8: no recommendations offered.** | How should customers ask for a flavour recommendation (in the order notes or by message), and can it take a colour theme into account? | Pages tell customers to ask for the recommendation in their request, the bridal shower page asks for colours, guest count and allergies in the notes, and no page promises colour matching. | 4 |
 | `q-d-ingredients` | Do any flavours contain gelatin, alcohol (even in flavourings) or added food colouring? Can any be called halal, kosher or vegetarian? Would you like the site to give guidance for pregnant guests or very young children? | Pages make no halal, kosher, vegetarian, alcohol-free or natural-colour claims and give no guidance for pregnancy or young children. | 2 |
 | `q-d-nut-advice` | Pages tell guests who avoid nuts they can stick to Mango Dream, Strawberry Fields, Blueberry Haze and Biscoff Bliss, that this works for preference but not for an allergy, and that the three nut flavours can be set apart on the table. Are those four free of tree nuts in every part? Are you comfortable with this advice? May pages say plainly that no flavour is guaranteed nut-free? | Event pages, the packages page and the FAQ give this advice, each next to a warning that cross-contact is possible, and one extra line about fruit flavours is held back. | 9 |
 | `q-d-other-allergens` | Besides dairy and tree nuts, should the allergen notice also name any others, such as wheat, soy, egg or peanuts? What are Tiramisu's allergens, including any tree nuts? Where should customers send allergy questions: Instagram, email or phone? | Pages name only dairy and tree nuts, treat Tiramisu as dairy only, and some point allergy questions to Instagram. | 9 |
@@ -90,8 +90,32 @@ The new order form needed working answers to a few of the questions above. Each 
 | Default | Where | Related question |
 |---|---|---|
 | The 48 hours are counted to 9 AM on the date needed (the morning the cups are made). Under that is "urgent, subject to availability". | `lib/order-timing.ts` | `q-d-notice` |
-| Urgent orders still say "a rush fee applies; we'll confirm it when we reply", as the current site does. | `lib/copy.ts` (`copy.order.urgent`) | 6 |
+| ~~Urgent orders say "a rush fee applies; we'll confirm it when we reply".~~ **Confirmed: there is a rush fee.** | `lib/copy.ts` (`copy.order.urgent`) | 6 |
 | Dates more than two years out are refused as typos; there is no other booking window. | `lib/order-timing.ts` | `q-d-lead-time` |
 | A delivery date that isn't a Saturday gets a note ("we'll get back to you about your date when we confirm, or you can pick up in Hamilton for free") and is never blocked. | `lib/copy.ts` (`copy.order.notSaturday`) | `q-d-days` |
 | Spam limits: 5 requests an hour and 10 a day from one connection. Customer auto-replies: at most 5 a day to one email address and 80 in 30 days (orders past those are still saved and emailed to you; only the auto-reply is skipped). | `lib/server/rate-limit.ts` | — |
 | Customers are told "we confirm every order within the day, by email", as the current site's "the reply will come from" message implies. | `lib/copy.ts` (`copy.order.confirmation`) | — |
+
+## Answers received (2026-10-30, review page)
+
+Nine answers came in through the review page. What each one changed:
+
+| Question | Answer | What changed |
+|---|---|---|
+| Tiramisu: tier, layers, sizes (`q-tiramisu`) | Premium; layered like a typical tiramisu; 5 oz only | Tiramisu is Premium and Dessert Cups (5 oz) only. The order form greys it out for Mini Shots and drops it if you switch to them, deep links skip it, and the server refuses it at 2 oz. Layers listed as coffee-soaked layers between tiramisu cream, finished with cocoa. |
+| Rush fee (`q-rush`) | There is a rush fee | Kept as is (no change needed). |
+| Cups labelled by flavour (`q-labelled`) | No labelling for now | "Labelled by flavour" removed from the 24. |
+| Flavour recommendations (`q-recommend`) | Not really | "Free flavour recommendation" removed from the 48, from the flavours section, and from seven page drafts; tests now stop it coming back. |
+| 48-pack price per cup (`q-pricing`) | Come back to it later; an admin page is needed to change prices | Prices unchanged. An admin page for prices is noted as a follow-up. |
+| "Real fruit, real cream" (`q-realfruit`) | Sure | Kept. |
+| Made the morning of / "Nothing sits overnight" (`q-morning`) | Yes | Kept. |
+| Other days and pickup times (`q-d-days`) | Anytime while it's open | Pages keep Saturday delivery and pickup by arrangement; see the follow-up below. |
+| Who can collect a pickup (`q-d-collect`) | Yes; the pickup location goes to whoever ordered | Pages can say a friend or courier may collect, with the location sent to the person who ordered (applied when the pages are built in Step 4). |
+
+### Follow-ups these answers raise
+
+- **Tiramisu and the dietary claim:** a typical tiramisu uses ladyfingers, which contain wheat and egg. Is yours made with something gluten-free and eggless? Until that's answered, the site names the layers generically ("coffee-soaked layer"), and the gluten-free and eggless question (`q-gf`) stays open.
+- **Custom label on the 96:** you said there's no labelling on the cups for now. Does that also mean the 96 has no custom label option? It's still listed as a 96 perk (brief §2.3) until you say otherwise (`q-d-96-label`).
+- **Tiramisu's filter:** it sits under Chocolate for now. Is that right?
+- **Pickup hours:** "anytime while it's open": what are the opening hours, so pages can say when pickup is possible?
+- **Admin page for prices:** a page where the owner can change prices without a code change. It needs sign-in and a database-backed price table; it's a separate piece of work.

@@ -8,7 +8,7 @@
  * navigation, so `requestOrderPrefill` hands the choices to the form directly.
  */
 import { EVENT_VALUES, getEventBySlug } from "./events";
-import { getFlavorById, getFlavorBySlug } from "./flavors";
+import { comesInSize, getFlavorById, getFlavorBySlug, type Flavor } from "./flavors";
 import type { OrderItem } from "./order-schema";
 import { MIN_CUPS_PER_FLAVOR, maxFlavorsForPack, type CupSize, type PackQty } from "./pricing";
 
@@ -57,12 +57,20 @@ export function hasPrefill(prefill: OrderPrefill): boolean {
  * The starting box for preselected flavours: the minimum of each, as many as
  * the pack allows. The customer then tops up to the pack size.
  */
-export function prefilledItems(flavourIds: readonly string[], pack: PackQty): OrderItem[] {
+export function prefilledItems(flavourIds: readonly string[], pack: PackQty, size: CupSize): OrderItem[] {
   return flavourIds
     .map((id) => getFlavorById(id))
-    .filter((f) => f !== undefined)
+    .filter((f): f is Flavor => f !== undefined && comesInSize(f, size))
     .slice(0, maxFlavorsForPack(pack))
     .map((f) => ({ id: f.id, name: f.name, tier: f.tier, count: MIN_CUPS_PER_FLAVOR }));
+}
+
+/** The box without flavours that don't come in this size (Tiramisu at 2 oz). */
+export function itemsForSize(items: readonly OrderItem[], size: CupSize): OrderItem[] {
+  return items.filter((i) => {
+    const f = getFlavorById(i.id);
+    return !f || comesInSize(f, size);
+  });
 }
 
 /**
