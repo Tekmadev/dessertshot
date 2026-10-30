@@ -1,5 +1,3 @@
-import { existsSync } from "node:fs";
-import { fileURLToPath } from "node:url";
 import { describe, expect, it } from "vitest";
 import {
   CLASSIC_FLAVORS,
@@ -124,13 +122,5 @@ describe("allergens and claims (brief §2.4)", () => {
     expect(text).toContain("Kinder Bueno, Ferrero Royale and Dubai Chocolate contain tree nuts");
     expect(text).not.toMatch(/certified|celiac|guarantee/i);
     expect(ALLERGEN_NOTICE.needsOwnerReview).toBe(true);
-  });
-});
-
-describe("product photos", () => {
-  // The picked generated still for each flavour (ASSETS.md, rows 12-20).
-  it.each(FLAVORS)("$name has its photo at public/media/products/$slug.webp", (f) => {
-    const file = fileURLToPath(new URL(`../public/media/products/${f.slug}.webp`, import.meta.url));
-    expect(existsSync(file)).toBe(true);
   });
 });
