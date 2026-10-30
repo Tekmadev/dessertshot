@@ -74,7 +74,7 @@ The slow parts of this project are not code. They are your decisions and approva
 - [x] Step 1 Foundation — built, six-lens reviewed (7 defects fixed), 122 tests green
 - [x] Step 2 Asset pilot → review round 1 — cut-outs (11 credits), 12 public page drafts (+ /open-a-shop kept private), 27 merged owner questions; review page (private): https://claude.ai/artifact/X6ULMeMSxhbo5Fdx6X6GYN — answers live in its `answers` collection. **Waiting on the owner.**
 - [x] Step 3 Order flow — built, browser-checked (dry run), reviewed twice (36 findings fixed), 263 tests green. **Owner setup pending:** `docs/order-setup.md` (EmailJS, Supabase secret key, Vercel env, then migration 004 after deploy).
-- [ ] Then: fully generated product shots (decided in chat 2026-10-30, overrides brief §4.1; see `DECISIONS.md`) — quoted pilot first, stills approved before any video.
+- [ ] Generated product shots (decided in chat 2026-10-30, overrides brief §4.1) — GPT Image 2.5 chosen; all 8 flavours generated, 2 variants each (48 credits; project total 59). **Waiting on picks** (one per flavour; Tiramisu's side layers are invented). Then the hero/tray videos, quoted first.
 - [ ] Step 4 Videos, experience, pages
 - [ ] Step 5 SEO + QA → review round 2
 - [ ] Step 6 Preview deploy
