@@ -228,3 +228,29 @@ html.lenis body {
     scroll-behavior: auto !important;
   }
 }
+
+/* Order form fields (components/order/OrderForm.tsx). In the stylesheet, not
+   styled-jsx, so they're in the server-rendered HTML from the first paint. */
+.form-input {
+  width: 100%;
+  padding: 0.85rem 1rem;
+  background: transparent;
+  border: 0;
+  border-bottom: 1px solid var(--color-ink-15);
+  color: var(--color-ink);
+  font-family: var(--font-sans);
+  font-size: 16px;
+  letter-spacing: -0.005em;
+  outline: none;
+  transition: border-color 600ms cubic-bezier(0.16, 1, 0.3, 1);
+}
+.form-input:focus {
+  border-bottom-color: var(--color-ember);
+}
+.form-input::placeholder {
+  color: var(--color-ink-40);
+}
+select.form-input {
+  appearance: none;
+  background: transparent;
+}

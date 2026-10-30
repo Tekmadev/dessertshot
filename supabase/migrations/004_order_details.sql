@@ -1,30 +1,38 @@
 -- ============================================================
--- DESSERT SHOT — Order details + spam throttle   (DRAFT)
+-- DESSERT SHOT — Order details, server-only writes, spam throttle
 -- Run in the Supabase SQL editor AFTER 003_mix_and_match.sql.
 --
--- STATUS: DRAFT. Do not run until Step 3 (order flow) finalizes it;
--- it will be handed over with review round 1.
+-- ORDER MATTERS. Run this only after SUPABASE_SECRET_KEY is set in
+-- Vercel (Production and Preview) and the site has been redeployed
+-- with the Step 3 order flow. This migration stops the public
+-- (publishable) key from writing orders; from then on only the
+-- server, using the secret key, can. If it runs first, orders still
+-- reach the inbox by email but are not saved until the key is set.
+-- See docs/order-setup.md.
 --
--- Adds structured fields the new order flow collects, so the owner no
--- longer has to dig the delivery address out of the notes:
---   - event_type            optional dropdown (analytics + event pages)
---   - delivery_address      street address for delivery quotes
---   - delivery_postal_code  postal code for delivery quotes
---   - source                deep-link origin, e.g. "menu/dubai-chocolate"
---   - client_ip_hash        salted hash of the requester IP (never the raw IP)
--- and a narrow, count-only function the API uses for rate limiting.
+-- What it does:
+--   1. Structured fields the order form now collects, so the owner
+--      no longer digs the delivery address out of the notes:
+--        event_type, delivery_address, delivery_postal_code, source
+--      and a stable flavor_id on each line item.
+--   2. Closes the public insert policies. Before this, anyone holding
+--      the publishable key (it ships in every page) could write rows
+--      straight into orders, skipping the site's validation.
+--   3. A private table for the order API's spam limits. It stores
+--      only salted hashes (never raw IPs or emails), deleted after
+--      24 hours, plus a 30-day count of auto-replies.
 --
 -- Safe to re-run: every statement is idempotent or guarded.
 -- ============================================================
 
--- ── New nullable columns (existing rows unaffected) ──
+-- ── 1. New nullable columns (existing rows unaffected) ──
 alter table orders add column if not exists event_type text;
 alter table orders add column if not exists delivery_address text;
 alter table orders add column if not exists delivery_postal_code text;
 alter table orders add column if not exists source text;
-alter table orders add column if not exists client_ip_hash text;
 
--- ── Constrain event_type to the event pages' types ──
+-- Constrain event_type to the event types in lib/events.ts (a test keeps
+-- this list and that file in sync).
 alter table orders drop constraint if exists orders_event_type_check;
 alter table orders
   add constraint orders_event_type_check
@@ -36,50 +44,96 @@ alter table orders
     )
   );
 
--- Canadian postal code shape (A1A 1A1, space optional), when present.
+-- The API stores postal codes normalised to "A1A 1A1".
 alter table orders drop constraint if exists orders_delivery_postal_code_check;
 alter table orders
   add constraint orders_delivery_postal_code_check
   check (
     delivery_postal_code is null
-    or delivery_postal_code ~* '^[A-Z][0-9][A-Z] ?[0-9][A-Z][0-9]$'
+    or delivery_postal_code ~ '^[A-Z][0-9][A-Z] [0-9][A-Z][0-9]$'
   );
 
-create index if not exists idx_orders_ip_created
-  on orders(client_ip_hash, created_at desc);
-
--- ── Stable flavour id on each line item ──
 -- Names can be reworded; the registry id (lib/flavors.ts) never changes.
 alter table order_items add column if not exists flavor_id text;
 
--- Step 3 must also resolve, before this ships (from the Step 1 review):
---   * move order writes to a server-only Supabase key and tighten the
---     insert policies from 001/003 to match.
---   * event_type values must come from one EVENT_TYPES registry shared with
---     the /events/[type] routes and the form.
---   * postal codes: normalise in the shared schema; align this CHECK with it.
---   * client_ip_hash retention: keep hashes out of orders (separate table,
---     purged after 24h) and select explicit columns in GET /api/orders.
+-- ── 2. Only the server writes orders ──
+-- The secret key bypasses row level security, so the server needs no
+-- policy. Reading stays as it was: signed-in customers see their own.
+drop policy if exists "Anyone can insert orders" on orders;
+drop policy if exists "Anyone can insert order items" on order_items;
+drop policy if exists "Anyone can insert analytics events" on analytics_events;
 
--- ── Rate-limit helper ──
--- The API uses the publishable (anon) key, and anon cannot SELECT orders.
--- This SECURITY DEFINER function exposes ONLY a count of recent orders for one
--- IP hash — no rows, no columns. search_path is pinned so it can't be hijacked.
-create or replace function public.recent_order_count(
-  p_ip_hash text,
-  p_minutes integer default 60
+-- ── 3. Spam throttle (private) ──
+create table if not exists order_rate_limits (
+  id          uuid primary key default gen_random_uuid(),
+  created_at  timestamptz not null default now(),
+  bucket      text not null,
+  key_hash    text not null
+);
+
+-- Buckets used by lib/server/rate-limit.ts (a test keeps the two in sync).
+alter table order_rate_limits drop constraint if exists order_rate_limits_bucket_check;
+alter table order_rate_limits
+  add constraint order_rate_limits_bucket_check
+  check (bucket in ('ip', 'ip_day', 'email', 'autoreply'));
+
+create index if not exists idx_order_rate_limits_lookup
+  on order_rate_limits (bucket, key_hash, created_at desc);
+create index if not exists idx_order_rate_limits_created
+  on order_rate_limits (created_at);
+
+-- Row level security with no policies: the publishable key can neither
+-- read nor write this table. Supabase no longer grants new tables to the
+-- API roles automatically, so grant the server's role explicitly.
+alter table order_rate_limits enable row level security;
+revoke all on order_rate_limits from anon, authenticated;
+grant select, insert, delete on order_rate_limits to service_role;
+
+-- Count-and-record in one step, so two requests at the same moment can't
+-- both slip under the limit. Returns false when the limit is reached.
+-- Also clears old entries: hashed IPs and emails after a day; the monthly
+-- auto-reply count (one shared key, no personal data) after 31 days.
+create or replace function public.take_order_rate_limit(
+  p_bucket text,
+  p_key_hash text,
+  p_window_minutes integer,
+  p_max integer
 )
-returns integer
-language sql
-stable
-security definer
+returns boolean
+language plpgsql
+security invoker
 set search_path = public
 as $$
-  select count(*)::integer
-  from public.orders
-  where client_ip_hash = p_ip_hash
-    and created_at > now() - make_interval(mins => greatest(1, least(p_minutes, 1440)));
+declare
+  recent integer;
+begin
+  perform pg_advisory_xact_lock(hashtextextended(p_bucket || ':' || p_key_hash, 0));
+
+  delete from order_rate_limits
+  where (bucket <> 'autoreply' and created_at < now() - interval '24 hours')
+     or created_at < now() - interval '31 days';
+
+  select count(*) into recent
+  from order_rate_limits
+  where bucket = p_bucket
+    and key_hash = p_key_hash
+    and created_at > now() - make_interval(mins => greatest(1, least(p_window_minutes, 44640)));
+
+  if recent >= p_max then
+    return false;
+  end if;
+
+  insert into order_rate_limits (bucket, key_hash) values (p_bucket, p_key_hash);
+  return true;
+end;
 $$;
 
-revoke all on function public.recent_order_count(text, integer) from public;
-grant execute on function public.recent_order_count(text, integer) to anon, authenticated;
+revoke all on function public.take_order_rate_limit(text, text, integer, integer) from public, anon, authenticated;
+grant execute on function public.take_order_rate_limit(text, text, integer, integer) to service_role;
+
+-- An earlier draft of this file defined a public count function for the
+-- throttle. It is no longer used; drop it if it was ever created.
+drop function if exists public.recent_order_count(text, integer);
+
+-- Make the API see the new columns and function straight away.
+notify pgrst, 'reload schema';

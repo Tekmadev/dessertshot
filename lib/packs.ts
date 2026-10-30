@@ -3,7 +3,18 @@
  * pricing rules, so "Mix up to N flavours" can never disagree with what the
  * order form and the API enforce.
  */
-import { MIN_CUPS_PER_FLAVOR, maxFlavorsForPack, type PackQty } from "./pricing";
+import { MIN_CUPS_PER_FLAVOR, maxFlavorsForPack, type CupSize, type PackQty } from "./pricing";
+
+export const CUP_SIZES = [
+  { value: "2oz", label: "Mini Shots", sub: "2 oz · tasting size" },
+  { value: "5oz", label: "Dessert Cups", sub: "5 oz · full serving" },
+] as const satisfies readonly { value: CupSize; label: string; sub: string }[];
+
+/** "Dessert Cups (5 oz)" */
+export function cupSizeLabel(size: CupSize): string {
+  const s = CUP_SIZES.find((c) => c.value === size)!;
+  return `${s.label} (${size.replace("oz", " oz")})`;
+}
 
 export const PACK_SIZES = [24, 48, 96] as const satisfies readonly PackQty[];
 export const MIN_ORDER_CUPS = Math.min(...PACK_SIZES);

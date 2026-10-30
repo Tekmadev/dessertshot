@@ -28,6 +28,8 @@ type PageMetadataInput = {
   path: string;
   /** Use the title as-is, without the brand template (homepage). */
   absoluteTitle?: boolean;
+  /** Keep the page out of search results (e.g. /order/thanks). */
+  noindex?: boolean;
   image?: OgImage;
 };
 
@@ -36,6 +38,7 @@ export function pageMetadata({
   description,
   path,
   absoluteTitle = false,
+  noindex = false,
   image = DEFAULT_OG_IMAGE,
 }: PageMetadataInput): Metadata {
   const fullTitle = absoluteTitle ? title : `${title}${TITLE_SEPARATOR}${BUSINESS.name}`;
@@ -43,6 +46,9 @@ export function pageMetadata({
     title: absoluteTitle ? { absolute: title } : title,
     description,
     alternates: { canonical: path },
+    // A whole new object, never a spread of the layout's: metadata merges
+    // shallowly, and a leftover googleBot "index" would contradict this.
+    ...(noindex ? { robots: { index: false, follow: true } } : {}),
     openGraph: {
       type: "website",
       siteName: BUSINESS.name,

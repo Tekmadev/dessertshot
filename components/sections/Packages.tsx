@@ -1,15 +1,24 @@
 "use client";
 
+import { useRouter } from "next/navigation";
 import { motion } from "motion/react";
 import { Check } from "lucide-react";
 import { copy, PACKAGES, PACK_RULES_LINE, MENU_PRICES } from "@/lib/copy";
 import { EASE_CINEMA } from "@/lib/constants";
+import { orderHref, requestOrderPrefill, type OrderPrefill } from "@/lib/order-prefill";
 
 const QUANTITIES: (24 | 48 | 96)[] = [24, 48, 96];
 
 export default function Packages() {
-  const scrollToOrder = () => {
-    document.getElementById("contact")?.scrollIntoView({ behavior: "smooth" });
+  const router = useRouter();
+
+  // Preselect what was clicked in the order form: below on the same page
+  // (home, /order), otherwise on /order (e.g. from /menu).
+  const orderWith = (prefill: OrderPrefill) => {
+    const form = document.getElementById("contact");
+    if (!form) return router.push(orderHref(prefill));
+    requestOrderPrefill(prefill);
+    form.scrollIntoView({ behavior: "smooth" });
   };
 
   return (
@@ -70,7 +79,7 @@ export default function Packages() {
             subtitle="2 oz · tasting size"
             description="Light, elegant, perfect for events where guests try everything on the table."
             index={0}
-            onOrder={scrollToOrder}
+            onOrder={() => orderWith({ size: "2oz" })}
           />
           <SizeBlock
             cupSize="5oz"
@@ -78,14 +87,14 @@ export default function Packages() {
             subtitle="5 oz · full serving"
             description="The full experience. Every layer lands the way it was built."
             index={1}
-            onOrder={scrollToOrder}
+            onOrder={() => orderWith({ size: "5oz" })}
           />
         </div>
 
         {/* Pack info cards */}
         <div className="grid grid-cols-1 md:grid-cols-3 gap-px bg-ink/15 hairline-top hairline-bottom">
           {PACKAGES.map((pkg, i) => (
-            <PackCard key={pkg.size} pkg={pkg} index={i} onOrder={scrollToOrder} />
+            <PackCard key={pkg.size} pkg={pkg} index={i} onOrder={() => orderWith({ pack: pkg.size })} />
           ))}
         </div>
 

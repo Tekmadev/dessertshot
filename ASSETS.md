@@ -1,7 +1,7 @@
 # Higgsfield asset ledger
 
-**Hard cap for this project: 200 credits.** Stop at 200.
-Starting balance: **981 credits** (Plus plan, checked 2026-10-30). **Hard stop when the balance reaches 781.**
+**Budget for this project: about 200 credits.** A working budget, not a hard stop (relaxed in chat, 2026-10-30): stay well within it and flag before any spend that would take the total past it.
+Starting balance: **981 credits** (Plus plan, checked 2026-10-30). The budget line is a balance of 781.
 
 Rules (brief §4): image-to-video only from the owner's real photos; fidelity check after every generation (reject if cup shape/lid/toppings/swirl/layer order/colours drift, or any text/logo/wrapper/distorted hands appear); no people/hands; stills first → show a contact sheet → **wait for approval before spending video credits**; quote cost before each generation; prefer `remove_background` + `upscale_image` for cut-outs over regeneration.
 

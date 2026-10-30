@@ -2,21 +2,26 @@
  * The order request schema, shared by the order form (client) and the order
  * API (server) so the two can never disagree. The server re-validates every
  * request with this schema and prices it from the flavour registry — never
- * from client-supplied tiers or totals.
+ * from client-supplied tiers or totals. Urgency is not an input: both sides
+ * derive it from the date (lib/order-timing.ts).
  */
 import { z } from "zod";
+import { EVENT_VALUES } from "./events";
 import { getFlavorById } from "./flavors";
+import { isRealCalendarDate, orderTiming } from "./order-timing";
 import { MIN_CUPS_PER_FLAVOR, maxFlavorsForPack, type PackQty } from "./pricing";
-
-// "2026-02-30" matches YYYY-MM-DD but isn't a date; Postgres would reject it.
-function isRealCalendarDate(value: string): boolean {
-  const [y, m, d] = value.split("-").map(Number);
-  const date = new Date(Date.UTC(y, m - 1, d));
-  return date.getUTCFullYear() === y && date.getUTCMonth() === m - 1 && date.getUTCDate() === d;
-}
 
 export const CUP_SIZE_VALUES = ["2oz", "5oz"] as const;
 export const PACK_QTY_VALUES = ["24", "48", "96"] as const;
+
+// Canada Post: no D, F, I, O, Q or U anywhere, and no W or Z in first place.
+const POSTAL_CODE_RE = /^[ABCEGHJ-NPRSTVXY]\d[ABCEGHJ-NPRSTV-Z]\d[ABCEGHJ-NPRSTV-Z]\d$/;
+
+/** "l8p4r5", "L8P-4R5" → "L8P 4R5"; null if it isn't a Canadian postal code. */
+export function normalizePostalCode(value: string): string | null {
+  const compact = value.toUpperCase().replace(/[\s-]/g, "");
+  return POSTAL_CODE_RE.test(compact) ? `${compact.slice(0, 3)} ${compact.slice(3)}` : null;
+}
 
 export const orderItemSchema = z.object({
   id: z.string().min(1),
@@ -30,7 +35,6 @@ export const orderSchema = z
     cupSize: z.enum(CUP_SIZE_VALUES),
     packQty: z.enum(PACK_QTY_VALUES),
     items: z.array(orderItemSchema).min(1, "Select at least one flavour"),
-    urgency: z.enum(["standard", "urgent"]),
     fulfillment: z.enum(["pickup", "delivery"]),
     name: z
       .string()
@@ -42,13 +46,22 @@ export const orderSchema = z
     date: z
       .string()
       .min(1, "Please select a desired date")
-      .regex(/^\d{4}-\d{2}-\d{2}$/, "Please select a valid date")
       .refine(isRealCalendarDate, "Please select a valid date"),
+    eventType: z
+      .string()
+      .optional()
+      .refine((v) => !v || EVENT_VALUES.includes(v), "Please choose an event type from the list"),
     notes: z.string().max(2000, "Please keep notes under 2000 characters").optional(),
     deliveryAddress: z
       .string()
       .max(300, "Please keep the address under 300 characters")
       .optional(),
+    deliveryPostalCode: z.string().max(10, "Please enter a postal code like L8P 4R5").optional(),
+    // Where the request came from (path + deep-link query), for the owner's records.
+    source: z.string().max(300).startsWith("/").optional(),
+    // One id per filled-in form, kept across retries, so a retry after a
+    // dropped connection isn't saved or emailed twice.
+    requestId: z.uuid().optional(),
   })
   .superRefine((data, ctx) => {
     const packSize = Number(data.packQty) as PackQty;
@@ -90,12 +103,31 @@ export const orderSchema = z
         message: `Cup counts must total ${packSize} (currently ${totalCups})`,
       });
     }
-    if (data.fulfillment === "delivery" && !data.deliveryAddress?.trim()) {
-      ctx.addIssue({
-        code: "custom",
-        path: ["deliveryAddress"],
-        message: "Add a delivery address so we can quote the fee",
-      });
+
+    if (isRealCalendarDate(data.date)) {
+      const timing = orderTiming(data.date, new Date());
+      if (timing === "past") {
+        ctx.addIssue({ code: "custom", path: ["date"], message: "Please choose today or a later date" });
+      } else if (timing === "too-far") {
+        ctx.addIssue({ code: "custom", path: ["date"], message: "Please choose a date within the next two years" });
+      }
+    }
+
+    if (data.fulfillment === "delivery") {
+      if (!data.deliveryAddress?.trim()) {
+        ctx.addIssue({
+          code: "custom",
+          path: ["deliveryAddress"],
+          message: "Add a delivery address so we can quote the fee",
+        });
+      }
+      if (!normalizePostalCode(data.deliveryPostalCode ?? "")) {
+        ctx.addIssue({
+          code: "custom",
+          path: ["deliveryPostalCode"],
+          message: "Please enter a postal code like L8P 4R5",
+        });
+      }
     }
   });
 

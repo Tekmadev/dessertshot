@@ -12,6 +12,8 @@ export type RouteMeta = {
   description: string;
   /** Use the title as-is, without the brand template (homepage). */
   absoluteTitle?: boolean;
+  /** Keep out of search results and the sitemap. */
+  noindex?: boolean;
 };
 
 const dietary = dietaryClaim();
@@ -34,5 +36,12 @@ export const ROUTES = {
     title: "Order Dessert Cups for Pickup or Delivery",
     description:
       "Request a pack of 24, 48 or 96 dessert cups or mini dessert shots. Free pickup in Hamilton, Saturday delivery across the GTA. We confirm within the day.",
+  },
+  orderThanks: {
+    path: "/order/thanks",
+    noindex: true,
+    title: "Order Request Received",
+    description:
+      "Your Dessert Shot order request has arrived. Here is your summary and what happens next: we confirm by email within the day.",
   },
 } as const satisfies Record<string, RouteMeta>;

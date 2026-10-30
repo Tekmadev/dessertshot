@@ -104,6 +104,23 @@ export const copy = {
     primary: { label: "Place an Order", href: "/order" },
     secondary: { label: "Browse the Menu", href: "/menu" },
   },
+
+  // The order form, the order emails and /order/thanks (brief §7).
+  order: {
+    totalLabel: "Estimated total (before delivery)",
+    deliveryFee: "Delivery fee quoted after we confirm.",
+    standard: "48 hours' notice or more.",
+    noticeDefault: "Standard orders need 48 hours' notice. Under 48 hours is urgent, subject to availability.",
+    // The rush fee is kept from the current site until the owner answers
+    // CONTENT-REVIEW.md question 6; "subject to availability" is the brief's.
+    urgent: "Under 48 hours' notice: urgent, subject to availability. A rush fee applies; we'll confirm it when we reply.",
+    notSaturday:
+      "Delivery runs on Saturdays. We'll get back to you about your date when we confirm, or you can pick up in Hamilton for free.",
+    pickup: "Pickup is free in Hamilton. We share the pickup spot when we confirm your order.",
+    // When the thanks page doesn't know which was chosen.
+    pickupOrDelivery: "Pickup is free in Hamilton; for delivery, the fee is quoted after we confirm.",
+    confirmation: "We confirm every order within the day, by email.",
+  },
 } as const;
 
 export const HOW_STEPS = [

@@ -53,15 +53,14 @@ The slow parts of this project are not code. They are your decisions and approva
 - `CONTENT-REVIEW.md`: Tiramisu tier/price/layers/sizes, business phone, gluten-free + allergen statement, delivery areas, pickup wording, about story, `/open-a-shop` publish or hold.
 - The reshoot (2–4 cups).
 - Setup only the owner can do:
-  - In EmailJS: connect dessertshot.ca@gmail.com as the sending service, add a customer auto-reply template, enable API access for non-browser apps, and put the private key in Vercel env (never in chat).
-  - Add a server-only Supabase secret key to Vercel env (never in chat), then run migration `004` in the Supabase SQL editor.
+  - Email, Supabase key, Vercel env and migration `004`, in that order: step by step in `docs/order-setup.md` (keys go in Vercel, never in chat).
   - Confirm Preview-environment env vars exist in Vercel.
   - The settings in `CONTENT-REVIEW.md` (make the apex→www redirect permanent; delete the unused `NEXT_PUBLIC_BUSINESS_EMAIL`).
 - OK for one clearly labelled test order. There is only one database, so it lands in the live orders table and her inbox.
 
 ## Constraints carried forward
 
-- Credits: 981 available, project cap 200 → **hard stop at 781**. Every spend is quoted first and logged in `ASSETS.md`.
+- Credits: 981 available, project budget about 200 (balance 781). A working budget, not a hard stop: stay well within it and flag before going past it. Every spend is quoted first and logged in `ASSETS.md`.
 - Hosting: GitHub `Tekmadev/dessertshot` (**public**), no local Vercel link, so a branch push most likely triggers a Vercel preview. A push is outward-facing and gets asked first. Never `main`, never production, never DNS.
 - Primary host is **www.dessertshot.ca** (production: apex → 307 → www). No app-level host redirect.
 - Privacy: original photos carry GPS and stay out of git (`/source-photos/` is ignored). Every derived image is re-encoded without metadata before it reaches `public/` or any third party.
@@ -73,8 +72,9 @@ The slow parts of this project are not code. They are your decisions and approva
 - [x] Phase 0 audit (`fa9a3e8`)
 - [x] All 10 photos reviewed and mapped (`ASSETS.md`); balance recorded
 - [x] Step 1 Foundation — built, six-lens reviewed (7 defects fixed), 122 tests green
-- [x] Step 2 Asset pilot → review round 1 — cut-outs (11 credits), 13 page drafts, 27 merged owner questions; review page (private): https://claude.ai/artifact/X6ULMeMSxhbo5Fdx6X6GYN — answers live in its `answers` collection. **Waiting on the owner.**
-- [ ] Step 3 Order flow
+- [x] Step 2 Asset pilot → review round 1 — cut-outs (11 credits), 12 public page drafts (+ /open-a-shop kept private), 27 merged owner questions; review page (private): https://claude.ai/artifact/X6ULMeMSxhbo5Fdx6X6GYN — answers live in its `answers` collection. **Waiting on the owner.**
+- [x] Step 3 Order flow — built, browser-checked (dry run), reviewed twice (36 findings fixed), 263 tests green. **Owner setup pending:** `docs/order-setup.md` (EmailJS, Supabase secret key, Vercel env, then migration 004 after deploy).
+- [ ] Then: fully generated product shots (decided in chat 2026-10-30, overrides brief §4.1; see `DECISIONS.md`) — quoted pilot first, stills approved before any video.
 - [ ] Step 4 Videos, experience, pages
 - [ ] Step 5 SEO + QA → review round 2
 - [ ] Step 6 Preview deploy

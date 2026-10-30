@@ -82,3 +82,16 @@ The 13 page drafts (`content/drafts/`) raised 289 questions; they were merged in
 | `q-d-tastings` | Do you offer tastings, for example to wedding couples before they book? | The wedding page says nothing about tastings. | 2 |
 
 Three further questions, about a page that stays unpublished until the owner approves it, are on the private review page only.
+
+## Order form defaults to confirm (Step 3)
+
+The new order form needed working answers to a few of the questions above. Each is one line in config, easy to change:
+
+| Default | Where | Related question |
+|---|---|---|
+| The 48 hours are counted to 9 AM on the date needed (the morning the cups are made). Under that is "urgent, subject to availability". | `lib/order-timing.ts` | `q-d-notice` |
+| Urgent orders still say "a rush fee applies; we'll confirm it when we reply", as the current site does. | `lib/copy.ts` (`copy.order.urgent`) | 6 |
+| Dates more than two years out are refused as typos; there is no other booking window. | `lib/order-timing.ts` | `q-d-lead-time` |
+| A delivery date that isn't a Saturday gets a note ("we'll get back to you about your date when we confirm, or you can pick up in Hamilton for free") and is never blocked. | `lib/copy.ts` (`copy.order.notSaturday`) | `q-d-days` |
+| Spam limits: 5 requests an hour and 10 a day from one connection. Customer auto-replies: at most 5 a day to one email address and 80 in 30 days (orders past those are still saved and emailed to you; only the auto-reply is skipped). | `lib/server/rate-limit.ts` | — |
+| Customers are told "we confirm every order within the day, by email", as the current site's "the reply will come from" message implies. | `lib/copy.ts` (`copy.order.confirmation`) | — |

@@ -29,6 +29,11 @@ describe("pageMetadata()", () => {
     expect(meta.openGraph?.title).toBe("Home title");
   });
 
+  it("keeps noindex pages out of search with a fresh robots object", () => {
+    expect(pageMetadata({ title: "x", description: "d", path: "/x", noindex: true }).robots).toEqual({ index: false, follow: true });
+    expect(pageMetadata({ title: "x", description: "d", path: "/x" }).robots).toBeUndefined();
+  });
+
   it("always includes a share image", () => {
     const meta = pageMetadata({ title: "x", description: "d", path: "/x" });
     expect(meta.openGraph?.images).toEqual([DEFAULT_OG_IMAGE]);
