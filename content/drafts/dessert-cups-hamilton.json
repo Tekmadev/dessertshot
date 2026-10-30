@@ -1,0 +1,53 @@
+{
+  "slug": "dessert-cups-hamilton",
+  "path": "/dessert-cups-hamilton",
+  "status": "awaiting-owner-review",
+  "metaTitle": "Dessert Cups in Hamilton for Your Dessert Table",
+  "metaDescription": "Hand-layered dessert cups for parties and dessert tables in Hamilton, made fresh the morning of pickup. Free pickup by arrangement; order 48 hours ahead.",
+  "h1": "Dessert cups in Hamilton, made fresh the morning of pickup",
+  "intro": "Dessert Shot has been hand-layering dessert cups and mini dessert shots in Hamilton since 2024. Pickup free in Hamilton. Collection is by arrangement, standard orders need at least 48 hours' notice, and the morning you collect is the morning your cups are made. Here's how to time it, and how to plan a dessert table you'll collect yourself.",
+  "sections": [
+    {
+      "heading": "How Hamilton pickup works",
+      "body": "Ordering starts with a request, not a payment. There's nothing to pay online, and nothing is set until we confirm.\n\n1. **Send your request.** On the [order page](/order), choose Mini Shots or Dessert Cups, a pack of 24, 48 or 96, your flavours, pickup and the date you need them. Add your event date and any timing needs in the notes.\n2. **We confirm within the day.** Pickup is by arrangement: the location comes with your confirmation, and we'll let you know anything else we need from you.\n3. **We make your cups fresh the morning of pickup.** Plan around your pickup date, not only your event date.\n4. **You collect them in Hamilton.**"
+    },
+    {
+      "heading": "Counting back 48 hours to pickup",
+      "body": "Standard orders need at least 48 hours' notice, counted to the time you pick up. Picking up on the morning of the 14th? Send your request by the same time on the 12th, or on the 11th to stay clear of the urgent window.\n\nAnything under 48 hours is an urgent order. Urgent orders depend on availability and aren't guaranteed, but you can still ask: send your date and we'll let you know within the day.\n\nIf your date is already set, there's no need to wait: [send your request](/order) as soon as you know your numbers.\n\nChoosing Saturday delivery instead? It only runs on Saturdays, so read the next section before you pick a date."
+    },
+    {
+      "heading": "Prefer delivery? It runs on Saturdays",
+      "body": "If collecting doesn't suit, ask about delivery: it runs on Saturdays across the GTA, and the fee depends on your location, so we quote it after we confirm. Until then, the order form shows an estimated total before delivery.\n\nChoose delivery on the form and add your address and postal code. For how Saturday delivery works, see [Saturday delivery across the GTA](/dessert-cups-gta)."
+    },
+    {
+      "heading": "Planning a dessert table in Hamilton",
+      "body": "Layered cups work hard on a dessert table: every one comes portioned, and the colour is already in the layers. Sizes, how many to order and what each pack includes are all on [the packages page](/packages).\n\nLet the layers set the palette. A 24 of the three fruit flavours, as 12 [Mango Dream](/menu/mango-dream), 6 [Strawberry Fields](/menu/strawberry-fields) and 6 [Blueberry Haze](/menu/blueberry-haze), puts saffron-orange, glossy red and near-black violet in one box. All three are Classic, so it's $45 as Mini Shots or $99 as Dessert Cups. [Start a 24 of Mini Shots with Mango Dream](/order?pack=24&size=2oz&flavour=mango), then add Strawberry Fields and Blueberry Haze.\n\nFor deeper tones, [Kinder Bueno](/menu/kinder-bueno), [Ferrero Royale](/menu/ferrero-royale) and [Dubai Chocolate](/menu/dubai-chocolate) each carry a ganache layer, Dubai with pale green pistachio cream and a green marbled swirl. [Biscoff Bliss](/menu/biscoff-bliss) sits between the two palettes, caramel-tan under an amber top. Not sure which flavours to pick? The 48 comes with a free flavour recommendation: [start a 48 of Dessert Cups](/order?pack=48&size=5oz).\n\nCollecting for a big table? The 96 comes with a presentation tray, event-day pickup and a custom label option, and [planning by event](/events) covers weddings, showers and more."
+    },
+    {
+      "heading": "Allergens at a shared table",
+      "body": "Building a table for guests who avoid nuts? Leaving the flavours flagged for tree nuts off the table doesn't remove the chance of nut cross-contact. Every flavour contains dairy too, so there isn't a dairy-free cup to set aside.\n\nEach flavour page on [the menu](/menu) flags its allergens, the full allergen notice is at the bottom of this page, and the [FAQ](/faq) covers allergens too. If anyone at your table has a severe allergy, message us before you send your request."
+    }
+  ],
+  "faqs": [
+    {
+      "q": "Is pickup in Hamilton free?",
+      "a": "Yes. There's no charge to collect your cups in Hamilton, and pickup is by arrangement once we confirm your order. Only Saturday delivery has a fee, which depends on your location and is quoted after we confirm."
+    },
+    {
+      "q": "When do I find out where to pick up?",
+      "a": "When we confirm your order. The pickup location is shared after confirmation, and we confirm within the day."
+    },
+    {
+      "q": "How much notice does a Hamilton pickup need?",
+      "a": "At least 48 hours before the time you pick up. With less notice it's an urgent order, subject to availability and not guaranteed, so send your date and we'll tell you within the day."
+    },
+    {
+      "q": "When are pickup orders made?",
+      "a": "The morning you collect them. Your cups are made fresh the morning of pickup, so choose your pickup date with your event in mind."
+    }
+  ],
+  "cta": {
+    "label": "Request a Hamilton pickup",
+    "href": "/order"
+  }
+}

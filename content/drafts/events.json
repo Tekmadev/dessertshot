@@ -1,0 +1,45 @@
+{
+  "slug": "events",
+  "path": "/events",
+  "status": "awaiting-owner-review",
+  "metaTitle": "Party Dessert Cups for Events in Hamilton & the GTA",
+  "metaDescription": "Party dessert cups for weddings, showers, birthdays, graduations and office events in Hamilton and the GTA: sizes, packs, colour themes and timing.",
+  "h1": "Party dessert cups for every kind of event",
+  "intro": "Showers, weddings, birthdays, office afternoons, big family celebrations: every gathering has a dessert moment. Make it a table of hand-layered cups: cups so good people stop talking when they hit the spoon. We've been making them by hand in Hamilton, Ontario since 2024, with free pickup in Hamilton and Saturday delivery across the GTA. Pick your event below, or read on for the planning basics every order shares.",
+  "sections": [
+    {
+      "heading": "Start with your event",
+      "body": "Each page below covers what's specific to that kind of day. Sizes, packs, notice, delivery and pickup are the same for every event, so they're further down this page.\n\n- [Weddings](/events/weddings): planning a dessert table around your wedding colours, and what the 96 pack's presentation tray, custom label option and event-day pickup add on the day.\n- [Baby showers](/events/baby-showers): pink, lilac and sunny-yellow flavours for a shower theme, and how to split a pack between them.\n- [Bridal showers](/events/bridal-showers): building the table around a Premium centrepiece flavour, and planning the shower and the wedding together.\n- [Birthdays](/events/birthdays): building a mix that works when kids and adults share the same table.\n- [Graduations](/events/graduations): picking flavours to echo school colours, and timing your request around a ceremony weekend.\n- [Corporate dessert boxes](/events/corporate): ordering for the office, a client meeting or a team celebration when you don't know everyone's tastes or allergies.\n- [Cultural and religious celebrations](/events/celebrations): big family gatherings and festival tables, and how a 96 (up to 16 flavours) handles a big spread."
+    },
+    {
+      "heading": "Sizes and packs for an event",
+      "body": "Mini Shots (2 oz) are the tasting size and suit a dessert table where guests try a few flavours, while Dessert Cups (5 oz) are a full serving for when the cup is the dessert you hand out. The 96 is the event pack: it brings a presentation tray, a custom label option and event-day pickup. Packs start at $45 for 24 Classic Mini Shots and $99 for 24 Classic Dessert Cups, before delivery, and every price, perk and mixing rule is on the [packages page](/packages).\n\nHow many to order? See the cups-per-guest guide on [packages](/packages)."
+    },
+    {
+      "heading": "Theme your dessert table with flavour colours",
+      "body": "Every flavour has its own colours, which makes it easy to build a table around a theme.\n\n- **Blush and red:** [Strawberry Fields](/menu/strawberry-fields), glossy red compote over blush-pink cream, with cream rosettes on top.\n- **Lilac and violet:** [Blueberry Haze](/menu/blueberry-haze), near-black violet compote over lilac cream, finished with fresh blueberries.\n- **Sunny yellow and orange:** [Mango Dream](/menu/mango-dream), a saffron-orange mango layer over pale yellow cream, topped with a cream dollop.\n- **Milk chocolate:** [Kinder Bueno](/menu/kinder-bueno), milk-chocolate cream under glossy ganache, with a striped chocolate bite.\n- **Dark and glossy:** [Ferrero Royale](/menu/ferrero-royale), dark ganache crowned with a crunchy hazelnut sphere.\n- **Caramel and amber:** [Biscoff Bliss](/menu/biscoff-bliss), caramel-tan cream under an amber top, with a cookie standing upright.\n- **Green and gold:** [Dubai Chocolate](/menu/dubai-chocolate), pale green cream with golden kunafa strands mid-cup, dark ganache and a green marbled swirl.\n- **Cocoa:** [Tiramisu](/menu/tiramisu), with a matte cocoa-dusted top.\n\nThe event pages put these colours together for weddings, showers and graduations. You'll find the layers, bottom to top, on the [menu](/menu)."
+    },
+    {
+      "heading": "Timing: notice, delivery and pickup",
+      "body": "- **Notice:** 48 hours minimum. Anything shorter counts as urgent: subject to availability, with no guarantee.\n- **Confirmation:** we confirm requests within the day.\n- **Freshness:** cups are made the morning of your pickup or delivery.\n- **Delivery:** Saturdays, across the GTA. The fee depends on your location and is quoted after we confirm your order.\n- **Pickup:** free in Hamilton, by arrangement, with the location shared once your order is confirmed.\n\nPlanning a Saturday event with delivery? We suggest sending your request by Wednesday, which keeps you well clear of the 48-hour minimum.\n\nLocal details are on [dessert cups in Hamilton](/dessert-cups-hamilton) and [dessert cups across the GTA](/dessert-cups-gta)."
+    },
+    {
+      "heading": "Allergens when you're feeding a crowd",
+      "body": "Ask about dietary needs with your RSVPs, then plan your mix with the allergen notice below in mind. If a guest must avoid gluten or egg for health reasons, message us before you order.\n\n{{dietaryClaim}}"
+    },
+    {
+      "heading": "What happens after you send a request",
+      "body": "Ordering here is a request, not a checkout, and there's no online payment.\n\n1. Choose your size, pack and flavours on the [order page](/order). The form keeps your mix within the pack rules. Add any notes.\n2. We confirm within the day.\n3. If you chose delivery, we quote the fee for your location. If you're picking up, we tell you where.\n4. Your cups are made the morning of pickup or delivery.\n\nQuestions before you start? The [FAQ](/faq) covers allergens, lead time, delivery and flavours per pack."
+    }
+  ],
+  "faqs": [
+    {
+      "q": "My event isn't listed. Can I still use these packs?",
+      "a": "Yes. Sizes, packs, flavour rules, notice, delivery and pickup work the same for any gathering. Tell us about your event in the notes when you send your request."
+    }
+  ],
+  "cta": {
+    "label": "Send your event request",
+    "href": "/order"
+  }
+}

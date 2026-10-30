@@ -1,0 +1,20 @@
+{
+  "_doc": "Crop boxes in full-resolution source pixels: [top, left, height, width]. Photos live in source-photos/ (gitignored: they carry GPS). Run crop_clean.py to produce EXIF-free crops.",
+  "cutouts": {
+    "mango": { "photo": "J", "file": "20260524_121713_IMG_4985.jpeg", "box": [250, 2070, 1150, 830] },
+    "dubai": { "photo": "F", "file": "20260524_130314_IMG_5014.jpeg", "box": [448, 1702, 1858, 1143] },
+    "blueberry": { "photo": "E", "file": "20260524_132214_IMG_5020.jpeg", "box": [1501, 784, 1366, 874] },
+    "strawberry": { "photo": "E", "file": "20260524_132214_IMG_5020.jpeg", "box": [1366, 1725, 1255, 851] },
+    "ferrero": { "photo": "G", "file": "20260524_125855_IMG_5010.jpeg", "box": [336, 269, 1412, 963] },
+    "kinder": { "photo": "G", "file": "20260524_125855_IMG_5010.jpeg", "box": [412, 1142, 1343, 650] },
+    "biscoff": { "photo": "I", "file": "20260524_122446_IMG_4987.jpeg", "box": [1053, 1210, 1635, 985] },
+    "tiramisu": { "photo": "D", "file": "20260801_122507.jpg", "box": [1702, 717, 628, 627], "note": "top-down only; no cut-out possible" }
+  },
+  "floaters": {
+    "pistachios": { "photo": "F", "file": "20260524_130314_IMG_5014.jpeg", "box": [2374, 1702, 538, 986] },
+    "rose-petals": { "photo": "F", "file": "20260524_130314_IMG_5014.jpeg", "box": [896, 0, 1792, 627] },
+    "blueberries": { "photo": "E", "file": "20260524_132214_IMG_5020.jpeg", "box": [2262, 381, 605, 694] },
+    "crushed-pistachio": { "photo": "J", "file": "20260524_121713_IMG_4985.jpeg", "box": [1523, 1344, 717, 1165], "note": "rejected" }
+  },
+  "og_default": { "photo": "J", "file": "20260524_121713_IMG_4985.jpeg", "top": 150 }
+}

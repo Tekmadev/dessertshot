@@ -50,3 +50,21 @@ One line each: decision — why. Newest at the bottom of each phase.
 - Migration 004 draft adds `order_items.flavor_id` (stable registry id).
 - Deferred with reasons: order-security hardening, event-type registry, postal-code normalisation and IP-hash retention → Step 3; branded 404 and the meta keywords tag → Step 5.
 - Owner questions collected in `CONTENT-REVIEW.md` (facts, pack rules, settings only the owner can change).
+
+## Step 2 — Asset pilot and review round 1
+- Every crop is re-encoded without EXIF before it leaves the machine — the originals carry GPS of the owner's location.
+- Background removal (Higgsfield, 1 credit each, cost measured from the transaction log after one run because the tool has no preview) on tight local crops; all cleanup is local and touches only what surrounds the dessert: erase stray props, keep the largest shape, fade clear feet that carried the board/counter, desaturate background seen through empty glass. The dessert pixels are never repainted — fidelity rule §4.1.
+- Feet of clear stemmed cups are faded rather than rebuilt: the stem stays visible (the cup still reads as stemmed) without inventing a foot.
+- Dubai hero cut-out is usable for review; its lower-left (hidden in the photo by the square cup in front) gets rebuilt in the final pass before the P2 video uses it as a start frame.
+- Tiramisu has no cut-out (only a top-down photo inside a box); Biscoff and Kinder are provisional. All three plus Ferrero go on a short reshoot request — real photos beat any generation.
+- Floaters: blueberries split into singles; pistachios and petals stay soft-masked clusters until the reshoot (they touch each other in the photo); crushed pistachio rejected (board came with it); no mango pieces (none photographed, and never imply cubes); ganache drips and cocoa dust will be CSS/SVG (brief S4).
+- The UI/UX skill's generated system ("vibrant block-based", black + hot pink, Amatic SC/Cabin) is overruled by the brief's explicit direction (editorial serif, photo-derived warm palette, generous whitespace). Kept from it: food-photo and "hidden hours" anti-patterns, 1–2 animated elements per view, reduced motion, 4.5:1 text contrast.
+- Contrast: berry `#B3213F` passes for text on cream (~6:1); the current rose accent passes only at display size (~4:1); mango and caramel are decorative only.
+- Review round 1 is one private page (artifact "Dessert Shot Proofs") with the `db` capability: the owner's answers save to `answers/<question id>` and are read back with `ArtifactData` — no relaying answers through chat.
+- 13 page drafts written by a double-audited workflow (facts/claims auditor + usefulness/SEO auditor per page, then a cross-page dedupe), stored as data in `content/drafts/*.json`, built into pages only after approval — pages are built once, from reviewed copy.
+- Draft copy uses tokens (`{{dietaryClaim}}`, `{{contactEmail}}`, `{{mailto}}`) resolved from config at render — the dietary claim stays a one-line switch everywhere, and a FAQ entry asking about it is dropped with it.
+- Seventh event page "celebrations" (event value `cultural`) so every S7 card links to a real page; one `EVENT_TYPES` list drives slugs, the order field and migration 004's CHECK (tested).
+- The drafts' 289 owner questions merged into 27 new plain-language questions plus 89 folded into existing ones (coverage verified: every question placed exactly once) — one review pass for the owner, not 289.
+- Cut-out masters, crop boxes and cleanup settings are committed (`assets/review/`, `scripts/assets/`) so nothing depends on the session scratchpad or costs credits to redo.
+- The `/open-a-shop` draft and its three questions stay out of the public repo (`content/private/`, gitignored) until the owner approves publishing — the brief says that page is confirmed before it goes live, and a public repo is live. They are on the private review page. The same reason neutralised a `.gitignore` comment in the unpushed Step 1 commit (amended locally; no force-push).
+- Draft meta titles are capped at 55 characters before the " · Dessert Shot" suffix; when the pages are built (Step 4) the full-title test cap moves from 65 to 70 — the brand sitting last and occasionally truncating is acceptable.

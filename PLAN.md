@@ -73,7 +73,7 @@ The slow parts of this project are not code. They are your decisions and approva
 - [x] Phase 0 audit (`fa9a3e8`)
 - [x] All 10 photos reviewed and mapped (`ASSETS.md`); balance recorded
 - [x] Step 1 Foundation — built, six-lens reviewed (7 defects fixed), 122 tests green
-- [ ] Step 2 Asset pilot → review round 1
+- [x] Step 2 Asset pilot → review round 1 — cut-outs (11 credits), 13 page drafts, 27 merged owner questions; review page (private): https://claude.ai/artifact/X6ULMeMSxhbo5Fdx6X6GYN — answers live in its `answers` collection. **Waiting on the owner.**
 - [ ] Step 3 Order flow
 - [ ] Step 4 Videos, experience, pages
 - [ ] Step 5 SEO + QA → review round 2

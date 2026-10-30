@@ -41,6 +41,10 @@ yarn-error.log*
 # The private project brief (business details not meant for a public repo)
 /dessertshot-cc-prompt.md
 
+# Drafts that stay private until the owner approves publishing them
+# (the repo is public)
+/content/private/
+
 # vercel
 .vercel
 

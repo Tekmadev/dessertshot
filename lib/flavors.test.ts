@@ -8,7 +8,7 @@ import {
   getFlavorBySlug,
   treeNutFlavorNames,
 } from "./flavors";
-import { ALLERGEN_NOTICE, DIETARY_CLAIM, allergenNoticeText } from "./claims";
+import { ALLERGEN_NOTICE, DIETARY_CLAIM, allergenNoticeText, dietaryClaimSentence } from "./claims";
 
 describe("flavour registry (brief §2.1)", () => {
   it("has the eight flavours, in menu order", () => {
@@ -108,6 +108,12 @@ describe("allergens and claims (brief §2.4)", () => {
     expect(DIETARY_CLAIM.text).toBe("Gluten-free and eggless");
     expect(DIETARY_CLAIM.needsOwnerReview).toBe(true);
     expect(DIETARY_CLAIM.text).not.toMatch(/certified|celiac|coeliac|safe/i);
+  });
+
+  it("frames the page-copy sentence as the owner's statement, not a certification", () => {
+    expect(dietaryClaimSentence()).toBe(
+      "We describe our cups as gluten-free and eggless. That's our own statement, not a certification."
+    );
   });
 
   it("builds the notice from the registry's tree-nut list", () => {

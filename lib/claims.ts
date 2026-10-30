@@ -31,6 +31,18 @@ export function dietaryClaim(): string | null {
   return DIETARY_CLAIM.enabled ? DIETARY_CLAIM.text : null;
 }
 
+/**
+ * The full sentence page copy uses for the claim (the `{{dietaryClaim}}`
+ * token in content/drafts), or null when the claim is switched off. Framed as
+ * the owner's own statement, never a certification.
+ */
+export function dietaryClaimSentence(): string | null {
+  const claim = dietaryClaim();
+  return claim
+    ? `We describe our cups as ${claim.toLowerCase()}. That's our own statement, not a certification.`
+    : null;
+}
+
 export const ALLERGEN_NOTICE = {
   title: "Allergens and cross-contact",
   needsOwnerReview: true,

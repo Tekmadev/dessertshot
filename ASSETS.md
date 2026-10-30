@@ -10,8 +10,29 @@ Rules (brief §4): image-to-video only from the owner's real photos; fidelity ch
 | # | Asset | Model | Settings | Credits (quoted) | Credits (actual) | Keep / Reject | Notes |
 |---|---|---|---|---|---|---|---|
 | 0 | `public/og/default.jpg` — default share image, 1200×630 crop of photo J | none (local crop) | top offset 150px, re-encoded with no EXIF/GPS | 0 | 0 | Keep | Replaces the unused, AI-looking `dessertshotshowcase.jpg` |
+| 1 | Mango Dream cut-out (pilot #1) | Image Background Remover | crop J 830×1150 | unknown → measured | 1 | Keep | Body faithful. Clear foot carried the wooden board → foot faded locally (stem kept). |
+| 2 | Dubai Chocolate cut-out (hero) | Image Background Remover | crop F 1143×1858 | 1 | 1 | Keep* | Square Dubai cup in front erased locally; stem hidden in the photo. *Hero needs the bowl's lower-left rebuilt in the final pass. |
+| 3 | Blueberry Haze cut-out | Image Background Remover | crop E 874×1366 | 1 | 1 | Keep | Grey counter in the foot faded locally. |
+| 4 | Strawberry Fields cut-out | Image Background Remover | crop E 851×1255 | 1 | 1 | Keep | Foot faded; ghost of the cup behind erased above the rim. |
+| 5 | Ferrero Royale cut-out | Image Background Remover | crop G 963×1412 | 1 | 1 | Keep | Gold foil ball **with printed branding** and a loose ball removed locally (largest-shape + erase). |
+| 6 | Kinder Bueno cut-out | Image Background Remover | crop G 650×1343 | 1 | 1 | Keep (provisional) | Empty top of the clear glass carried grey background → neutralised to translucent. Reshoot preferred. |
+| 7 | Biscoff Bliss cut-out | Image Background Remover | crop I 985×1635 | 1 | 1 | Keep (provisional) | Back cup erased above the rim; faint brown still visible through the clear rim. Reshoot preferred. |
+| 8 | Floater: pistachios | Image Background Remover | crop F 986×538 | 1 | 1 | Keep as cluster | Nuts touch each other and the crop edge — single pieces need a spaced-out source (reshoot add-on). |
+| 9 | Floater: rose petals | Image Background Remover | crop F 627×1792 | 1 | 1 | Keep as cluster | Same as pistachios. |
+| 10 | Floater: blueberries | Image Background Remover | crop E 694×605 | 1 | 1 | Keep | Split locally: 3 single berries + 2 pairs. |
+| 11 | Floater: crushed pistachio | Image Background Remover | crop J 1165×717 | 1 | 1 | **Reject** | Kept the wooden board texture; crumbs on wood can't be separated. |
+| — | Tiramisu | — | — | — | 0 | Not attempted | Photo D shows it only top-down inside a packed box; no cup to cut out. Reshoot required. |
+| — | Whole-strawberry floater | — | — | — | 0 | Not attempted | Source is out of focus. |
 
-**Running total: 0 / 200**
+Cost of background removal: **1 credit**, measured from the transaction log after the first run (no preview is available for this tool). Balance after these 11 runs: **970**.
+
+**Running total: 11 / 200**
+
+## Where things are
+- Cleaned masters awaiting approval (EXIF-free WebP, not served): `assets/review/cutouts/`, `assets/review/floaters/`.
+- Reproducible pipeline: `scripts/assets/` (crop boxes in `crops.json`, per-cup cleanup in `cleanup.json`, see its README).
+- Raw background-removal results (re-downloadable): Higgsfield job IDs — mango `309780a0-34bb-4a7d-8b6d-bb4b510abdd7`, dubai `8e9032c1-61b5-4441-943f-0ef4167f62ef`, blueberry `200fb77b-1ed6-4e5c-a812-7c5fce61615f`, strawberry `cb4f8e22-117f-4eb1-bc1e-a7eb85ba5b22`, ferrero `12ce25ea-c8f2-46db-8a96-6944cc676bca`, kinder `0eb0feeb-7d27-4f39-a93a-0f43cb79aa06`, biscoff `de145977-a3a7-4e4c-8404-5bc0ff849e18`, pistachios `91b0d817-7fc8-4979-ba6f-768323fd74e4`, rose petals `26d0d7b5-d411-4627-bdbe-6bae7ef86e08`, blueberries `492b1438-6582-40cf-9688-096f5a775333`, crushed pistachio (rejected) `77fa3dbc-6d5b-4e71-a9f7-f5f93f895d7e`.
+- Owner review page (private): https://claude.ai/artifact/X6ULMeMSxhbo5Fdx6X6GYN — approvals land in its `answers` collection (`cut-<flavour>`, `floaters`, `reshoot`, `dir`).
 
 ## Pipeline rules learned in Step 1
 - **Strip metadata first.** All 10 originals carry GPS coordinates of one Hamilton location. Re-encode every crop/derivative without EXIF before it goes to Higgsfield or into `public/`. Originals never enter git (`/source-photos/` is ignored).

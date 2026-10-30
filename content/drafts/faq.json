@@ -1,0 +1,85 @@
+{
+  "slug": "faq",
+  "path": "/faq",
+  "status": "awaiting-owner-review",
+  "metaTitle": "Dessert Cups FAQ: Gluten-Free? Eggless? Allergens",
+  "metaDescription": "Are our dessert cups gluten-free and eggless? Which flavours have nuts? How much notice? Answers on allergens, Hamilton pickup and Saturday GTA delivery.",
+  "h1": "Dessert cups FAQ: good to know before you order",
+  "intro": "Planning dessert for a crowd comes with questions. Here are straight answers about our hand-layered dessert cups: allergens and the gluten-free and eggless question, how much notice we need, pickup in Hamilton and Saturday delivery across the GTA, and how packs, sizes and flavours fit together.",
+  "sections": [
+    {
+      "heading": "Planning a table with allergies in mind",
+      "body": "The allergen facts are in the questions on this page. This part is about the table itself.\n\nA suggestion for styling, not a rule: the three nut flavours have distinct tops, so they're easy to group or sign if you want to. Ferrero Royale wears a hazelnut sphere on dark glossy ganache, Dubai Chocolate a green marbled pistachio swirl, and Kinder Bueno a striped chocolate bite. Giving them their own corner helps guests choose at a glance.\n\nThat's a styling cue, not an allergen check. It doesn't make the rest of the table nut-free: cross-contact with nuts is possible in every cup."
+    },
+    {
+      "heading": "Didn't see your question?",
+      "body": "Message us on Instagram at @dessertshot.ca, or add it to the notes when you [send your order request](/order). We confirm within the day.\n\nFor what goes into each cup, layer by layer, browse the [full menu](/menu). For every pack and price side by side, see [packages](/packages)."
+    }
+  ],
+  "faqs": [
+    {
+      "q": "Are your dessert cups gluten-free and eggless?",
+      "a": "We describe our dessert cups as gluten-free and eggless. That's our own statement, not a certification. And eggless isn't dairy-free: every cup contains dairy. If you avoid gluten or egg for medical reasons, message us on Instagram (@dessertshot.ca) before you order and ask about the flavours you have in mind."
+    },
+    {
+      "q": "Which flavours contain nuts?",
+      "a": "Three flavours contain tree nuts: [Kinder Bueno](/menu/kinder-bueno), [Ferrero Royale](/menu/ferrero-royale) (hazelnut) and [Dubai Chocolate](/menu/dubai-chocolate) (pistachio). Every cup is made in the same kitchen, so cross-contact with nuts is possible in any flavour."
+    },
+    {
+      "q": "Do all your dessert cups contain dairy?",
+      "a": "Yes. Every flavour contains dairy, so there isn't a dairy-free option on the menu. Dairy and tree nuts are the allergens we flag on each flavour. If you need to check another ingredient, ask us before you order."
+    },
+    {
+      "q": "Someone at my event has a severe food allergy. Can I still order?",
+      "a": "Message us before you order. Leaving the nut flavours out doesn't remove the cross-contact risk, and we'd rather talk it through with you than have you guess. You can reach us on Instagram at @dessertshot.ca."
+    },
+    {
+      "q": "When are the cups made?",
+      "a": "The morning of your pickup or delivery. Each cup is hand-layered that morning."
+    },
+    {
+      "q": "How much notice do you need?",
+      "a": "At least 48 hours before your pickup or delivery. That's our standard minimum. For a Saturday delivery, we suggest sending by Wednesday; see [Saturday delivery](/dessert-cups-gta) and [Hamilton pickup](/dessert-cups-hamilton). Send your request through the [order form](/order) and we'll confirm within the day."
+    },
+    {
+      "q": "Can I order with less than 48 hours' notice?",
+      "a": "You can ask. Anything under 48 hours is an urgent request: it's subject to availability and we can't guarantee it. Send the request with your date and we'll let you know whether we can make it happen."
+    },
+    {
+      "q": "Do you deliver, and how much does delivery cost?",
+      "a": "Yes, on Saturdays, across the GTA. The fee depends on your location, so we quote it after we confirm your order, and the total in the order form doesn't include it. Add your postal code and address to your request so we can work out the fee. Prefer to collect? Pickup in Hamilton is free. More on [dessert cup delivery across the GTA](/dessert-cups-gta)."
+    },
+    {
+      "q": "How does pickup work?",
+      "a": "Pickup in Hamilton is free and arranged with you, and we share the pickup location once your order is confirmed. More on [ordering dessert cups in Hamilton](/dessert-cups-hamilton)."
+    },
+    {
+      "q": "How many flavours can I put in one pack?",
+      "a": "Up to 4 in a 24 pack, 8 in a 48 and 16 in a 96. Each flavour needs at least 6 cups, in multiples of 6 (6, 12, 18…), so a 48 could be eight flavours of 6 or four flavours of 12. Want more flavours than that? Add another pack. The 48, our most popular pack, includes a free flavour recommendation. [Compare the packs](/packages)."
+    },
+    {
+      "q": "Can I mix Classic and Premium flavours in one pack?",
+      "a": "Yes, freely. Classic: Mango Dream, Strawberry Fields and Blueberry Haze. Premium: Kinder Bueno, Ferrero Royale, Biscoff Bliss and Dubai Chocolate. A mixed pack is priced cup by cup: each cup at its own tier's rate for that pack size, with the total rounded to the nearest dollar. See priced sample boxes on [packages](/packages)."
+    },
+    {
+      "q": "What's the difference between Mini Shots and Dessert Cups?",
+      "a": "Mini Shots are 2 oz, a tasting size. Dessert Cups are 5 oz, a full serving. Prices for both sizes, in every pack, are on [packages](/packages). A suggestion, not a rule: Dessert Cups suit a table where the cup is the dessert; Mini Shots suit a spread where guests want to try a few flavours."
+    },
+    {
+      "q": "Can I ask for something custom?",
+      "a": "Our menu is eight flavours, two cup sizes and three pack sizes, and the 96 pack comes with a custom label option. If you have something else in mind, mention it in the notes when you send your request, and we'll let you know when we confirm."
+    },
+    {
+      "q": "What happens after I send my request?",
+      "a": "We confirm it within the day. Until then, it's a request rather than a confirmed order. Once we confirm, we quote the delivery fee if you chose delivery, or share the pickup location if you're collecting in Hamilton. Then, the morning of your date, we make your cups fresh."
+    },
+    {
+      "q": "How do I pay?",
+      "a": "Not on this site. Ordering works by request, and nothing is charged when you send it."
+    }
+  ],
+  "cta": {
+    "label": "Send an order request",
+    "href": "/order"
+  }
+}
