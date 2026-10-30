@@ -136,10 +136,10 @@ export default function Hero() {
                 size={420}
                 showLabels
                 layers={[
-                  { label: "Biscuit", color: "#a86060", height: 22 },
+                  { label: "Base", color: "#a86060", height: 22 },
                   { label: "Cream", color: "#fde0e6", height: 38 },
-                  { label: "Compote", color: "#d04864", height: 18 },
-                  { label: "Topping", color: "#a82a48", height: 18 },
+                  { label: "Flavour", color: "#d04864", height: 18 },
+                  { label: "Finish", color: "#a82a48", height: 18 },
                 ]}
               />
             </div>
@@ -150,10 +150,10 @@ export default function Hero() {
               style={{ boxShadow: "0 24px 60px -20px rgba(58,29,40,0.18)" }}
             >
               <div className="font-mono text-[10px] tracking-[0.18em] uppercase text-ink/55 mb-1">
-                Today&apos;s drop
+                Made fresh
               </div>
               <div className="font-display text-[20px] tracking-[-0.02em] text-ink leading-none">
-                Strawberry Fields
+                The morning of pickup
               </div>
             </div>
           </div>

@@ -157,9 +157,14 @@ function FlavorCard({
         </div>
 
         <ul className="flex-1 min-w-0 flex flex-col gap-1.5">
+          {flavor.layers.length === 0 ? (
+            <li className="font-mono text-[10px] tracking-[0.18em] uppercase text-ink/55">
+              {flavor.visualSignature}
+            </li>
+          ) : null}
           {flavor.layers.map((l, i) => (
             <li
-              key={l}
+              key={`${i}-${l}`}
               className="flex items-center gap-3 font-mono text-[10px] tracking-[0.18em] uppercase text-ink/55"
             >
               <span
@@ -202,53 +207,60 @@ function layerColors(id: string, accent: string) {
   switch (id) {
     case "strawberry":
       return [
-        { label: "Biscuit", color: "#c89464", height: 18 },
+        { label: "Base", color: "#c89464", height: 18 },
         { label: "Cream", color: "#f8d8dc", height: 30 },
-        { label: "Concentrate", color: accent, height: 16 },
-        { label: "Topping", color: "#7a1a26", height: 14 },
+        { label: "Flavour", color: accent, height: 16 },
+        { label: "Finish", color: "#7a1a26", height: 14 },
       ];
     case "blueberry":
       return [
-        { label: "Biscuit", color: "#c89464", height: 18 },
+        { label: "Base", color: "#c89464", height: 18 },
         { label: "Cream", color: "#dad0eb", height: 30 },
-        { label: "Concentrate", color: accent, height: 16 },
-        { label: "Topping", color: "#2d1f60", height: 14 },
+        { label: "Flavour", color: accent, height: 16 },
+        { label: "Finish", color: "#2d1f60", height: 14 },
       ];
     case "kinder":
       return [
-        { label: "Biscuit", color: "#7c4a14", height: 18 },
+        { label: "Base", color: "#7c4a14", height: 18 },
         { label: "Cream", color: "#f3dfb6", height: 30 },
-        { label: "Concentrate", color: accent, height: 16 },
-        { label: "Topping", color: "#3a1f08", height: 14 },
+        { label: "Flavour", color: accent, height: 16 },
+        { label: "Finish", color: "#3a1f08", height: 14 },
       ];
     case "ferrero":
       return [
-        { label: "Biscuit", color: "#5c3814", height: 18 },
+        { label: "Base", color: "#5c3814", height: 18 },
         { label: "Cream", color: "#d3a86a", height: 30 },
-        { label: "Concentrate", color: accent, height: 16 },
-        { label: "Topping", color: "#2a1607", height: 14 },
+        { label: "Flavour", color: accent, height: 16 },
+        { label: "Finish", color: "#2a1607", height: 14 },
       ];
     case "biscoff":
       return [
-        { label: "Biscuit", color: "#a96a14", height: 18 },
+        { label: "Base", color: "#a96a14", height: 18 },
         { label: "Cream", color: "#f0c890", height: 30 },
-        { label: "Concentrate", color: accent, height: 16 },
-        { label: "Topping", color: "#7a4810", height: 14 },
+        { label: "Flavour", color: accent, height: 16 },
+        { label: "Finish", color: "#7a4810", height: 14 },
       ];
     case "dubai":
       return [
-        { label: "Biscuit", color: "#3a4a28", height: 18 },
+        { label: "Base", color: "#3a4a28", height: 18 },
         { label: "Cream", color: "#cdd9b8", height: 30 },
-        { label: "Concentrate", color: accent, height: 16 },
-        { label: "Topping", color: "#2a1607", height: 14 },
+        { label: "Flavour", color: accent, height: 16 },
+        { label: "Finish", color: "#2a1607", height: 14 },
+      ];
+    case "tiramisu":
+      return [
+        { label: "Base", color: "#8a6a4a", height: 18 },
+        { label: "Cream", color: "#efe2c8", height: 30 },
+        { label: "Flavour", color: "#5a3a22", height: 16 },
+        { label: "Finish", color: accent, height: 14 },
       ];
     case "mango":
     default:
       return [
-        { label: "Biscuit", ...base },
+        { label: "Base", ...base },
         { label: "Cream", ...cream },
-        { label: "Concentrate", color: accent, height: 16 },
-        { label: "Topping", ...finish },
+        { label: "Flavour", color: accent, height: 16 },
+        { label: "Finish", ...finish },
       ];
   }
 }

@@ -3,12 +3,10 @@ import Footer from "@/components/layout/Footer";
 import OrderCTA from "@/components/sections/OrderCTA";
 import Packages from "@/components/sections/Packages";
 import type { Metadata } from "next";
-import { BUSINESS } from "@/lib/business";
+import { ROUTES } from "@/lib/routes";
+import { pageMetadata } from "@/lib/seo";
 
-export const metadata: Metadata = {
-  title: "Order",
-  description: `Place your ${BUSINESS.name} order. Pickup in ${BUSINESS.location.city} or delivery across the ${BUSINESS.location.regionShort}. Confirmation within the day.`,
-};
+export const metadata: Metadata = pageMetadata(ROUTES.order);
 
 export default function OrderPage() {
   return (
@@ -36,8 +34,9 @@ export default function OrderPage() {
               </em>
             </h1>
             <p className="mt-6 md:mt-8 max-w-[52ch] text-[17px] md:text-[19px] leading-[1.55] text-ink/70">
-              Confirmations arrive within the day. Cups are baked the morning
-              of pickup. Custom flavour requests welcome.
+              Confirmations arrive within the day. Cups are made the morning
+              of pickup or delivery. Custom requests welcome: add them to your
+              notes.
             </p>
           </div>
         </section>

@@ -36,15 +36,24 @@
   --color-ember-soft: #ea8298;
   --color-ember-glow: rgba(208, 72, 100, 0.18);
 
+  /* Brief palette (§5), drawn from the owner's photos. The surface swap from
+     baby pink to warm cream waits for the design-direction checkpoint. */
+  --color-cream-warm: #fbf5ee;
+  --color-cacao: #2a1710;
+  --color-blush: #fce4e7;
+  --color-berry: #b3213f;
+  --color-caramel: #c98a4b;
+
   /* Flavour spectrum (used sparingly, never decorative) */
-  --color-mango: #e89914;
-  --color-strawberry: #c4344a;
+  --color-mango: #f4a524;
+  --color-strawberry: #b3213f;
   --color-blueberry: #4a3580;
-  --color-pistachio: #6b8a4a;
-  --color-biscoff: #b07410;
+  --color-pistachio: #b7c48a;
+  --color-biscoff: #c98a4b;
   --color-kinder: #a85a14;
-  --color-ferrero: #6b4014;
+  --color-ferrero: #5a3414;
   --color-dubai: #5c7a4a;
+  --color-tiramisu: #6b4a32;
 
   --color-gold: #b08a3a;
 

@@ -1,7 +1,7 @@
 "use client";
 
 import { motion } from "motion/react";
-import { HOW_STEPS } from "@/lib/copy";
+import { copy, HOW_STEPS } from "@/lib/copy";
 import { EASE_CINEMA } from "@/lib/constants";
 
 export default function HowItsMade() {
@@ -21,7 +21,7 @@ export default function HowItsMade() {
               transition={{ duration: 0.9, ease: EASE_CINEMA }}
               className="font-mono text-[11px] tracking-[0.2em] uppercase text-ink/50 mb-6"
             >
-              The order flow
+              {copy.how.kicker}
             </motion.div>
             <motion.h2
               initial={{ y: 24, opacity: 0 }}
@@ -31,7 +31,7 @@ export default function HowItsMade() {
               className="font-display text-ink leading-[0.96] tracking-[-0.035em]"
               style={{ fontSize: "clamp(34px, 6vw, 96px)" }}
             >
-              Three steps,{" "}
+              {copy.how.headingPre}{" "}
               <em
                 className="italic"
                 style={{
@@ -39,7 +39,7 @@ export default function HowItsMade() {
                   fontVariationSettings: "'SOFT' 50, 'WONK' 1",
                 }}
               >
-                no surprises.
+                {copy.how.headingItalic}
               </em>
             </motion.h2>
           </div>
@@ -50,9 +50,7 @@ export default function HowItsMade() {
             transition={{ duration: 1, ease: EASE_CINEMA, delay: 0.15 }}
             className="md:col-span-6 md:col-start-7 self-end max-w-[52ch] text-[18px] md:text-[20px] leading-[1.55] tracking-[-0.005em] text-ink/70"
           >
-            We confirm the order the same day, bake the morning of, and hand it
-            off in a sealed cooler. The whole flow is built so the cup arrives
-            tasting like it did when it left the kitchen.
+            {copy.how.body}
           </motion.p>
         </div>
 

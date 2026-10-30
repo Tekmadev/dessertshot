@@ -13,10 +13,10 @@ import { CupGlyph } from "@/components/ui/CupGlyph";
 const PHASES = copy.builder.phases;
 
 const LAYERS = [
-  { label: "Biscuit", color: "#9a5252", height: 22 },
+  { label: "Base", color: "#9a5252", height: 22 },
   { label: "Cream", color: "#fde0e6", height: 38 },
-  { label: "Concentrate", color: "#d04864", height: 18 },
-  { label: "Topping", color: "#a82a48", height: 18 },
+  { label: "Flavour", color: "#d04864", height: 18 },
+  { label: "Finish", color: "#a82a48", height: 18 },
 ];
 
 export default function CupBuilder() {
@@ -27,7 +27,7 @@ export default function CupBuilder() {
   });
 
   // The cup itself fills as you scroll. We trim the start a touch so the
-  // first phase has time to read before the biscuit appears.
+  // first phase has time to read before the base layer appears.
   const cupProgress = useTransform(scrollYProgress, [0.05, 0.92], [0, 1]);
 
   return (
@@ -201,7 +201,7 @@ function Tick({
   total: number;
   scrollYProgress: MotionValue<number>;
 }) {
-  // Ticks render top to bottom; cup builds bottom up. Bottom tick = biscuit
+  // Ticks render top to bottom; cup builds bottom up. Bottom tick = base
   // (first to fill).
   const layerIndex = total - 1 - index;
   const start = layerIndex / total;

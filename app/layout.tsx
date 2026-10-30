@@ -3,6 +3,7 @@ import { Fraunces, Inter_Tight } from "next/font/google";
 import { Analytics } from "@vercel/analytics/next";
 import { LenisProvider } from "@/components/layout/LenisProvider";
 import { BUSINESS } from "@/lib/business";
+import { DEFAULT_OG_IMAGE, TITLE_SEPARATOR } from "@/lib/seo";
 import "./globals.css";
 
 const fraunces = Fraunces({
@@ -21,41 +22,30 @@ const interTight = Inter_Tight({
 
 export const metadata: Metadata = {
   metadataBase: new URL(BUSINESS.url),
+  // Fallbacks only. Every page sets its own title, description, canonical and
+  // Open Graph via `pageMetadata()` in lib/seo.ts. No canonical here: a
+  // layout-level canonical is inherited by every page that forgets its own.
   title: {
-    default: `${BUSINESS.name}. ${BUSINESS.tagline}`,
-    template: `%s . ${BUSINESS.name}`,
+    default: `${BUSINESS.name}${TITLE_SEPARATOR}${BUSINESS.tagline}`,
+    template: `%s${TITLE_SEPARATOR}${BUSINESS.name}`,
   },
   description: BUSINESS.description,
   applicationName: BUSINESS.name,
   authors: [{ name: BUSINESS.name }],
   keywords: [...BUSINESS.seoKeywords],
   openGraph: {
-    title: `${BUSINESS.name}. Layered cups, made by hand.`,
+    title: `${BUSINESS.name}${TITLE_SEPARATOR}${BUSINESS.tagline}`,
     description: BUSINESS.description,
-    url: BUSINESS.url,
     siteName: BUSINESS.name,
     locale: BUSINESS.location.locale,
     type: "website",
-    images: [
-      {
-        url: "/dessertshotshowcase.jpg",
-        width: 896,
-        height: 917,
-        alt: `${BUSINESS.name} — hand layered dessert cups`,
-        type: "image/jpeg",
-      },
-    ],
+    images: [DEFAULT_OG_IMAGE],
   },
   twitter: {
     card: "summary_large_image",
-    title: `${BUSINESS.name}. Layered cups, made by hand.`,
+    title: `${BUSINESS.name}${TITLE_SEPARATOR}${BUSINESS.tagline}`,
     description: BUSINESS.shortDescription,
-    images: [
-      {
-        url: "/dessertshotshowcase.jpg",
-        alt: `${BUSINESS.name} — hand layered dessert cups`,
-      },
-    ],
+    images: [{ url: DEFAULT_OG_IMAGE.url, alt: DEFAULT_OG_IMAGE.alt }],
   },
   robots: {
     index: true,
@@ -67,7 +57,6 @@ export const metadata: Metadata = {
       "max-snippet": -1,
     },
   },
-  alternates: { canonical: "/" },
   manifest: "/favicondessert/site.webmanifest",
   icons: {
     icon: [

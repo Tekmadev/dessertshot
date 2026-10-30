@@ -2,7 +2,7 @@
 
 import { motion } from "motion/react";
 import { Check } from "lucide-react";
-import { copy, PACKAGES, MENU_PRICES } from "@/lib/copy";
+import { copy, PACKAGES, PACK_RULES_LINE, MENU_PRICES } from "@/lib/copy";
 import { EASE_CINEMA } from "@/lib/constants";
 
 const QUANTITIES: (24 | 48 | 96)[] = [24, 48, 96];
@@ -96,7 +96,7 @@ export default function Packages() {
           transition={{ duration: 1, ease: EASE_CINEMA, delay: 0.3 }}
           className="mt-8 font-mono text-[10px] tracking-[0.18em] uppercase text-ink/45 leading-[1.8]"
         >
-          Minimum order 24 cups · Minimum 6 cups per flavour · Mix Classic and Premium in the same box
+          {PACK_RULES_LINE}
         </motion.p>
       </div>
     </section>

@@ -3,12 +3,10 @@ import Footer from "@/components/layout/Footer";
 import Flavors from "@/components/sections/Flavors";
 import Packages from "@/components/sections/Packages";
 import type { Metadata } from "next";
-import { BUSINESS } from "@/lib/business";
+import { ROUTES } from "@/lib/routes";
+import { pageMetadata } from "@/lib/seo";
 
-export const metadata: Metadata = {
-  title: "Menu",
-  description: `Browse the full ${BUSINESS.name} menu. Mango, Strawberry, Blueberry, Kinder Bueno, Ferrero Rocher, Biscoff, Dubai Chocolate.`,
-};
+export const metadata: Metadata = pageMetadata(ROUTES.menu);
 
 export default function MenuPage() {
   return (
@@ -37,8 +35,8 @@ export default function MenuPage() {
             </h1>
             <p className="mt-8 max-w-[52ch] text-[17px] md:text-[19px] leading-[1.55] text-ink/70">
               Pick a flavour, build a mixed box, or browse the lineup before
-              you order. Every cup builds the same way: biscuit, cream,
-              concentrate, finish.
+              you order. Every flavour lists its layers from the bottom up,
+              and Classic and Premium mix freely in the same box.
             </p>
           </div>
         </section>

@@ -21,10 +21,10 @@ type Props = {
 };
 
 const DEFAULT_LAYERS: Layer[] = [
-  { label: "Biscuit", color: "var(--color-biscoff)", height: 18 },
+  { label: "Base", color: "var(--color-biscoff)", height: 18 },
   { label: "Cream", color: "#f3e0c0", height: 32 },
-  { label: "Concentrate", color: "var(--color-mango)", height: 18 },
-  { label: "Topping", color: "var(--color-ember)", height: 22 },
+  { label: "Flavour", color: "var(--color-mango)", height: 18 },
+  { label: "Finish", color: "var(--color-ember)", height: 22 },
 ];
 
 /**

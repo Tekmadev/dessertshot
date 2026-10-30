@@ -4,7 +4,6 @@ import { useState } from "react";
 import { motion } from "motion/react";
 import { useForm, Controller } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { z } from "zod";
 import { CheckCircle } from "lucide-react";
 import emailjs from "@emailjs/browser";
 import {
@@ -21,63 +20,11 @@ import { EASE_CINEMA } from "@/lib/constants";
 import { BUSINESS, mailtoLink } from "@/lib/business";
 import { InstagramIcon } from "@/components/ui/InstagramIcon";
 import { FacebookIcon } from "@/components/ui/FacebookIcon";
-
-const flavorItemSchema = z.object({
-  id: z.string(),
-  name: z.string(),
-  tier: z.enum(["classic", "premium"]),
-  count: z.number().int(),
-});
-
-const schema = z
-  .object({
-    cupSize: z.enum(["2oz", "5oz"]),
-    packQty: z.enum(["24", "48", "96"]),
-    items: z.array(flavorItemSchema).min(1, "Select at least one flavour"),
-    urgency: z.enum(["standard", "urgent"]),
-    fulfillment: z.enum(["pickup", "delivery"]),
-    name: z.string().min(2, "Please enter your full name"),
-    email: z.email("Please enter a valid email"),
-    phone: z.string().optional(),
-    date: z.string().min(1, "Please select a desired date"),
-    notes: z.string().optional(),
-    deliveryAddress: z.string().optional(),
-  })
-  .superRefine((data, ctx) => {
-    const packSize = parseInt(data.packQty, 10);
-    const totalCups = data.items.reduce((sum, i) => sum + i.count, 0);
-    if (data.items.some((i) => i.count < MIN_CUPS_PER_FLAVOR || i.count % MIN_CUPS_PER_FLAVOR !== 0)) {
-      ctx.addIssue({
-        code: z.ZodIssueCode.custom,
-        path: ["items"],
-        message: `Each flavour needs at least ${MIN_CUPS_PER_FLAVOR} cups, in multiples of ${MIN_CUPS_PER_FLAVOR}`,
-      });
-    }
-    if (data.items.length > packSize / MIN_CUPS_PER_FLAVOR) {
-      ctx.addIssue({
-        code: z.ZodIssueCode.custom,
-        path: ["items"],
-        message: `A ${packSize} pack holds at most ${packSize / MIN_CUPS_PER_FLAVOR} flavours`,
-      });
-    }
-    if (totalCups !== packSize) {
-      ctx.addIssue({
-        code: z.ZodIssueCode.custom,
-        path: ["items"],
-        message: `Cup counts must total ${packSize} (currently ${totalCups})`,
-      });
-    }
-    if (data.fulfillment === "delivery" && !data.deliveryAddress?.trim()) {
-      ctx.addIssue({
-        code: z.ZodIssueCode.custom,
-        path: ["deliveryAddress"],
-        message: "Add a delivery address so we can quote the fee",
-      });
-    }
-  });
-
-type FormData = z.infer<typeof schema>;
-type FlavorItem = z.infer<typeof flavorItemSchema>;
+import {
+  orderSchema,
+  type OrderFormValues as FormData,
+  type OrderItem as FlavorItem,
+} from "@/lib/order-schema";
 
 const CUP_SIZES: { value: "2oz" | "5oz"; label: string; sub: string }[] = [
   { value: "2oz", label: "Mini Shots", sub: "2 oz · tasting size" },
@@ -103,7 +50,7 @@ export default function OrderCTA() {
     setValue,
     formState: { errors },
   } = useForm<FormData>({
-    resolver: zodResolver(schema),
+    resolver: zodResolver(orderSchema),
     defaultValues: {
       cupSize: "5oz",
       packQty: "24",
@@ -198,7 +145,9 @@ export default function OrderCTA() {
     const serviceId = process.env.NEXT_PUBLIC_EMAILJS_SERVICE_ID;
     const templateId = process.env.NEXT_PUBLIC_EMAILJS_TEMPLATE_ID;
     const publicKey = process.env.NEXT_PUBLIC_EMAILJS_PUBLIC_KEY;
-    const toEmail = process.env.NEXT_PUBLIC_BUSINESS_EMAIL ?? BUSINESS.email;
+    // Business inbox from config. Never read a NEXT_PUBLIC_ env var here: those
+    // are inlined into the public JS bundle.
+    const toEmail = BUSINESS.email;
 
     const emailConfigured = Boolean(serviceId && templateId && publicKey);
 
@@ -599,6 +548,7 @@ export default function OrderCTA() {
                     <Field label="Name" error={errors.name?.message}>
                       <input
                         {...register("name")}
+                        maxLength={120}
                         className="form-input"
                         placeholder="Your full name"
                       />
@@ -607,6 +557,7 @@ export default function OrderCTA() {
                       <input
                         {...register("email")}
                         type="email"
+                        maxLength={254}
                         className="form-input"
                         placeholder="you@email.com"
                       />
@@ -614,10 +565,11 @@ export default function OrderCTA() {
                   </div>
 
                   <div className="grid grid-cols-1 sm:grid-cols-2 gap-6">
-                    <Field label="Phone (optional)" error={undefined}>
+                    <Field label="Phone (optional)" error={errors.phone?.message}>
                       <input
                         {...register("phone")}
                         type="tel"
+                        maxLength={40}
                         className="form-input"
                         placeholder="(xxx) xxx-xxxx"
                       />
@@ -749,6 +701,7 @@ export default function OrderCTA() {
                         >
                           <input
                             {...register("deliveryAddress")}
+                            maxLength={300}
                             className="form-input"
                             placeholder="Street, city, postal code"
                           />
@@ -757,10 +710,11 @@ export default function OrderCTA() {
                     ) : null}
                   </div>
 
-                  <Field label="Notes (optional)" error={undefined}>
+                  <Field label="Notes (optional)" error={errors.notes?.message}>
                     <textarea
                       {...register("notes")}
                       rows={3}
+                      maxLength={2000}
                       className="form-input"
                       placeholder="Flavour ratios, allergies, event details, anything we should know"
                       style={{ resize: "vertical" }}
@@ -799,7 +753,7 @@ export default function OrderCTA() {
                   >
                     <span>{loading ? "Sending…" : "Send order request"}</span>
                     <span className="hidden sm:inline font-mono text-[10px] tracking-[0.18em] uppercase opacity-70">
-                      {loading ? "…" : "Reply by tomorrow"}
+                      {loading ? "…" : "Confirmed within the day"}
                     </span>
                   </button>
                 </div>

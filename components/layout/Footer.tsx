@@ -2,6 +2,7 @@ import Link from "next/link";
 import Image from "next/image";
 import { InstagramIcon } from "@/components/ui/InstagramIcon";
 import { FacebookIcon } from "@/components/ui/FacebookIcon";
+import { AllergenNotice } from "@/components/ui/AllergenNotice";
 import { BUSINESS, mailtoLink } from "@/lib/business";
 
 export default function Footer() {
@@ -39,10 +40,11 @@ export default function Footer() {
               the morning of.
             </h2>
             <p className="mt-8 max-w-[44ch] text-bone-soft/70 text-[17px] leading-[1.55]">
-              Pickup in {BUSINESS.location.city}, delivery across the{" "}
-              {BUSINESS.location.region}. Minimum order is 24 cups. Maximum is
-              whatever your event needs.
+              Pickup in {BUSINESS.location.city}, delivery on Saturdays across
+              the {BUSINESS.location.region}. Minimum order is 24 cups. Maximum
+              is whatever your event needs.
             </p>
+            <AllergenNotice className="mt-10 text-bone-soft" />
           </div>
 
           <div className="md:col-span-5 grid grid-cols-1 sm:grid-cols-2 gap-8">

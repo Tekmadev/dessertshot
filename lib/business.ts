@@ -2,17 +2,29 @@
  * Single source of truth for business identity, contact, and location.
  * Update values here — every page, footer, metadata block, and CTA reads from this.
  */
+
+// Public business contact (brief §2.5). The owner's personal address must never
+// appear in the UI or the client bundle.
+export const CONTACT_EMAIL = "dessertshot.ca@gmail.com";
+// Placeholder until the owner supplies a business phone (brief §10.2).
+export const CONTACT_PHONE: string | null = null;
+
 export const BUSINESS = {
   name: "Dessert Shot",
+  founded: 2024,
   tagline: "Layered cups, made by hand in Hamilton.",
   description:
-    "Hand layered dessert cups baked in Hamilton, Ontario. Real fruit, real cream, ridiculous detail. Order packs of 24, 48, or 96 across the GTA.",
-  shortDescription: "Hand layered dessert cups baked in Hamilton, Ontario.",
+    "Hand-layered dessert cups and mini dessert shots, made fresh the morning of pickup in Hamilton, Ontario. Packs of 24, 48 or 96 for events and parties, with Saturday delivery across the GTA.",
+  shortDescription: "Hand-layered dessert cups, made fresh in Hamilton, Ontario.",
 
+  // Display name of the domain.
   domain: "dessertshot.ca",
-  url: "https://dessertshot.ca",
+  // Primary host: production serves www and Vercel redirects the apex to it.
+  // metadataBase, every canonical and og:url resolve against this.
+  url: "https://www.dessertshot.ca",
 
-  email: "farhanaakter2612@gmail.com",
+  email: CONTACT_EMAIL,
+  phone: CONTACT_PHONE,
 
   instagram: {
     handle: "@dessertshot.ca",
@@ -39,22 +51,35 @@ export const BUSINESS = {
     pickup: "Pickup free in Hamilton.",
     delivery: "Delivery Saturdays across the GTA.",
     notice: "48 hours minimum notice.",
+    confirmation: "We confirm within the day.",
   },
 
   seoKeywords: [
     "dessert cups Hamilton",
-    "dessert cups GTA",
-    "dessert shot",
-    "layered dessert cups",
-    "Kinder Bueno dessert",
-    "Ferrero dessert",
-    "Dubai chocolate dessert",
-    "Biscoff dessert cups",
-    "mango cheesecake cup",
-    "custom dessert orders Hamilton",
-    "Toronto dessert delivery",
+    "dessert shots GTA",
+    "party dessert cups",
     "wedding dessert cups",
+    "baby shower dessert cups",
+    "corporate dessert boxes",
+    "mini dessert shooters",
+    "dessert table Hamilton",
+    "Dubai chocolate dessert cup",
+    "Kinder Bueno dessert cup",
+    "Biscoff dessert cups",
+    "tiramisu cups",
+    "dessert cups Toronto delivery",
   ],
 } as const;
 
-export const mailtoLink = `mailto:${BUSINESS.email}`;
+/**
+ * Service area for a service-area business — no street address is ever
+ * published (brief §1, §8.5). Only places consistent with the Saturday
+ * delivery policy; the owner confirms the final list (brief §10.4).
+ */
+export const SERVICE_AREA = {
+  pickupCity: "Hamilton",
+  deliveryCities: ["Hamilton", "Burlington", "Oakville", "Mississauga", "Toronto"],
+  needsOwnerReview: true,
+} as const;
+
+export const mailtoLink = `mailto:${CONTACT_EMAIL}`;

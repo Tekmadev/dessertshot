@@ -34,6 +34,13 @@ yarn-error.log*
 # env files (can opt-in for committing if needed)
 .env*
 
+# Owner's original phone photos: they carry GPS EXIF (home location) and
+# this repo is public. Only metadata-stripped derivatives go in public/.
+/source-photos/
+
+# The private project brief (business details not meant for a public repo)
+/dessertshot-cc-prompt.md
+
 # vercel
 .vercel
 
