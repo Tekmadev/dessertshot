@@ -134,6 +134,21 @@ export function parseBlocks(body: string): Block[] {
   return blocks;
 }
 
+/** Markdown (this subset) to plain text, tokens resolved; null when nothing is left. */
+export function plainText(markdown: string, tokens: Tokens = SITE_TOKENS): string | null {
+  const text = resolveTokens(markdown, tokens);
+  if (text === null) return null;
+  return parseBlocks(text)
+    .map((b) =>
+      b.kind === "p"
+        ? inlineText(b.children)
+        : b.kind === "table"
+          ? b.rows.map((r) => r.map(inlineText).join(" ")).join("; ")
+          : b.items.map(inlineText).join(", ")
+    )
+    .join(" ");
+}
+
 /** Plain text of inline nodes (for JSON-LD and metadata). */
 export function inlineText(nodes: Inline[]): string {
   return nodes.map((n) => (n.kind === "text" ? n.text : inlineText(n.children))).join("");

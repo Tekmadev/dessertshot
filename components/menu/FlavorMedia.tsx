@@ -4,7 +4,7 @@ import type { Flavor } from "@/lib/flavors";
 import { productPhoto, type VideoAsset } from "@/lib/media";
 import { accentTint } from "./menu-data";
 
-const SIZES = "(min-width: 1400px) 680px, (min-width: 1024px) 48vw, 100vw";
+const SIZES = "(min-width: 1400px) 680px, (min-width: 1024px) 48vw, (min-width: 768px) calc(100vw - 80px), calc(100vw - 48px)";
 
 /**
  * The flavour page's hero visual: the product still, preloaded as the LCP.

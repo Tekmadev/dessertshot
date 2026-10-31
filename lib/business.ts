@@ -59,6 +59,8 @@ export const BUSINESS = {
     confirmation: "We confirm within the day.",
   },
 
+  // Planning list for copy and titles (brief §8). Not rendered: Google ignores
+  // meta keywords, and the tag would publish the plan.
   seoKeywords: [
     "dessert cups Hamilton",
     "dessert shots GTA",

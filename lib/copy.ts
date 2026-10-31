@@ -29,7 +29,7 @@ const CREAM_LAYERS = FLAVORS.filter((f) => f.layers.length > 1).map((f) => lower
 
 export const copy = {
   hero: {
-    eyebrow: "Hand-layered in Hamilton, Ontario",
+    eyebrow: "Hand-layered dessert cups in Hamilton, Ontario",
     line1: "Cups so good",
     line2Pre: "people stop ",
     line2Italic: "talking",
@@ -89,6 +89,18 @@ export const copy = {
     body: "Mix Classic and Premium flavours freely in the same box. The 96 brings the lowest price per cup.",
   },
 
+  // The /menu and /order h1s (first line small, then the display line with an
+  // italic end). Their share cards (lib/og.ts) read the same strings.
+  menuPage: {
+    kicker: "The dessert cup menu",
+    headingPre: "Every flavour,",
+    headingItalic: "every layer.",
+  },
+  orderPage: {
+    kicker: "Place an order",
+    headingPre: "Order dessert cups for",
+    headingItalic: "pickup or delivery.",
+  },
   how: {
     kicker: "The order flow",
     headingPre: "Three steps,",

@@ -26,9 +26,10 @@ describe("pageMetadata()", () => {
     expect(meta.openGraph?.siteName).toBe("Dessert Shot by Farhana");
   });
 
-  it("puts the full brand in the homepage title", () => {
-    const home = routes.find((r) => r.path === "/");
-    expect(home?.title.startsWith(`${BUSINESS.name}${TITLE_SEPARATOR}`)).toBe(true);
+  it("leads the homepage title with the intent and keeps the full brand", () => {
+    const home = routes.find((r) => r.path === "/")!;
+    expect(home.title).toMatch(/^Dessert Cups in Hamilton/);
+    expect(home.title.endsWith(`${TITLE_SEPARATOR}${BUSINESS.name}`)).toBe(true);
   });
 
   it("uses an absolute title when asked (homepage)", () => {
@@ -42,9 +43,13 @@ describe("pageMetadata()", () => {
     expect(pageMetadata({ title: "x", description: "d", path: "/x" }).robots).toBeUndefined();
   });
 
-  it("always includes a share image", () => {
+  it("always includes a share image: the page's own card, else the shared fallback", () => {
     const meta = pageMetadata({ title: "x", description: "d", path: "/x" });
     expect(meta.openGraph?.images).toEqual([DEFAULT_OG_IMAGE]);
+    for (const r of routes.filter((x) => !x.noindex)) {
+      const own = pageMetadata(r).openGraph?.images as { url: string }[];
+      expect(own[0].url, r.path).toBe(`/og/${r.path === "/" ? "home" : r.path.slice(1).replaceAll("/", "-")}.jpg`);
+    }
   });
 });
 
@@ -57,8 +62,8 @@ describe("route map", () => {
 
   it.each(routes)("$path has a search-friendly title and description length", (r) => {
     expect(r.path.startsWith("/")).toBe(true);
-    // 70 with the " · Dessert Shot" short-name suffix (DECISIONS.md: drafts cap at 55 before it).
-    expect(fullTitle(r).length).toBeLessThanOrEqual(70);
+    // 60 with the " · Dessert Shot" short-name suffix, so search results don't cut it off.
+    expect(fullTitle(r).length).toBeLessThanOrEqual(60);
     expect(r.description.length).toBeGreaterThanOrEqual(70);
     expect(r.description.length).toBeLessThanOrEqual(160);
   });

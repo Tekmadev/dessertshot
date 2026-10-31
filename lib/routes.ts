@@ -24,12 +24,12 @@ export const ROUTES = {
   home: {
     path: "/",
     absoluteTitle: true,
-    title: "Dessert Shot by Farhana · Hand-Layered Dessert Cups, Hamilton & GTA",
+    title: "Dessert Cups in Hamilton & the GTA · Dessert Shot by Farhana",
     description: `${dietary ? `${dietary} dessert cups` : "Hand-layered dessert cups"} and dessert shots for weddings, showers and parties. Made fresh in Hamilton, delivered Saturdays across the GTA.`,
   },
   menu: {
     path: "/menu",
-    title: "Menu: Layered Dessert Cup Flavours",
+    title: "Dessert Cup Menu: Eight Layered Flavours",
     description:
       "Dubai Chocolate, Kinder Bueno, Biscoff, Ferrero, Tiramisu and fruit dessert cups. Every layer listed bottom to top, with allergen notes.",
   },
@@ -58,13 +58,7 @@ export function draftRoute(slug: string): RouteMeta {
 /** /menu/[flavour]: one page per flavour (brief §6). */
 export function flavorRoute(f: Flavor): RouteMeta {
   const sizes = sizeNote(f) ? "Dessert Cups" : "Dessert Cups & Mini Shots";
-  const layers = f.layers.length ? ` Layers, bottom to top: ${f.layers.join(", ").toLowerCase()}.` : "";
-  const description = `${f.name}: ${f.tagline.replace(/\.$/, "")}.${layers} Order in packs of 24, 48 or 96 for pickup in Hamilton or GTA delivery.`;
-  return {
-    path: `/menu/${f.slug}`,
-    title: `${f.name} ${sizes}`,
-    description: description.length <= 160 ? description : `${f.name}: ${f.tagline.replace(/\.$/, "")}. A ${f.tier === "premium" ? "Premium" : "Classic"} flavour in packs of 24, 48 or 96, made fresh in Hamilton.`,
-  };
+  return { path: `/menu/${f.slug}`, title: `${f.name} ${sizes}`, description: f.seoDescription };
 }
 
 /** Every route with metadata: the fixed pages, the draft pages and the flavour pages. */

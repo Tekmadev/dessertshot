@@ -30,7 +30,7 @@ export default function OtherFlavors({ flavor }: { flavor: Pick<Flavor, "id"> })
               </span>
               <span className="mt-3 block font-display text-[18px] md:text-[20px] leading-[1.15] tracking-[-0.015em] text-ink group-hover:underline group-hover:decoration-ember group-hover:underline-offset-4">
                 {f.name}
-              </span>
+              </span>{" "}
               <span className="mt-1 block font-mono text-[10px] tracking-[0.18em] uppercase text-ink/70">
                 {tierLabel(f)}
               </span>

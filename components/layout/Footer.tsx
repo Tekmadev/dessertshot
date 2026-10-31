@@ -5,26 +5,28 @@ import { FacebookIcon } from "@/components/ui/FacebookIcon";
 import { AllergenNotice } from "@/components/ui/AllergenNotice";
 import { Wordmark } from "@/components/ui/Wordmark";
 import { BUSINESS, mailtoLink, telLink } from "@/lib/business";
+import { EVENT_TYPES } from "@/lib/events";
 
 export default function Footer() {
   return (
     <footer className="relative bg-ink text-bone-soft pt-20 sm:pt-28 md:pt-32 pb-12 overflow-hidden">
       <div className="mx-auto max-w-[1400px] px-6 md:px-10">
-        <div className="grid grid-cols-1 md:grid-cols-12 gap-10 md:gap-12 pb-14 md:pb-20">
-          <div className="md:col-span-7">
+        <div className="grid grid-cols-1 lg:grid-cols-12 gap-10 md:gap-12 pb-14 md:pb-20">
+          <div className="lg:col-span-5">
             <div className="flex items-center gap-3 mb-8">
               {/* Decorative: the wordmark beside it carries the name. */}
               <Image src="/logo.png" alt="" width={44} height={44} className="h-12 w-12 object-contain" />
               <div className="flex flex-col gap-2">
-                <Wordmark light className="self-start text-[26px]" />
+                <Wordmark light className="self-start text-[26px]" />{" "}
                 <span className="font-mono text-[11px] tracking-[0.2em] uppercase text-bone-soft/60">
                   Hand layered in {BUSINESS.location.city}
                 </span>
               </div>
             </div>
-            <h2
+            {/* A styled line, not a heading: it would add the same h2 to every page's outline. */}
+            <p
               className="font-display tracking-[-0.035em] leading-[0.95]"
-              style={{ fontSize: "clamp(48px, 7vw, 112px)" }}
+              style={{ fontSize: "clamp(48px, 6vw, 104px)" }}
             >
               Cups{" "}
               <span
@@ -37,7 +39,7 @@ export default function Footer() {
                 made
               </span>{" "}
               the morning of.
-            </h2>
+            </p>
             <p className="mt-8 max-w-[44ch] text-bone-soft/70 text-[17px] leading-[1.55]">
               Pickup in {BUSINESS.location.city}, delivery on Saturdays across
               the {BUSINESS.location.region}. Minimum order is 24 cups. Maximum
@@ -46,7 +48,7 @@ export default function Footer() {
             <AllergenNotice className="mt-10 text-bone-soft" />
           </div>
 
-          <div className="md:col-span-5 grid grid-cols-1 sm:grid-cols-2 gap-8">
+          <div className="lg:col-span-7 grid grid-cols-1 sm:grid-cols-3 gap-8">
             <FooterCol title="Browse">
               <FooterLink href="/menu">Menu</FooterLink>
               <FooterLink href="/packages">Packages</FooterLink>
@@ -56,6 +58,14 @@ export default function Footer() {
               <FooterLink href="/dessert-cups-gta">Delivery across the GTA</FooterLink>
               {/* Footer only (brief §6). */}
               <FooterLink href="/open-a-shop">Help us open our first shop</FooterLink>
+            </FooterCol>
+            {/* Every event page, so each one is a click from anywhere on the site. */}
+            <FooterCol title="Events">
+              {EVENT_TYPES.map((e) => (
+                <FooterLink key={e.slug} href={`/events/${e.slug}`}>
+                  {e.label}
+                </FooterLink>
+              ))}
             </FooterCol>
             <FooterCol title="Contact">
               <FooterLink href={mailtoLink}>{BUSINESS.email}</FooterLink>
@@ -97,20 +107,19 @@ export default function Footer() {
         </div>
       </div>
 
-      {/* Big background wordmark */}
+      {/* Big background wordmark: drawn by CSS (::before), so it's decoration, not page text. */}
       <div
         aria-hidden="true"
         className="absolute -bottom-16 left-0 right-0 pointer-events-none flex justify-center select-none"
       >
         <span
-          className="font-display italic text-bone-soft/[0.06] leading-none"
+          data-word="dessert"
+          className="font-display italic text-bone-soft/[0.06] leading-none before:content-[attr(data-word)]"
           style={{
             fontSize: "clamp(180px, 28vw, 420px)",
             fontVariationSettings: "'SOFT' 100, 'WONK' 1",
           }}
-        >
-          dessert
-        </span>
+        />
       </div>
     </footer>
   );
@@ -141,11 +150,13 @@ function FooterLink({
   children: React.ReactNode;
 }) {
   return (
-    <Link
-      href={href}
-      className="inline-flex items-center min-h-[44px] py-1.5 -my-1.5 text-[15px] text-bone-soft/80 hover:text-bone-soft transition-colors [overflow-wrap:anywhere]"
-    >
-      {children}
-    </Link>
+    <>
+      <Link
+        href={href}
+        className="inline-flex items-center min-h-[44px] py-1.5 -my-1.5 text-[15px] text-bone-soft/80 hover:text-bone-soft transition-colors [overflow-wrap:anywhere]"
+      >
+        {children}
+      </Link>{" "}
+    </>
   );
 }

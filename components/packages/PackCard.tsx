@@ -55,6 +55,8 @@ export default function PackCard({
           className="mt-3 font-display text-[44px] md:text-[52px] lg:text-[60px] leading-none tracking-[-0.035em] text-ink"
         >
           {pkg.label}
+          {/* Both size tabs render a "The 24": the size keeps each heading distinct. */}
+          <span className="sr-only">, {sizeLabel}</span>
         </h3>
         <p className="mt-3 max-w-[36ch] text-[15px] leading-[1.55] text-ink/70">{pkg.description}</p>
       </div>
@@ -93,7 +95,7 @@ export default function PackCard({
         onOrder={onOrder}
         className="group mt-auto inline-flex min-h-[56px] items-center justify-between gap-4 rounded-full bg-ink px-6 py-4 text-[15px] tracking-[-0.01em] text-bone-soft focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-ember"
       >
-        <span>Order the {pkg.size}</span>
+        <span>Order the {pkg.size}</span>{" "}
         <span className="inline-flex items-center gap-2 font-mono text-[10px] tracking-[0.18em] uppercase text-bone-soft/80">
           {sizeLabel}
           <ArrowRight

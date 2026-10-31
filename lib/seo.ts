@@ -6,11 +6,12 @@
  */
 import type { Metadata } from "next";
 import { BUSINESS } from "./business";
+import { ogImageFor } from "./og";
 
 export type OgImage = { url: string; width: number; height: number; alt: string };
 
-// Shared fallback until per-page OG images land in Step 2. A crop of the
-// owner's real Mango photo (photo J), re-encoded with all EXIF/GPS removed.
+// Fallback for pages without their own card (lib/og.ts), e.g. the 404. A
+// crop of the owner's real Mango photo (photo J), re-encoded with no EXIF/GPS.
 export const DEFAULT_OG_IMAGE: OgImage = {
   url: "/og/default.jpg",
   width: 1200,
@@ -30,6 +31,7 @@ type PageMetadataInput = {
   absoluteTitle?: boolean;
   /** Keep the page out of search results (e.g. /order/thanks). */
   noindex?: boolean;
+  /** Defaults to the page's own share card (lib/og.ts), else the shared fallback. */
   image?: OgImage;
 };
 
@@ -39,7 +41,7 @@ export function pageMetadata({
   path,
   absoluteTitle = false,
   noindex = false,
-  image = DEFAULT_OG_IMAGE,
+  image = ogImageFor(path) ?? DEFAULT_OG_IMAGE,
 }: PageMetadataInput): Metadata {
   // Matches the layout's title template: the short name keeps titles within search-result length.
   const fullTitle = absoluteTitle ? title : `${title}${TITLE_SEPARATOR}${BUSINESS.shortName}`;

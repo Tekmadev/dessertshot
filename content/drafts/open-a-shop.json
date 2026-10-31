@@ -27,7 +27,7 @@
     },
     {
       "q": "Can I try the cups first?",
-      "a": "Yes. The smallest order is a pack of 24, with up to four flavours and at least six of each. Choose 2 oz Mini Shots, the tasting size, and [send a request](/order?pack=24&size=2oz)."
+      "a": "Yes. The smallest order is a pack of 24, with up to four flavours and at least six of each. Choose 2 oz Mini Shots, the tasting size, and [request a 24 of Mini Shots](/order?pack=24&size=2oz)."
     }
   ],
   "cta": {

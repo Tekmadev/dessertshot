@@ -17,8 +17,11 @@ import { AllergenNotice } from "@/components/ui/AllergenNotice";
 import { BUSINESS } from "@/lib/business";
 import { FLAVORS, comesInSize, getFlavorBySlug, sizeNote } from "@/lib/flavors";
 import { CUP_SIZES, PACK_RULES_LINE, PACK_SIZES } from "@/lib/packs";
+import { eventsNaming } from "@/lib/page-photos";
 import { flavorRoute } from "@/lib/routes";
 import { pageMetadata } from "@/lib/seo";
+import JsonLd from "@/components/seo/JsonLd";
+import { pageGraph } from "@/lib/structured-data";
 
 type Props = { params: Promise<{ slug: string }> };
 
@@ -40,6 +43,9 @@ const H2_SIZE = { fontSize: "clamp(32px, 4.2vw, 56px)" };
 const KICKER = "font-mono text-[11px] tracking-[0.2em] uppercase text-ink/70";
 const TEXT_LINK =
   "inline-flex min-h-11 items-center gap-2 text-[15px] tracking-[-0.01em] text-ink underline decoration-ink/30 underline-offset-[5px] transition-colors hover:decoration-ember focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-ink";
+/** Links inside the small mono fulfilment line. */
+const MONO_LINK =
+  "underline decoration-ink/30 underline-offset-[4px] transition-colors hover:text-ink hover:decoration-ember focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-ink";
 
 export default async function FlavorPage({ params }: Props) {
   const { slug } = await params;
@@ -49,9 +55,12 @@ export default async function FlavorPage({ params }: Props) {
   const note = sizeNote(flavor);
   const sizes = CUP_SIZES.filter((s) => comesInSize(flavor, s.value));
   const faqs = flavorFaqs();
+  const events = eventsNaming(flavor);
 
   return (
     <>
+      {/* No FAQPage here: the questions are /faq's own, picked for this page. */}
+      <JsonLd data={pageGraph(flavorRoute(flavor).path)!} />
       <Navbar />
       <main className="relative pt-28 md:pt-32">
         <nav aria-label="Breadcrumb" className="px-6 md:px-10 pt-6 md:pt-10">
@@ -77,7 +86,11 @@ export default async function FlavorPage({ params }: Props) {
                 className="mt-5 font-display text-ink leading-[0.94] tracking-[-0.04em]"
                 style={{ fontSize: "clamp(48px, 8.4vw, 124px)" }}
               >
-                {flavor.name}
+                {flavor.name}{" "}
+                {/* Part of the h1 ("Dubai Chocolate dessert cups"), set small. */}
+                <span className="mt-4 block font-mono text-[11px] leading-[1.6] tracking-[0.2em] uppercase text-ink/70">
+                  dessert cups
+                </span>
               </h1>
               <p
                 className="mt-4 font-display italic text-[24px] md:text-[30px] leading-[1.2]"
@@ -113,7 +126,12 @@ export default async function FlavorPage({ params }: Props) {
               <p className="font-mono text-[10px] tracking-[0.18em] uppercase text-ink/70 leading-[1.9]">
                 Made the morning of pickup or delivery
                 <br />
-                {BUSINESS.fulfillment.pickup} {BUSINESS.fulfillment.delivery}
+                <Link href="/dessert-cups-hamilton" className={MONO_LINK}>
+                  {BUSINESS.fulfillment.pickup}
+                </Link>{" "}
+                <Link href="/dessert-cups-gta" className={MONO_LINK}>
+                  {BUSINESS.fulfillment.delivery}
+                </Link>
               </p>
             </div>
           </div>
@@ -159,6 +177,21 @@ export default async function FlavorPage({ params }: Props) {
                 Classic and Premium flavours mix freely in the same box. In a mixed box, each cup is
                 priced at its own tier&apos;s rate.
               </p>
+              {/* The event guides whose copy names this flavour (lib/page-photos.ts). */}
+              {events.length ? (
+                <div className="mt-8">
+                  <p className={KICKER}>In our event guides</p>
+                  <ul className="mt-3 flex flex-wrap gap-x-5 gap-y-1">
+                    {events.map((e) => (
+                      <li key={e.slug}>
+                        <Link href={`/events/${e.slug}`} className={TEXT_LINK}>
+                          {e.label}
+                        </Link>
+                      </li>
+                    ))}
+                  </ul>
+                </div>
+              ) : null}
             </div>
             <div className="lg:col-span-7">
               <PriceTable flavor={flavor} />

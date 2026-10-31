@@ -3,7 +3,7 @@
  * No React, no I/O, so lib/story-content.test.ts can run them directly.
  */
 import type { PageDraft } from "@/lib/drafts";
-import { inlineText, parseBlocks, resolveTokens, usesDietaryClaim } from "@/lib/markdown";
+import { plainText, usesDietaryClaim } from "@/lib/markdown";
 
 // ---------------------------------------------------------------------------
 // Event summaries (EventsGrid)
@@ -32,20 +32,8 @@ export function trimSummary(text: string, max = 120): string {
   return `${head.slice(0, space > 0 ? space : max - 1).replace(/[,;:\s–—-]+$/, "")}…`;
 }
 
-/** Markdown (lib/markdown.ts subset) to plain text, tokens resolved; null if it needs a claim that's off. */
-export function plainText(markdown: string): string | null {
-  const text = resolveTokens(markdown);
-  if (text === null) return null;
-  return parseBlocks(text)
-    .map((b) =>
-      b.kind === "p"
-        ? inlineText(b.children)
-        : b.kind === "table"
-          ? b.rows.map((r) => r.map(inlineText).join(" ")).join("; ")
-          : b.items.map(inlineText).join(", ")
-    )
-    .join(" ");
-}
+// Markdown to plain text lives in lib/markdown.ts (structured data uses it too).
+export { plainText };
 
 /**
  * One line for an event card: the first sentence of the page's meta

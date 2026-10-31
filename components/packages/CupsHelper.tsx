@@ -213,6 +213,7 @@ export default function CupsHelper({ onOrder }: { onOrder: (prefill: OrderPrefil
             className={`group mt-8 inline-flex min-h-[56px] w-full sm:w-auto sm:self-start items-center justify-between gap-6 rounded-full bg-ink px-7 py-4 text-[15px] tracking-[-0.01em] text-bone-soft ${focusRing}`}
           >
             <span>Order this</span>
+            <span className="sr-only">: </span>
             <span className="inline-flex items-center gap-2 font-mono text-[10px] tracking-[0.18em] uppercase text-bone-soft/80">
               {packName(suggestion.lead)} · {suggestion.size.replace("oz", " oz")}
               <ArrowRight

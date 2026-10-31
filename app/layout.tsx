@@ -3,8 +3,10 @@ import { Fraunces, Inter_Tight } from "next/font/google";
 import { Analytics } from "@vercel/analytics/next";
 import { LenisProvider } from "@/components/layout/LenisProvider";
 import { MotionPreferences } from "@/components/layout/MotionPreferences";
+import JsonLd from "@/components/seo/JsonLd";
 import { BUSINESS } from "@/lib/business";
 import { DEFAULT_OG_IMAGE, TITLE_SEPARATOR } from "@/lib/seo";
+import { siteGraph } from "@/lib/structured-data";
 import "./globals.css";
 
 const fraunces = Fraunces({
@@ -33,7 +35,6 @@ export const metadata: Metadata = {
   description: BUSINESS.description,
   applicationName: BUSINESS.shortName,
   authors: [{ name: BUSINESS.name }],
-  keywords: [...BUSINESS.seoKeywords],
   openGraph: {
     title: `${BUSINESS.name}${TITLE_SEPARATOR}${BUSINESS.tagline}`,
     description: BUSINESS.description,
@@ -122,6 +123,8 @@ export default function RootLayout({
           <LenisProvider>{children}</LenisProvider>
         </MotionPreferences>
         <Analytics />
+        {/* WebSite + the business, on every page; pages add their own nodes. */}
+        <JsonLd data={siteGraph()} />
       </body>
     </html>
   );

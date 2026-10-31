@@ -66,12 +66,13 @@ export default function OrderCTA() {
                   <div>
                     <div className="font-mono text-[10px] tracking-[0.2em] uppercase text-ink/70">
                       Instagram
-                    </div>
+                    </div>{" "}
                     <div className="font-display text-[20px] tracking-[-0.02em] text-ink">
                       {BUSINESS.instagram.handle}
                     </div>
                   </div>
                 </div>
+                {" "}
                 <span className="font-mono text-[11px] tracking-[0.18em] uppercase text-ink/70 group-hover:text-berry transition-colors">
                   Open
                 </span>
@@ -87,12 +88,13 @@ export default function OrderCTA() {
                   <div>
                     <div className="font-mono text-[10px] tracking-[0.2em] uppercase text-ink/70">
                       Facebook
-                    </div>
+                    </div>{" "}
                     <div className="font-display text-[20px] tracking-[-0.02em] text-ink">
                       {BUSINESS.facebook.handle}
                     </div>
                   </div>
                 </div>
+                {" "}
                 <span className="font-mono text-[11px] tracking-[0.18em] uppercase text-ink/70 group-hover:text-berry transition-colors">
                   Open
                 </span>
@@ -104,11 +106,12 @@ export default function OrderCTA() {
                 <div className="min-w-0 flex-1">
                   <div className="font-mono text-[10px] tracking-[0.2em] uppercase text-ink/70">
                     Email
-                  </div>
+                  </div>{" "}
                   <div className="font-display text-[20px] tracking-[-0.02em] text-ink truncate">
                     {BUSINESS.email}
                   </div>
                 </div>
+                {" "}
                 <span className="font-mono text-[11px] tracking-[0.18em] uppercase text-ink/70 group-hover:text-berry transition-colors">
                   Send
                 </span>
@@ -118,9 +121,10 @@ export default function OrderCTA() {
                   <div className="min-w-0 flex-1">
                     <div className="font-mono text-[10px] tracking-[0.2em] uppercase text-ink/70">
                       Call or text
-                    </div>
+                    </div>{" "}
                     <div className="font-display text-[20px] tracking-[-0.02em] text-ink">{BUSINESS.phone}</div>
                   </div>
+                  {" "}
                   <span className="font-mono text-[11px] tracking-[0.18em] uppercase text-ink/70 group-hover:text-berry transition-colors">
                     Call
                   </span>

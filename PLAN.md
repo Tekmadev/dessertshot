@@ -76,5 +76,14 @@ The slow parts of this project are not code. They are your decisions and approva
 - [x] Step 3 Order flow — built, browser-checked (dry run), reviewed twice (36 findings fixed), 263 tests green. **Owner setup pending:** `docs/order-setup.md` (EmailJS, Supabase secret key, Vercel env, then migration 004 after deploy).
 - [x] Generated product shots (decided in chat 2026-10-30, overrides brief §4.1) — GPT Image 2.5 chosen; all 8 flavours generated, 2 variants each (48 credits; project total 59). Picks made (A: Dubai, Kinder, Biscoff; B: the rest) → `public/media/products/`. Tiramisu's side layers are invented: owner to confirm. Videos: two hero takes (Kling, MiniMax) and the tray clip generated (27.5 credits; project total 86.5); Kling take picked; final MP4 + WebM (desktop and phone) and posters in `public/media/`, registered in `lib/media.ts`. Assets done for Step 4.
 - [x] Step 4 Videos, experience, pages — blush direction kept. Homepage S1–S9 (hero video, pinned Build reveal, flavour lineup, Morning Of, packages with a cups helper, events, Instagram (hidden until testimonials exist), FAQ, order), /menu and eight /menu/[slug] pages, and the draft pages (/packages, /events + seven event pages, /faq, both area pages, /open-a-shop). Brand corrected to **Dessert Shot by Farhana** (short form "Dessert Shot"). Browser-checked at 360/768/1280 px plus short and landscape screens. Five-lens review with a skeptic per finding: 39 confirmed and fixed (see DECISIONS.md), 458 tests green. Process clips for S5 not generated yet (`lib/process-clips.ts` is empty; the section works without them).
-- [ ] Step 5 SEO + QA → review round 2. **Last step for now (user, 2026-10-30): full focus on SEO; Step 6 and the rest wait.**
+- [x] Step 5 SEO — the last step for now (user, 2026-10-30). Structured data on every page, image sitemap, robots, branded 404, 24 per-page share images, intent-led titles (≤60) and h1s, per-flavour descriptions, internal links (footer Events column, event guides on flavour pages), page photos. Lighthouse mobile: SEO 100, CLS 0, Performance 91/95 with real throttling (79–89 simulated; see DECISIONS.md). Reviewed by four lenses with skeptics; 543 tests green. The QA half (screenshots at four widths, full accessibility pass) waits with Step 6.
+
+### SEO tasks only you or the owner can do (no code)
+
+1. **Google Business Profile** as a service-area business: address hidden, the five delivery cities as the service area, the same name ("Dessert Shot by Farhana"), phone and site.
+2. **Search Console**: verify https://www.dessertshot.ca, submit /sitemap.xml, then watch Core Web Vitals and the structured-data reports.
+3. **Rich Results Test** on a few live URLs after the next deploy (/, /menu/dubai-chocolate, /faq, /events/weddings).
+4. **Vercel → Domains**: make the apex → www redirect permanent (308; it answers 307 today). That is domain configuration, so it's yours to change.
+5. **Instagram link-in-bio** to the site, and **Google reviews** from real customers (never seeded).
+6. When copy on a page changes, run `npm run og` so its share card follows.
 - [ ] Step 6 Preview deploy

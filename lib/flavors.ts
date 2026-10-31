@@ -25,6 +25,8 @@ export type Flavor = {
   category: FlavorCategory;
   tagline: string;
   description: string;
+  /** Search description for /menu/[slug] (lib/routes.ts): 160 characters at most, facts from this entry only. */
+  seoDescription: string;
   /** Layers bottom → top, exactly as the owner builds them. Empty = not yet confirmed. */
   layers: readonly string[];
   /** What the finished cup looks like — art direction and alt text. */
@@ -49,6 +51,8 @@ export const FLAVORS: readonly Flavor[] = [
     tier: "classic",
     category: "Fruit",
     tagline: "Tropical and bright.",
+    seoDescription:
+      "Mango Dream dessert cups: graham crumb, mango-tinted cream cheese and a mango layer under a cream dollop. Classic, in packs of 24, 48 or 96, made in Hamilton.",
     description:
       "A graham crumb base, a mango-tinted cream cheese layer and a saffron-orange mango layer, finished with a soft dollop of cream.",
     layers: ["Graham crumb", "Mango-tinted cream cheese", "Mango layer", "Cream dollop"],
@@ -63,6 +67,8 @@ export const FLAVORS: readonly Flavor[] = [
     tier: "classic",
     category: "Fruit",
     tagline: "Summer in a cup.",
+    seoDescription:
+      "Strawberry Fields dessert cups: graham crumb, pink strawberry cream and compote under cream rosettes. Classic, in packs of 24, 48 or 96, made in Hamilton.",
     description:
       "A graham crumb base, a blush-pink strawberry cream and a glossy strawberry compote, topped with cream rosettes and strawberry.",
     layers: [
@@ -82,6 +88,8 @@ export const FLAVORS: readonly Flavor[] = [
     tier: "classic",
     category: "Fruit",
     tagline: "Deep and lush.",
+    seoDescription:
+      "Blueberry Haze dessert cups: graham crumb, lilac blueberry cream and deep compote with fresh blueberries. Classic, in packs of 24, 48 or 96, made in Hamilton.",
     description:
       "A graham crumb base, a lilac blueberry cream and a deep blueberry compote, finished with fresh blueberries.",
     layers: ["Graham crumb", "Lilac blueberry cream", "Deep blueberry compote", "Fresh blueberries"],
@@ -96,6 +104,8 @@ export const FLAVORS: readonly Flavor[] = [
     tier: "premium",
     category: "Chocolate",
     tagline: "Milk chocolate, silk and crunch.",
+    seoDescription:
+      "Kinder Bueno dessert cups: Kinder chocolate cream cheese and ganache on graham crumb, topped with a Kinder Bueno bite. Premium, in packs of 24, 48 or 96.",
     description:
       "A graham crumb base, cream cheese mixed with Kinder chocolate and a glossy Kinder-chocolate ganache, topped with a Kinder Bueno bite and a dusting of crumb.",
     layers: [
@@ -115,6 +125,8 @@ export const FLAVORS: readonly Flavor[] = [
     tier: "premium",
     category: "Chocolate",
     tagline: "Dark, glossy, hazelnut.",
+    seoDescription:
+      "Ferrero Royale dessert cups: chocolate-hazelnut cream and dark ganache, crowned with a hazelnut ball. Premium, in packs of 24, 48 or 96, made in Hamilton.",
     description:
       "A graham crumb base, a chocolate-hazelnut cream and a dark ganache, crowned with a Ferrero-style hazelnut ball and crushed hazelnut.",
     layers: [
@@ -134,6 +146,8 @@ export const FLAVORS: readonly Flavor[] = [
     tier: "premium",
     category: "Caramel",
     tagline: "Caramel and spice.",
+    seoDescription:
+      "Biscoff dessert cups: Biscoff crumb and cream under a melted Biscoff layer, topped with a Biscoff cookie. Premium, in packs of 24, 48 or 96, made in Hamilton.",
     description:
       "A Biscoff crumb base, Biscoff cream and a melted Biscoff layer, finished with a Biscoff cookie standing upright in a scatter of crumb.",
     layers: ["Biscoff crumb", "Biscoff cream", "Melted Biscoff layer", "Biscoff cookie and crumb"],
@@ -148,6 +162,8 @@ export const FLAVORS: readonly Flavor[] = [
     tier: "premium",
     category: "Premium",
     tagline: "Pistachio, kunafa and dark chocolate.",
+    seoDescription:
+      "Dubai Chocolate dessert cups: pistachio cream, golden kunafa and dark ganache with a pistachio swirl. Premium, in packs of 24, 48 or 96, made in Hamilton.",
     description:
       "A graham crumb base, pistachio cream, a layer of golden kunafa, more pistachio cream and a dark ganache, finished with a pistachio-paste swirl and crushed pistachio. Some are topped with rose petals.",
     layers: [
@@ -175,6 +191,8 @@ export const FLAVORS: readonly Flavor[] = [
     tier: "premium",
     category: "Chocolate",
     tagline: "Cocoa-dusted.",
+    seoDescription:
+      "Tiramisu dessert cups: coffee-soaked layers and tiramisu cream under a cocoa dusting. Premium, 5 oz Dessert Cups in packs of 24, 48 or 96, made in Hamilton.",
     description: "Tiramisu layered the traditional way, coffee-soaked layers between cream, finished with a cocoa dusting.",
     layers: ["Coffee-soaked layer", "Tiramisu cream", "Coffee-soaked layer", "Tiramisu cream", "Cocoa dusting"],
     visualSignature: "Square cup, matte cocoa-dusted top with a light sprinkle of sugar.",

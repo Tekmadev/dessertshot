@@ -22,13 +22,15 @@ export default function Hero() {
 
       <div className="relative mx-auto grid w-full max-w-[1400px] grid-cols-1 gap-y-8 px-6 md:px-10 lg:grid-cols-12 lg:gap-x-12 lg:gap-y-10">
         <div className="lg:col-span-7 lg:row-start-1 lg:self-end">
-          <p
-            className={`mb-5 font-mono text-[11px] uppercase tracking-[0.2em] text-ink/70 md:mb-7 ${styles.fade}`}
-            style={{ animationDelay: "0.05s" }}
-          >
-            {copy.hero.eyebrow}
-          </p>
+          {/* The small first line is part of the h1, so the heading says what and where. */}
           <h1 className="font-display text-[length:clamp(40px,11vw,76px)] leading-[0.95] tracking-[-0.04em] text-ink lg:text-[length:clamp(56px,5.4vw,96px)]">
+            <span
+              className={`mb-5 block font-mono text-[11px] uppercase leading-[1.6] tracking-[0.2em] text-ink/70 md:mb-7 ${styles.fade}`}
+              style={{ animationDelay: "0.05s" }}
+            >
+              {copy.hero.eyebrow}
+              <span className="sr-only">.</span>
+            </span>{" "}
             <Line delay={0.1}>{copy.hero.line1}</Line>{" "}
             <Line delay={0.2}>
               {copy.hero.line2Pre}

@@ -8,6 +8,6 @@ export const metadata: Metadata = pageMetadata(draftRoute("faq"));
 
 export default function Page() {
   return (
-    <DraftPage draft={getDraft("faq")!} kicker="Questions and answers"></DraftPage>
+    <DraftPage draft={getDraft("faq")!} kicker="Questions and answers" faqFirst />
   );
 }
