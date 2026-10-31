@@ -2,7 +2,11 @@ import type { Metadata, Viewport } from "next";
 import { Fraunces, Inter_Tight } from "next/font/google";
 import { Analytics } from "@vercel/analytics/next";
 import { LenisProvider } from "@/components/layout/LenisProvider";
+import { MotionPreferences } from "@/components/layout/MotionPreferences";
+import JsonLd from "@/components/seo/JsonLd";
 import { BUSINESS } from "@/lib/business";
+import { DEFAULT_OG_IMAGE, TITLE_SEPARATOR } from "@/lib/seo";
+import { siteGraph } from "@/lib/structured-data";
 import "./globals.css";
 
 const fraunces = Fraunces({
@@ -21,41 +25,29 @@ const interTight = Inter_Tight({
 
 export const metadata: Metadata = {
   metadataBase: new URL(BUSINESS.url),
+  // Fallbacks only. Every page sets its own title, description, canonical and
+  // Open Graph via `pageMetadata()` in lib/seo.ts. No canonical here: a
+  // layout-level canonical is inherited by every page that forgets its own.
   title: {
-    default: `${BUSINESS.name}. ${BUSINESS.tagline}`,
-    template: `%s . ${BUSINESS.name}`,
+    default: `${BUSINESS.name}${TITLE_SEPARATOR}${BUSINESS.tagline}`,
+    template: `%s${TITLE_SEPARATOR}${BUSINESS.shortName}`,
   },
   description: BUSINESS.description,
-  applicationName: BUSINESS.name,
+  applicationName: BUSINESS.shortName,
   authors: [{ name: BUSINESS.name }],
-  keywords: [...BUSINESS.seoKeywords],
   openGraph: {
-    title: `${BUSINESS.name}. Layered cups, made by hand.`,
+    title: `${BUSINESS.name}${TITLE_SEPARATOR}${BUSINESS.tagline}`,
     description: BUSINESS.description,
-    url: BUSINESS.url,
     siteName: BUSINESS.name,
     locale: BUSINESS.location.locale,
     type: "website",
-    images: [
-      {
-        url: "/dessertshotshowcase.jpg",
-        width: 896,
-        height: 917,
-        alt: `${BUSINESS.name} — hand layered dessert cups`,
-        type: "image/jpeg",
-      },
-    ],
+    images: [DEFAULT_OG_IMAGE],
   },
   twitter: {
     card: "summary_large_image",
-    title: `${BUSINESS.name}. Layered cups, made by hand.`,
+    title: `${BUSINESS.name}${TITLE_SEPARATOR}${BUSINESS.tagline}`,
     description: BUSINESS.shortDescription,
-    images: [
-      {
-        url: "/dessertshotshowcase.jpg",
-        alt: `${BUSINESS.name} — hand layered dessert cups`,
-      },
-    ],
+    images: [{ url: DEFAULT_OG_IMAGE.url, alt: DEFAULT_OG_IMAGE.alt }],
   },
   robots: {
     index: true,
@@ -67,7 +59,6 @@ export const metadata: Metadata = {
       "max-snippet": -1,
     },
   },
-  alternates: { canonical: "/" },
   manifest: "/favicondessert/site.webmanifest",
   icons: {
     icon: [
@@ -113,8 +104,13 @@ export default function RootLayout({
     <html
       lang="en-CA"
       className={`${fraunces.variable} ${interTight.variable} h-full`}
+      // The inline script below adds "js" before React hydrates.
+      suppressHydrationWarning
     >
       <head>
+        {/* Marks a running script before first paint, for the pin/unpinned
+            variants and the no-script fallback in app/globals.css. */}
+        <script dangerouslySetInnerHTML={{ __html: 'document.documentElement.classList.add("js")' }} />
         <link rel="preconnect" href="https://fonts.googleapis.com" />
         <link
           rel="preconnect"
@@ -123,8 +119,12 @@ export default function RootLayout({
         />
       </head>
       <body className="min-h-full bg-bone text-ink antialiased">
-        <LenisProvider>{children}</LenisProvider>
+        <MotionPreferences>
+          <LenisProvider>{children}</LenisProvider>
+        </MotionPreferences>
         <Analytics />
+        {/* WebSite + the business, on every page; pages add their own nodes. */}
+        <JsonLd data={siteGraph()} />
       </body>
     </html>
   );

@@ -7,7 +7,7 @@ export function MonoKicker({
 }) {
   return (
     <span
-      className={`font-mono text-[11px] tracking-[0.2em] uppercase text-ink/50 ${className}`}
+      className={`font-mono text-[11px] tracking-[0.2em] uppercase text-ink/70 ${className}`}
     >
       {children}
     </span>

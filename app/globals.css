@@ -1,5 +1,27 @@
 @import "tailwindcss";
 
+/*
+ * Scroll-pinned sections (lib/pin.ts): pin only with motion welcome, room for
+ * the stage and a running script. `html.js` is set by an inline script in
+ * app/layout.tsx before first paint (no `(scripting)` media feature: Safari
+ * before 17 doesn't know it, and would match neither variant).
+ */
+@custom-variant pin {
+  @media (prefers-reduced-motion: no-preference) and (min-height: 35rem) {
+    :where(html.js) & {
+      @slot;
+    }
+  }
+}
+@custom-variant unpinned {
+  @media not all and (prefers-reduced-motion: no-preference) and (min-height: 35rem) {
+    @slot;
+  }
+  :where(html:not(.js)) & {
+    @slot;
+  }
+}
+
 /* ============================================================
    DESSERT SHOT . Editorial design system
    Warm bone background. Caramel accent. Cinema easing.
@@ -36,15 +58,24 @@
   --color-ember-soft: #ea8298;
   --color-ember-glow: rgba(208, 72, 100, 0.18);
 
+  /* Brief palette (§5), drawn from the owner's photos. The surface swap from
+     baby pink to warm cream waits for the design-direction checkpoint. */
+  --color-cream-warm: #fbf5ee;
+  --color-cacao: #2a1710;
+  --color-blush: #fce4e7;
+  --color-berry: #b3213f;
+  --color-caramel: #c98a4b;
+
   /* Flavour spectrum (used sparingly, never decorative) */
-  --color-mango: #e89914;
-  --color-strawberry: #c4344a;
+  --color-mango: #f4a524;
+  --color-strawberry: #b3213f;
   --color-blueberry: #4a3580;
-  --color-pistachio: #6b8a4a;
-  --color-biscoff: #b07410;
+  --color-pistachio: #b7c48a;
+  --color-biscoff: #c98a4b;
   --color-kinder: #a85a14;
-  --color-ferrero: #6b4014;
+  --color-ferrero: #5a3414;
   --color-dubai: #5c7a4a;
+  --color-tiramisu: #6b4a32;
 
   --color-gold: #b08a3a;
 
@@ -191,7 +222,7 @@ html.lenis body {
   }
 
   .glass-bone {
-    background: rgba(252, 228, 231, 0.72);
+    background: rgba(252, 228, 231, 0.92);
     backdrop-filter: blur(20px) saturate(140%);
     -webkit-backdrop-filter: blur(20px) saturate(140%);
   }
@@ -218,4 +249,38 @@ html.lenis body {
     transition-duration: 0.001ms !important;
     scroll-behavior: auto !important;
   }
+}
+
+/* Order form fields (components/order/OrderForm.tsx). In the stylesheet, not
+   styled-jsx, so they're in the server-rendered HTML from the first paint. */
+.form-input {
+  width: 100%;
+  padding: 0.85rem 1rem;
+  background: transparent;
+  border: 0;
+  border-bottom: 1px solid var(--color-ink-15);
+  color: var(--color-ink);
+  font-family: var(--font-sans);
+  font-size: 16px;
+  letter-spacing: -0.005em;
+  outline: none;
+  transition: border-color 600ms cubic-bezier(0.16, 1, 0.3, 1);
+}
+.form-input:focus {
+  border-bottom-color: var(--color-ember);
+}
+.form-input::placeholder {
+  color: var(--color-ink-40);
+}
+select.form-input {
+  appearance: none;
+  background: transparent;
+}
+
+/* Without a script, motion/react's scroll reveals never run, but their
+   starting styles (opacity:0, a nudge) are in the server HTML. Show it all. */
+html:not(.js) [style*="opacity:0;"],
+html:not(.js) [style$="opacity:0"] {
+  opacity: 1 !important;
+  transform: none !important;
 }
