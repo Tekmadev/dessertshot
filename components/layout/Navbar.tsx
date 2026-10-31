@@ -1,22 +1,25 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import Link from "next/link";
 import Image from "next/image";
 import { Menu, X } from "lucide-react";
 import { InstagramIcon } from "@/components/ui/InstagramIcon";
+import { Wordmark } from "@/components/ui/Wordmark";
 import { BUSINESS } from "@/lib/business";
 
 const NAV = [
-  { href: "/#flavors", label: "Flavours" },
-  { href: "/#builder", label: "How a cup is built" },
-  { href: "/#packages", label: "Packages" },
   { href: "/menu", label: "Menu" },
+  { href: "/packages", label: "Packages" },
+  { href: "/events", label: "Events" },
+  { href: "/faq", label: "FAQ" },
 ];
 
 export default function Navbar() {
   const [scrolled, setScrolled] = useState(false);
   const [mobileOpen, setMobileOpen] = useState(false);
+  const toggleRef = useRef<HTMLButtonElement>(null);
+  const menuRef = useRef<HTMLElement>(null);
 
   useEffect(() => {
     const handler = () => setScrolled(window.scrollY > 24);
@@ -24,6 +27,25 @@ export default function Navbar() {
     window.addEventListener("scroll", handler, { passive: true });
     return () => window.removeEventListener("scroll", handler);
   }, []);
+
+  // Open: focus the first link. Escape closes and hands focus back to the toggle.
+  useEffect(() => {
+    if (!mobileOpen) return;
+    menuRef.current?.querySelector<HTMLElement>("a")?.focus();
+    const onKey = (e: KeyboardEvent) => {
+      if (e.key !== "Escape") return;
+      setMobileOpen(false);
+      toggleRef.current?.focus();
+    };
+    document.addEventListener("keydown", onKey);
+    return () => document.removeEventListener("keydown", onKey);
+  }, [mobileOpen]);
+
+  // Tabbing out of the open menu (into the page it covers) closes it.
+  const onMenuBlur = (e: React.FocusEvent<HTMLElement>) => {
+    const next = e.relatedTarget as Node | null;
+    if (next && !menuRef.current?.contains(next) && next !== toggleRef.current) setMobileOpen(false);
+  };
 
   return (
     <>
@@ -35,34 +57,20 @@ export default function Navbar() {
         }`}
       >
         <div className="mx-auto max-w-[1400px] px-6 md:px-10 flex items-center justify-between gap-6">
-          <Link
-            href="/"
-            className="group flex items-center gap-2.5 font-display text-[22px] tracking-[-0.025em] text-ink"
-          >
+          <Link href="/" aria-label={`${BUSINESS.name}, home`} className="group flex items-center gap-2.5">
+            {/* Decorative: the wordmark beside it names the link. */}
             <Image
               src="/logo.png"
-              alt={`${BUSINESS.name} logo`}
+              alt=""
               width={36}
               height={36}
-              priority
-              className="h-9 w-9 object-contain"
+              loading="eager"
+              className="h-10 w-10 object-contain"
             />
-            <span className="flex items-baseline gap-1">
-              <span>Dessert</span>
-              <span
-                className="italic"
-                style={{
-                  fontVariationSettings: "'SOFT' 50, 'WONK' 1",
-                  color: "var(--color-ember)",
-                }}
-              >
-                Shot
-              </span>
-              <span className="text-ember translate-y-[-0.2em]">.</span>
-            </span>
+            <Wordmark className="text-[22px]" />
           </Link>
 
-          <nav className="hidden lg:flex items-center gap-9">
+          <nav aria-label="Main" className="hidden lg:flex items-center gap-9">
             {NAV.map((link) => (
               <Link
                 key={link.href}
@@ -85,12 +93,12 @@ export default function Navbar() {
               rel="noopener noreferrer"
               className="hidden md:inline-flex items-center gap-3 px-5 py-2.5 rounded-full text-[14px] tracking-[-0.01em] transition-all duration-500 ease-cinema bg-ink text-bone-soft hover:scale-[1.02]"
               style={{ backgroundColor: "var(--color-ink)" }}
-              aria-label="Instagram"
             >
               <InstagramIcon size={16} />
               <span className="font-mono text-[10px] opacity-80 tracking-[0.18em] uppercase">
                 {BUSINESS.instagram.handle}
               </span>
+              <span className="sr-only"> on Instagram (opens in a new tab)</span>
             </Link>
 
             <Link
@@ -99,15 +107,19 @@ export default function Navbar() {
               rel="noopener noreferrer"
               className="md:hidden flex items-center justify-center w-11 h-11 rounded-full bg-ink text-bone-soft"
               style={{ backgroundColor: "var(--color-ink)" }}
-              aria-label="Instagram"
+              aria-label="Instagram (opens in a new tab)"
             >
               <InstagramIcon size={16} />
             </Link>
 
             <button
+              ref={toggleRef}
+              type="button"
               className="lg:hidden flex items-center justify-center w-11 h-11 rounded-full text-ink -mr-1"
               onClick={() => setMobileOpen((o) => !o)}
-              aria-label="Toggle menu"
+              aria-label="Menu"
+              aria-expanded={mobileOpen}
+              aria-controls="mobile-menu"
             >
               {mobileOpen ? <X size={20} /> : <Menu size={20} />}
             </button>
@@ -115,14 +127,21 @@ export default function Navbar() {
         </div>
       </header>
 
-      <div
-        className={`fixed inset-x-0 top-0 z-40 min-h-[100svh] h-[100svh] flex flex-col justify-center items-start gap-6 px-7 sm:px-10 pt-24 pb-[max(2rem,env(safe-area-inset-bottom))] transition-all duration-500 lg:hidden ${
+      {/* Phones and tablets. Closed, it's inert: out of the tab order and hidden from screen readers. */}
+      <nav
+        ref={menuRef}
+        id="mobile-menu"
+        aria-label="Main"
+        inert={!mobileOpen}
+        onBlur={onMenuBlur}
+        // Visible at once on open (so the first link can take focus), hidden only after the fade on close.
+        className={`fixed inset-0 z-40 flex flex-col justify-center-safe items-start gap-6 overflow-y-auto overscroll-contain px-7 sm:px-10 pt-24 pb-[max(2rem,env(safe-area-inset-bottom))] duration-500 lg:hidden ${
           mobileOpen
-            ? "opacity-100 pointer-events-auto"
-            : "opacity-0 pointer-events-none"
+            ? "visible opacity-100 pointer-events-auto transition-opacity"
+            : "invisible opacity-0 pointer-events-none transition-[opacity,visibility]"
         }`}
         style={{
-          background: "rgba(244, 236, 219, 0.97)",
+          background: "color-mix(in srgb, var(--color-bone) 97%, transparent)",
           backdropFilter: "blur(20px)",
         }}
       >
@@ -133,9 +152,11 @@ export default function Navbar() {
             onClick={() => setMobileOpen(false)}
             className="font-display text-[2.5rem] leading-[1.05] sm:text-5xl tracking-[-0.03em] text-ink py-1.5 -my-1.5"
             style={{
-              transitionDelay: mobileOpen ? `${100 + i * 60}ms` : "0ms",
               transform: mobileOpen ? "translateY(0)" : "translateY(20px)",
-              transition: "transform 600ms cubic-bezier(0.16,1,0.3,1)",
+              transitionProperty: "transform",
+              transitionDuration: "600ms",
+              transitionTimingFunction: "cubic-bezier(0.16,1,0.3,1)",
+              transitionDelay: mobileOpen ? `${100 + i * 60}ms` : "0ms",
             }}
           >
             {link.label}
@@ -146,13 +167,13 @@ export default function Navbar() {
           target="_blank"
           rel="noopener noreferrer"
           onClick={() => setMobileOpen(false)}
-          className="mt-4 inline-flex items-center gap-3 px-7 py-4 rounded-full text-[15px] text-bone-soft"
-          style={{ backgroundColor: "var(--color-ember)" }}
+          className="mt-4 inline-flex items-center gap-3 px-7 py-4 rounded-full text-[15px] text-bone-soft bg-berry"
         >
           <InstagramIcon size={18} />
           <span>{BUSINESS.instagram.handle}</span>
+          <span className="sr-only"> on Instagram (opens in a new tab)</span>
         </Link>
-      </div>
+      </nav>
     </>
   );
 }

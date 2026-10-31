@@ -119,7 +119,7 @@ export default function OrderForm() {
   const price = calcMixTotal(cupSize, packSize, items);
 
   const today = now ? torontoToday(now) : undefined;
-  const timing = now && /^\d{4}-\d{2}-\d{2}$/.test(date ?? "") ? orderTiming(date, now) : null;
+  const timing = now && /^\d{4}-\d{2}-\d{2}$/.test(date ?? "") ? orderTiming(date, now, packSize) : null;
   const deliveryNotSaturday =
     fulfillment === "delivery" && Boolean(timing) && timing !== "past" && !isSaturday(date);
 
@@ -168,7 +168,16 @@ export default function OrderForm() {
       applyPrefill(prefill);
       formRef.current?.scrollIntoView({ block: "start" });
     }
-    const onPrefill = (e: Event) => applyPrefill((e as CustomEvent<OrderPrefill>).detail);
+    // Same-page pack buttons: apply, then bring the form into view and keyboard
+    // focus to it, so the next Tab starts in the form (reduced motion: no glide).
+    const onPrefill = (e: Event) => {
+      applyPrefill((e as CustomEvent<OrderPrefill>).detail);
+      const form = formRef.current;
+      if (!form) return;
+      const reduce = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+      form.scrollIntoView({ block: "start", behavior: reduce ? "auto" : "smooth" });
+      form.focus({ preventScroll: true });
+    };
     window.addEventListener(ORDER_PREFILL_EVENT, onPrefill);
     return () => window.removeEventListener(ORDER_PREFILL_EVENT, onPrefill);
   }, [applyPrefill]);
@@ -273,9 +282,11 @@ export default function OrderForm() {
     <form
       ref={formRef}
       id="order-form"
+      aria-label="Order request"
+      tabIndex={-1}
       onSubmit={(e) => handleSubmit(onSubmit, onInvalid)(e)}
       noValidate
-      className="flex flex-col gap-8 scroll-mt-28"
+      className="flex flex-col gap-8 scroll-mt-28 focus:outline-none"
     >
       {/* ── Cup size ── */}
       <FormSection label="Cup size">
@@ -473,9 +484,11 @@ export default function OrderForm() {
           id="order-timing-note"
           aria-live="polite"
           className="font-mono text-[9px] tracking-[0.16em] uppercase leading-[1.7] -mt-2"
-          style={{ color: timing === "urgent" ? "var(--color-ember)" : "var(--color-ink-40)" }}
+          style={{ color: timing === "urgent" || timing === "too-soon" ? "var(--color-ember)" : "var(--color-ink-40)" }}
         >
-          {timing === "urgent"
+          {timing === "too-soon"
+            ? "A 96 needs at least 7 days' notice. Choose a later date or a smaller pack."
+            : timing === "urgent"
             ? copy.order.urgent
             : timing === "standard"
             ? copy.order.standard
@@ -513,7 +526,7 @@ export default function OrderForm() {
           {fulfillment === "delivery" ? (
             <div className="flex flex-col gap-4">
               <p className="font-mono text-[9px] tracking-[0.16em] uppercase leading-[1.7] text-ember">
-                {copy.order.deliveryFee}
+                {copy.order.deliveryFee} {copy.order.deliveryTime}
               </p>
               <div className="grid grid-cols-1 sm:grid-cols-3 gap-6">
                 <div className="sm:col-span-2">
@@ -613,6 +626,7 @@ export default function OrderForm() {
           <span className="font-display text-[36px] tracking-[-0.035em] text-ink leading-tight tabular-nums">
             {formatCad(price)}
           </span>
+          <span className="text-[12px] leading-[1.5] text-ink/55 mt-1 max-w-[34ch]">{copy.order.deposit}</span>
           {timing === "urgent" || fulfillment === "delivery" ? (
             <span className="font-mono text-[9px] tracking-[0.16em] uppercase mt-1 text-ember">
               {timing === "urgent" && fulfillment === "delivery"

@@ -3,7 +3,8 @@ import Image from "next/image";
 import { InstagramIcon } from "@/components/ui/InstagramIcon";
 import { FacebookIcon } from "@/components/ui/FacebookIcon";
 import { AllergenNotice } from "@/components/ui/AllergenNotice";
-import { BUSINESS, mailtoLink } from "@/lib/business";
+import { Wordmark } from "@/components/ui/Wordmark";
+import { BUSINESS, mailtoLink, telLink } from "@/lib/business";
 
 export default function Footer() {
   return (
@@ -12,16 +13,14 @@ export default function Footer() {
         <div className="grid grid-cols-1 md:grid-cols-12 gap-10 md:gap-12 pb-14 md:pb-20">
           <div className="md:col-span-7">
             <div className="flex items-center gap-3 mb-8">
-              <Image
-                src="/logo.png"
-                alt={`${BUSINESS.name} logo`}
-                width={44}
-                height={44}
-                className="h-11 w-11 object-contain"
-              />
-              <span className="font-mono text-[11px] tracking-[0.2em] uppercase text-bone-soft/50">
-                Hand layered in {BUSINESS.location.city}
-              </span>
+              {/* Decorative: the wordmark beside it carries the name. */}
+              <Image src="/logo.png" alt="" width={44} height={44} className="h-12 w-12 object-contain" />
+              <div className="flex flex-col gap-2">
+                <Wordmark light className="self-start text-[26px]" />
+                <span className="font-mono text-[11px] tracking-[0.2em] uppercase text-bone-soft/60">
+                  Hand layered in {BUSINESS.location.city}
+                </span>
+              </div>
             </div>
             <h2
               className="font-display tracking-[-0.035em] leading-[0.95]"
@@ -50,12 +49,17 @@ export default function Footer() {
           <div className="md:col-span-5 grid grid-cols-1 sm:grid-cols-2 gap-8">
             <FooterCol title="Browse">
               <FooterLink href="/menu">Menu</FooterLink>
-              <FooterLink href="/#flavors">Flavours</FooterLink>
-              <FooterLink href="/#packages">Packages</FooterLink>
-              <FooterLink href="/#builder">How a cup is built</FooterLink>
+              <FooterLink href="/packages">Packages</FooterLink>
+              <FooterLink href="/events">Events</FooterLink>
+              <FooterLink href="/faq">FAQ</FooterLink>
+              <FooterLink href="/dessert-cups-hamilton">Pickup in Hamilton</FooterLink>
+              <FooterLink href="/dessert-cups-gta">Delivery across the GTA</FooterLink>
+              {/* Footer only (brief §6). */}
+              <FooterLink href="/open-a-shop">Help us open our first shop</FooterLink>
             </FooterCol>
             <FooterCol title="Contact">
               <FooterLink href={mailtoLink}>{BUSINESS.email}</FooterLink>
+              {telLink ? <FooterLink href={telLink}>{BUSINESS.phone}</FooterLink> : null}
               <FooterLink href={BUSINESS.instagram.url}>Instagram</FooterLink>
               <FooterLink href={BUSINESS.facebook.url}>Facebook</FooterLink>
               <FooterLink href="/order">Place an Order</FooterLink>
@@ -64,7 +68,7 @@ export default function Footer() {
         </div>
 
         <div className="border-t border-bone-soft/15 pt-8 flex flex-col md:flex-row md:items-center justify-between gap-6">
-          <div className="font-mono text-[11px] tracking-[0.18em] uppercase text-bone-soft/45">
+          <div className="font-mono text-[11px] tracking-[0.18em] uppercase text-bone-soft/60">
             © {new Date().getFullYear()} {BUSINESS.name}.{" "}
             {BUSINESS.location.cityFull}.
           </div>
@@ -121,7 +125,7 @@ function FooterCol({
 }) {
   return (
     <div className="flex flex-col gap-3">
-      <div className="font-mono text-[10px] tracking-[0.2em] uppercase text-bone-soft/45 mb-2">
+      <div className="font-mono text-[10px] tracking-[0.2em] uppercase text-bone-soft/60 mb-2">
         {title}
       </div>
       {children}
@@ -139,7 +143,7 @@ function FooterLink({
   return (
     <Link
       href={href}
-      className="inline-flex items-center min-h-[44px] py-1.5 -my-1.5 text-[15px] text-bone-soft/80 hover:text-bone-soft transition-colors break-words"
+      className="inline-flex items-center min-h-[44px] py-1.5 -my-1.5 text-[15px] text-bone-soft/80 hover:text-bone-soft transition-colors [overflow-wrap:anywhere]"
     >
       {children}
     </Link>

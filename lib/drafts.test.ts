@@ -42,14 +42,12 @@ function linkProblem(href: string): string | null {
 }
 
 describe("page drafts", () => {
-  // 12 public drafts; the /open-a-shop draft stays out of the public repo until approved.
   it("has the pages the plan calls for, one per event type", () => {
-    expect(PAGE_DRAFTS).toHaveLength(12);
+    expect(PAGE_DRAFTS).toHaveLength(13);
     const paths = PAGE_DRAFTS.map((d) => d.path);
     for (const e of EVENT_TYPES) expect(paths).toContain(`/events/${e.slug}`);
-    for (const p of ["/events", "/dessert-cups-hamilton", "/dessert-cups-gta", "/faq", "/packages"]) expect(paths).toContain(p);
-    expect(paths).not.toContain("/open-a-shop");
-    expect(new Set(PAGE_DRAFTS.map((d) => d.slug)).size).toBe(12);
+    for (const p of ["/events", "/dessert-cups-hamilton", "/dessert-cups-gta", "/faq", "/packages", "/open-a-shop"]) expect(paths).toContain(p);
+    expect(new Set(PAGE_DRAFTS.map((d) => d.slug)).size).toBe(13);
   });
 
   it("are all awaiting the owner's review", () => {
@@ -91,6 +89,22 @@ describe("page drafts", () => {
     }
   });
 
+  it.each(PAGE_DRAFTS)("$path states notice deadlines the way the form counts them (to 9 AM)", (d) => {
+    // lib/order-timing.ts counts notice to 9 AM on the date; a deadline tied to
+    // the delivery or pickup time would promise later than the form accepts.
+    const text = draftStrings(d).join("\n");
+    expect(text).not.toMatch(
+      /same time (of day|on)|counted to the time|(?<!9 AM )the Saturday before|hours before (the time|you|pickup|delivery|your)|least 48 hours before you need|no later than 48 hours/i
+    );
+  });
+
+  it.each(PAGE_DRAFTS)("$path names the brand in full the first time (Dessert Shot by Farhana)", (d) => {
+    // What a visitor reads, top to bottom; "Dessert Shot" alone is fine after that.
+    const body = [d.h1, d.intro, ...d.sections.flatMap((s) => [s.heading, s.body]), ...d.faqs.flatMap((f) => [f.q, f.a])].join("\n");
+    const first = body.match(/Dessert Shot(?!s\b)( by Farhana)?/);
+    if (first) expect(first[1], first.input?.slice(Math.max(0, (first.index ?? 0) - 40), (first.index ?? 0) + 40)).toBe(" by Farhana");
+  });
+
   it.each(PAGE_DRAFTS)("$path makes no banned claims", (d) => {
     const banned = [/certified/i, /c(o)?eliac[- ]safe/i, /allergy[- ]safe/i, /\bbest\b/i, /#1\b/, /number one/i, /visit our (shop|store|caf)/i, /\bbak(e|ed|es|ing)\b/i, /better the value|bigger the pack/i, /flavou?r recommendation|recommend a mix/i, /labell?ed by flavou?r/i, /priced as a classic/i];
     for (const s of draftStrings(d)) for (const re of banned) expect(s, `${d.slug}: ${re}`).not.toMatch(re);
@@ -104,14 +118,16 @@ describe("page drafts", () => {
     }
   });
 
-  // Outside the FAQ page, gluten-free/eggless appears only via the {{dietaryClaim}} token, or in a FAQ
-  // question whose answer uses that token, so switching the claim off can drop the whole entry.
+  // Gluten-free/eggless appears only via the {{dietaryClaim}} token, or in a FAQ entry whose answer
+  // uses that token (dropped whole when the claim is off), so the switch reaches meta and intros too.
   it("states the dietary claim only through the {{dietaryClaim}} switch", () => {
-    for (const d of PAGE_DRAFTS.filter((x) => x.slug !== "faq")) {
-      const faqQs = new Set(d.faqs.filter((f) => f.a.includes("{{dietaryClaim}}")).map((f) => f.q));
+    for (const d of PAGE_DRAFTS) {
+      const claimFaqs = d.faqs.filter((f) => f.a.includes("{{dietaryClaim}}"));
+      const dropped = new Set(claimFaqs.flatMap((f) => [f.q, f.a]));
       for (const s of draftStrings(d)) {
-        if (faqQs.has(s)) continue;
-        expect(s, d.slug).not.toMatch(/gluten-free|eggless/i);
+        if (dropped.has(s)) continue;
+        // Elsewhere only the token itself goes, so what's left must not make the claim either.
+        expect(s.replaceAll("{{dietaryClaim}}", ""), d.slug).not.toMatch(/gluten-free|eggless/i);
       }
     }
   });

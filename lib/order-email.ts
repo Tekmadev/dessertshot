@@ -90,6 +90,7 @@ export function customerEmailParams(s: OrderSummary): Record<string, string> {
   const nextSteps = [
     "This is a request: your order is booked once we confirm it.",
     copy.order.confirmation,
+    copy.order.deposit,
     s.fulfillment === "pickup" ? copy.order.pickup : copy.order.deliveryFee,
   ].join(" ");
   const allergens = allergenNoticeText(treeNutFlavorNames());

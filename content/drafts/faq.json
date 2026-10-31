@@ -2,10 +2,10 @@
   "slug": "faq",
   "path": "/faq",
   "status": "awaiting-owner-review",
-  "metaTitle": "Dessert Cups FAQ: Gluten-Free? Eggless? Allergens",
-  "metaDescription": "Are our dessert cups gluten-free and eggless? Which flavours have nuts? How much notice? Answers on allergens, Hamilton pickup and Saturday GTA delivery.",
+  "metaTitle": "Dessert Cups FAQ: Allergens, Notice, Pickup, Delivery",
+  "metaDescription": "Which flavours have nuts? How much notice do you need? Straight answers on allergens, deposits, Hamilton pickup and Saturday GTA delivery.",
   "h1": "Dessert cups FAQ: good to know before you order",
-  "intro": "Planning dessert for a crowd comes with questions. Here are straight answers about our hand-layered dessert cups: allergens and the gluten-free and eggless question, how much notice we need, pickup in Hamilton and Saturday delivery across the GTA, and how packs, sizes and flavours fit together.",
+  "intro": "Planning dessert for a crowd comes with questions. Here are straight answers about our hand-layered dessert cups: allergens, how much notice we need, deposits, pickup in Hamilton and Saturday delivery, keeping the cups cold, and how packs, sizes and flavours fit together.",
   "sections": [
     {
       "heading": "Planning a table with allergies in mind",
@@ -19,7 +19,7 @@
   "faqs": [
     {
       "q": "Are your dessert cups gluten-free and eggless?",
-      "a": "We describe our dessert cups as gluten-free and eggless. That's our own statement, not a certification. And eggless isn't dairy-free: every cup contains dairy. If you avoid gluten or egg for medical reasons, message us on Instagram (@dessertshot.ca) before you order and ask about the flavours you have in mind."
+      "a": "{{dietaryClaim}} And eggless isn't dairy-free: every cup contains dairy. If you avoid gluten or egg for medical reasons, message us on Instagram (@dessertshot.ca) before you order and ask about the flavours you have in mind."
     },
     {
       "q": "Which flavours contain nuts?",
@@ -39,23 +39,35 @@
     },
     {
       "q": "How much notice do you need?",
-      "a": "At least 48 hours before your pickup or delivery. That's our standard minimum. For a Saturday delivery, we suggest sending by Wednesday; see [Saturday delivery](/dessert-cups-gta) and [Hamilton pickup](/dessert-cups-hamilton). Send your request through the [order form](/order) and we'll confirm within the day."
+      "a": "For a 24 or 48 pack, at least 48 hours, counted to 9 AM on your pickup or delivery day (the morning we make your cups). That's our standard minimum. A 96 needs at least 7 days' notice: by 9 AM on the same day the week before. For a Saturday delivery of a 24 or 48, we suggest sending by Wednesday; see [Saturday delivery](/dessert-cups-gta) and [Hamilton pickup](/dessert-cups-hamilton). Send your request through the [order form](/order) and we'll confirm within the day."
     },
     {
       "q": "Can I order with less than 48 hours' notice?",
-      "a": "You can ask. Anything under 48 hours is an urgent request: it's subject to availability and we can't guarantee it. Send the request with your date and we'll let you know whether we can make it happen."
+      "a": "For a 24 or 48, you can ask. Anything under 48 hours is an urgent request: it's subject to availability, a rush fee applies, and we can't guarantee it. Send the request with your date and we'll let you know whether we can make it happen. A 96 is different: it always needs at least 7 days, and shorter notice isn't offered for it."
     },
     {
       "q": "Do you deliver, and how much does delivery cost?",
-      "a": "Yes, on Saturdays, across the GTA. The fee depends on your location, so we quote it after we confirm your order, and the total in the order form doesn't include it. Add your postal code and address to your request so we can work out the fee. Prefer to collect? Pickup in Hamilton is free. More on [dessert cup delivery across the GTA](/dessert-cups-gta)."
+      "a": "Yes, on Saturdays, to Hamilton, Burlington, Oakville, Mississauga and Toronto. The fee depends on your location, so we quote it when we confirm your order, as part of your total; the estimate in the order form doesn't include it. Add your postal code and address to your request so we can work out the fee. If you'd like a particular delivery time, ask for it in your notes. Someone needs to be there to receive the cups. Prefer to collect? Pickup in Hamilton is free. More on [Saturday delivery and fees](/dessert-cups-gta)."
     },
     {
       "q": "How does pickup work?",
-      "a": "Pickup in Hamilton is free and arranged with you, and we share the pickup location once your order is confirmed. More on [ordering dessert cups in Hamilton](/dessert-cups-hamilton)."
+      "a": "Pickup in Hamilton is free and arranged with you. Once your order is confirmed, we share the pickup location with the person who placed it. You don't have to collect in person: a friend, a colleague or a courier can pick up for you. More on [ordering dessert cups in Hamilton](/dessert-cups-hamilton)."
+    },
+    {
+      "q": "How are the cups packed? Do they have lids?",
+      "a": "The cups come in boxes of 24, and they don't have lids. A 24 pack is one box, a 48 is two boxes and a 96 is four."
+    },
+    {
+      "q": "Do the cups need to stay in the fridge?",
+      "a": "Yes. Keep them refrigerated until you serve them. Out of the fridge, they can sit for about 2 hours, so set them out close to dessert time."
     },
     {
       "q": "How many flavours can I put in one pack?",
-      "a": "Up to 4 in a 24 pack, 8 in a 48 and 16 in a 96. Each flavour needs at least 6 cups, in multiples of 6 (6, 12, 18…), so a 48 could be eight flavours of 6 or four flavours of 12. Want more flavours than that? Add another pack. [Compare the packs](/packages)."
+      "a": "Up to 4 in a 24 pack, 8 in a 48 and 16 in a 96. Each flavour needs at least 6 cups, in multiples of 6 (6, 12, 18…), so a 48 could be eight flavours of 6 or four flavours of 12. Want more flavours than that? Choose a bigger pack, or order more than one. [Compare the packs](/packages)."
+    },
+    {
+      "q": "Can I order more than one pack?",
+      "a": "Yes, as long as each pack meets the minimums on its own: 24 cups or more, and at least 6 cups per flavour. The order form takes one pack at a time, so mention the other packs in your notes, or send another request for each one. There's no maximum order size."
     },
     {
       "q": "Can I mix Classic and Premium flavours in one pack?",
@@ -67,15 +79,15 @@
     },
     {
       "q": "Can I ask for something custom?",
-      "a": "Our menu is eight flavours, two cup sizes and three pack sizes, and the 96 pack comes with a custom label option. If you have something else in mind, mention it in the notes when you send your request, and we'll let you know when we confirm."
+      "a": "Yes, as a separate kind of order. Our menu is eight flavours, two cup sizes and three pack sizes, and the 96 pack comes with a custom label option. For anything beyond that, skip the order form: [email us]({{mailto}}) at {{contactEmail}} with the details, and we'll send you a separate quote."
     },
     {
       "q": "What happens after I send my request?",
-      "a": "We confirm it within the day. Until then, it's a request rather than a confirmed order. Once we confirm, we quote the delivery fee if you chose delivery, or share the pickup location if you're collecting in Hamilton. Then, the morning of your date, we make your cups fresh."
+      "a": "We confirm it within the day, by email, text or Instagram. Until then, it's a request rather than a confirmed order. When we confirm, we give you your total, with the delivery fee included if you chose delivery, and explain how to pay the deposit that confirms your order. If you're collecting in Hamilton, we share the pickup location. Then, the morning of your date, we make your cups fresh."
     },
     {
-      "q": "How do I pay?",
-      "a": "Not on this site. Ordering works by request, and nothing is charged when you send it."
+      "q": "How do I pay? Is there a deposit?",
+      "a": "Not on this site. Ordering works by request, and nothing is charged when you send it. A deposit is required to confirm your order, and we explain how to pay it when we confirm, along with your total."
     }
   ],
   "cta": {

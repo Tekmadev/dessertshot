@@ -86,7 +86,7 @@ describe("orderSummaryText", () => {
       "Dubai Chocolate ×12 (Dairy, Tree nuts)",
       "Estimated total (before delivery): $114",
       "Date needed: Saturday, December 12, 2026",
-      "Delivery to 1 Main St, Hamilton, L8P 4R5. Delivery fee quoted after we confirm.",
+      "Delivery to 1 Main St, Hamilton, L8P 4R5. Delivery fee quoted after we confirm, as part of your total.",
       "Event: Weddings",
       "Name: Test Customer",
       "Phone: 905-555-0100",

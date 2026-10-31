@@ -10,13 +10,22 @@
 
 export const BUSINESS_TIME_ZONE = "America/Toronto";
 
-/** Standard orders need at least this much notice; less is "urgent". */
-export const STANDARD_NOTICE_HOURS = 48;
+/** Standard orders need at least this much notice (48 hours); less is "urgent". */
+export const STANDARD_NOTICE_DAYS = 2;
 
 /**
- * Cups are made the morning of pickup or delivery, so the 48 hours are counted
- * to this hour on the chosen date. How the owner counts notice is still an
- * open question (CONTENT-REVIEW.md, q-d-notice).
+ * A 96 needs at least 7 days' notice, and less isn't offered at all (owner,
+ * 2026-10-30), unlike smaller packs, where short notice is merely urgent.
+ */
+export const LARGE_PACK_CUPS = 96;
+export const LARGE_PACK_MIN_NOTICE_DAYS = 7;
+
+/**
+ * Cups are made the morning of pickup or delivery, so notice is counted to
+ * this hour on the chosen date, in whole calendar days: a Saturday 96 is on
+ * time until 9 AM the Saturday before, a Saturday 48 until 9 AM on Thursday.
+ * The pages say it the same way (content/drafts). How the owner counts notice
+ * is still an open question (CONTENT-REVIEW.md, q-d-notice).
  */
 export const NOTICE_COUNTED_TO_HOUR = 9;
 
@@ -26,7 +35,7 @@ export const NOTICE_COUNTED_TO_HOUR = 9;
  */
 export const MAX_DAYS_AHEAD = 730;
 
-export type OrderTiming = "past" | "urgent" | "standard" | "too-far";
+export type OrderTiming = "past" | "urgent" | "standard" | "too-far" | "too-soon";
 
 const DATE_RE = /^(\d{4})-(\d{2})-(\d{2})$/;
 
@@ -89,11 +98,23 @@ export function hoursOfNotice(date: string, now: Date): number {
   return (torontoTimeOn(date, NOTICE_COUNTED_TO_HOUR).getTime() - now.getTime()) / 3_600_000;
 }
 
-export function orderTiming(date: string, now: Date): OrderTiming {
+/**
+ * The last moment a request for `date` still has `days` days' notice: 9 AM in
+ * Toronto, `days` calendar days before. Calendar days, not 24-hour blocks, so a
+ * week that crosses a clock change keeps the deadline the pages state.
+ */
+export function noticeDeadline(date: string, days: number): Date {
+  return torontoTimeOn(addDays(date, -days), NOTICE_COUNTED_TO_HOUR);
+}
+
+/** `packCups` brings in the 96's longer minimum ("too-soon"); omit it for the 48-hour rule alone. */
+export function orderTiming(date: string, now: Date, packCups?: number): OrderTiming {
   const today = torontoToday(now);
   if (date < today) return "past";
   if (date > addDays(today, MAX_DAYS_AHEAD)) return "too-far";
-  return hoursOfNotice(date, now) < STANDARD_NOTICE_HOURS ? "urgent" : "standard";
+  const t = now.getTime();
+  if (packCups === LARGE_PACK_CUPS && t > noticeDeadline(date, LARGE_PACK_MIN_NOTICE_DAYS).getTime()) return "too-soon";
+  return t > noticeDeadline(date, STANDARD_NOTICE_DAYS).getTime() ? "urgent" : "standard";
 }
 
 export function isSaturday(date: string): boolean {

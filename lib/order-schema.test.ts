@@ -126,6 +126,13 @@ describe("orderSchema", () => {
     expect(orderSchema.safeParse(order({ date: "2026-10-30" })).success).toBe(true);
   });
 
+  it("refuses a 96 with less than 7 days' notice", () => {
+    const big = (date: string) =>
+      order({ packQty: "96", date, items: [{ ...mango, count: 48 }, { ...dubai, count: 48 }] });
+    expect(messages(big("2026-11-05"))).toContain("A 96 needs at least 7 days' notice. Choose a later date or a smaller pack");
+    expect(orderSchema.safeParse(big("2026-11-06")).success).toBe(true);
+  });
+
   it("only records an on-site path as the source", () => {
     expect(orderSchema.safeParse(order({ source: "/order?pack=48&event=wedding" })).success).toBe(true);
     expect(orderSchema.safeParse(order({ source: "https://evil.example/" })).success).toBe(false);

@@ -2,6 +2,7 @@ import type { Metadata, Viewport } from "next";
 import { Fraunces, Inter_Tight } from "next/font/google";
 import { Analytics } from "@vercel/analytics/next";
 import { LenisProvider } from "@/components/layout/LenisProvider";
+import { MotionPreferences } from "@/components/layout/MotionPreferences";
 import { BUSINESS } from "@/lib/business";
 import { DEFAULT_OG_IMAGE, TITLE_SEPARATOR } from "@/lib/seo";
 import "./globals.css";
@@ -27,10 +28,10 @@ export const metadata: Metadata = {
   // layout-level canonical is inherited by every page that forgets its own.
   title: {
     default: `${BUSINESS.name}${TITLE_SEPARATOR}${BUSINESS.tagline}`,
-    template: `%s${TITLE_SEPARATOR}${BUSINESS.name}`,
+    template: `%s${TITLE_SEPARATOR}${BUSINESS.shortName}`,
   },
   description: BUSINESS.description,
-  applicationName: BUSINESS.name,
+  applicationName: BUSINESS.shortName,
   authors: [{ name: BUSINESS.name }],
   keywords: [...BUSINESS.seoKeywords],
   openGraph: {
@@ -102,8 +103,13 @@ export default function RootLayout({
     <html
       lang="en-CA"
       className={`${fraunces.variable} ${interTight.variable} h-full`}
+      // The inline script below adds "js" before React hydrates.
+      suppressHydrationWarning
     >
       <head>
+        {/* Marks a running script before first paint, for the pin/unpinned
+            variants and the no-script fallback in app/globals.css. */}
+        <script dangerouslySetInnerHTML={{ __html: 'document.documentElement.classList.add("js")' }} />
         <link rel="preconnect" href="https://fonts.googleapis.com" />
         <link
           rel="preconnect"
@@ -112,7 +118,9 @@ export default function RootLayout({
         />
       </head>
       <body className="min-h-full bg-bone text-ink antialiased">
-        <LenisProvider>{children}</LenisProvider>
+        <MotionPreferences>
+          <LenisProvider>{children}</LenisProvider>
+        </MotionPreferences>
         <Analytics />
       </body>
     </html>

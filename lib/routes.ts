@@ -5,6 +5,8 @@
  * New pages are added here when they are built.
  */
 import { dietaryClaim } from "./claims";
+import { PAGE_DRAFTS, getDraft } from "./drafts";
+import { FLAVORS, sizeNote, type Flavor } from "./flavors";
 
 export type RouteMeta = {
   path: string;
@@ -22,7 +24,7 @@ export const ROUTES = {
   home: {
     path: "/",
     absoluteTitle: true,
-    title: "Dessert Shot · Hand-Layered Dessert Cups, Hamilton & GTA",
+    title: "Dessert Shot by Farhana · Hand-Layered Dessert Cups, Hamilton & GTA",
     description: `${dietary ? `${dietary} dessert cups` : "Hand-layered dessert cups"} and dessert shots for weddings, showers and parties. Made fresh in Hamilton, delivered Saturdays across the GTA.`,
   },
   menu: {
@@ -42,6 +44,30 @@ export const ROUTES = {
     noindex: true,
     title: "Order Request Received",
     description:
-      "Your Dessert Shot order request has arrived. Here is your summary and what happens next: we confirm by email within the day.",
+      "Your Dessert Shot order request has arrived. Here is your summary and what happens next: we confirm within the day, by email, text or Instagram.",
   },
 } as const satisfies Record<string, RouteMeta>;
+
+/** A page built from a reviewed draft (content/drafts): its own title and description. */
+export function draftRoute(slug: string): RouteMeta {
+  const d = getDraft(slug);
+  if (!d) throw new Error(`No page draft "${slug}"`);
+  return { path: d.path, title: d.metaTitle, description: d.metaDescription };
+}
+
+/** /menu/[flavour]: one page per flavour (brief §6). */
+export function flavorRoute(f: Flavor): RouteMeta {
+  const sizes = sizeNote(f) ? "Dessert Cups" : "Dessert Cups & Mini Shots";
+  const layers = f.layers.length ? ` Layers, bottom to top: ${f.layers.join(", ").toLowerCase()}.` : "";
+  const description = `${f.name}: ${f.tagline.replace(/\.$/, "")}.${layers} Order in packs of 24, 48 or 96 for pickup in Hamilton or GTA delivery.`;
+  return {
+    path: `/menu/${f.slug}`,
+    title: `${f.name} ${sizes}`,
+    description: description.length <= 160 ? description : `${f.name}: ${f.tagline.replace(/\.$/, "")}. A ${f.tier === "premium" ? "Premium" : "Classic"} flavour in packs of 24, 48 or 96, made fresh in Hamilton.`,
+  };
+}
+
+/** Every route with metadata: the fixed pages, the draft pages and the flavour pages. */
+export function allRoutes(): RouteMeta[] {
+  return [...Object.values(ROUTES), ...PAGE_DRAFTS.map((d) => draftRoute(d.slug)), ...FLAVORS.map(flavorRoute)];
+}

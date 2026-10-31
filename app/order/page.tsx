@@ -5,6 +5,7 @@ import Packages from "@/components/sections/Packages";
 import type { Metadata } from "next";
 import { ROUTES } from "@/lib/routes";
 import { pageMetadata } from "@/lib/seo";
+import { copy } from "@/lib/copy";
 
 export const metadata: Metadata = pageMetadata(ROUTES.order);
 
@@ -15,7 +16,7 @@ export default function OrderPage() {
       <main className="relative pt-32">
         <section className="relative py-20 md:py-28 px-6 md:px-10 hairline-bottom">
           <div className="mx-auto max-w-[1400px]">
-            <div className="font-mono text-[11px] tracking-[0.2em] uppercase text-ink/50 mb-6">
+            <div className="font-mono text-[11px] tracking-[0.2em] uppercase text-ink/70 mb-6">
               Place an order
             </div>
             <h1
@@ -35,8 +36,7 @@ export default function OrderPage() {
             </h1>
             <p className="mt-6 md:mt-8 max-w-[52ch] text-[17px] md:text-[19px] leading-[1.55] text-ink/70">
               Confirmations arrive within the day. Cups are made the morning
-              of pickup or delivery. Custom requests welcome: add them to your
-              notes.
+              of pickup or delivery. {copy.order.custom}
             </p>
           </div>
         </section>

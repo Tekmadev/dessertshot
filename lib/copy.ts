@@ -39,7 +39,7 @@ export const copy = {
       "Real fruit, real cream, a crumb base pressed by hand. We layer every cup the morning of pickup so each layer lands the way it should.",
     primaryCta: { label: "Browse Packages", href: "#packages" },
     secondaryCta: { label: "See the Flavours", href: "#flavors" },
-    note: "Pickup in Hamilton or Saturday delivery across the GTA. Just give us 48 hours notice.",
+    note: "Pickup in Hamilton or Saturday delivery across the GTA. Just give us 48 hours' notice (7 days for a 96).",
   },
 
   feature: {
@@ -70,7 +70,7 @@ export const copy = {
       {
         kicker: "04 . Finish",
         title: "Topped the morning of pickup.",
-        body: "A cream dollop, fresh blueberries, a hazelnut ball, a Biscoff cookie or a pistachio swirl. Then a lid, and it is ready for the table.",
+        body: "A cream dollop, fresh blueberries, a hazelnut ball, a Biscoff cookie or a pistachio swirl. Then into the box, ready for the table.",
       },
     ],
   },
@@ -108,9 +108,13 @@ export const copy = {
   // The order form, the order emails and /order/thanks (brief §7).
   order: {
     totalLabel: "Estimated total (before delivery)",
-    deliveryFee: "Delivery fee quoted after we confirm.",
+    deliveryFee: "Delivery fee quoted after we confirm, as part of your total.",
+    deliveryTime: "Ask for a delivery time in your notes. Someone needs to be there to receive the cups.",
     standard: "48 hours' notice or more.",
-    noticeDefault: "Standard orders need 48 hours' notice. Under 48 hours is urgent, subject to availability.",
+    noticeDefault: "Standard orders need 48 hours' notice, and a 96 needs 7 days. Under 48 hours is urgent, subject to availability.",
+    // A deposit is required; only the owner can waive it (2026-10-30).
+    deposit: "A deposit confirms your order. We'll tell you how to pay it when we confirm.",
+    custom: "Something custom? That's a separate order: email us the details and we'll quote it.",
     // Rush fee confirmed by the owner (2026-10-30); "subject to availability"
     // is the brief's.
     urgent: "Under 48 hours' notice: urgent, subject to availability. A rush fee applies; we'll confirm it when we reply.",
@@ -119,7 +123,7 @@ export const copy = {
     pickup: "Pickup is free in Hamilton. We share the pickup spot when we confirm your order.",
     // When the thanks page doesn't know which was chosen.
     pickupOrDelivery: "Pickup is free in Hamilton; for delivery, the fee is quoted after we confirm.",
-    confirmation: "We confirm every order within the day, by email.",
+    confirmation: "We confirm every order within the day, by email, text or Instagram.",
   },
 } as const;
 

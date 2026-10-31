@@ -109,9 +109,15 @@ export const orderSchema = z
     }
 
     if (isRealCalendarDate(data.date)) {
-      const timing = orderTiming(data.date, new Date());
+      const timing = orderTiming(data.date, new Date(), packSize);
       if (timing === "past") {
         ctx.addIssue({ code: "custom", path: ["date"], message: "Please choose today or a later date" });
+      } else if (timing === "too-soon") {
+        ctx.addIssue({
+          code: "custom",
+          path: ["date"],
+          message: "A 96 needs at least 7 days' notice. Choose a later date or a smaller pack",
+        });
       } else if (timing === "too-far") {
         ctx.addIssue({ code: "custom", path: ["date"], message: "Please choose a date within the next two years" });
       }

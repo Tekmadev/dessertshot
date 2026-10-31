@@ -1,225 +1,150 @@
-"use client";
-
-import { motion, useScroll, useTransform } from "motion/react";
 import Link from "next/link";
-import { useRef } from "react";
-import { copy } from "@/lib/copy";
-import { EASE_CINEMA } from "@/lib/constants";
-import { BUSINESS } from "@/lib/business";
-import { CupGlyph } from "@/components/ui/CupGlyph";
 import { ArrowRight } from "lucide-react";
+import HeroFrame from "@/components/experience/hero/HeroFrame";
+import styles from "@/components/experience/hero/hero.module.css";
+import { BUSINESS } from "@/lib/business";
+import { copy } from "@/lib/copy";
 
+/**
+ * Homepage S1. A server component: the entrance is CSS (it plays from the
+ * first paint), and the only client code is the hero video. Phones stack
+ * kicker, headline, the 4:5 video, then the subhead and calls to action;
+ * desktops put the video in the right-hand column.
+ */
 export default function Hero() {
-  const ref = useRef<HTMLElement>(null);
-  const { scrollYProgress } = useScroll({
-    target: ref,
-    offset: ["start start", "end start"],
-  });
-
-  const cupY = useTransform(scrollYProgress, [0, 1], [0, -120]);
-  const cupRotate = useTransform(scrollYProgress, [0, 1], [-2, 4]);
-  const headlineY = useTransform(scrollYProgress, [0, 1], [0, -80]);
-  const headlineOpacity = useTransform(scrollYProgress, [0, 0.6], [1, 0]);
-  const cueOpacity = useTransform(scrollYProgress, [0, 0.2], [1, 0]);
-
   return (
     <section
-      ref={ref}
       id="hero"
-      aria-label="Hero"
-      className="relative min-h-[100svh] overflow-hidden flex items-center pt-32 md:pt-36 pb-20"
+      aria-label="Introduction"
+      className="relative overflow-hidden pb-16 pt-24 md:pt-32 lg:flex lg:min-h-[100svh] lg:items-center lg:pb-28"
     >
-      {/* Background numerals */}
-      <BackgroundFlair />
+      <Backdrop />
 
-      <div className="relative mx-auto w-full max-w-[1400px] px-6 md:px-10 grid grid-cols-1 lg:grid-cols-12 gap-12 items-center">
-        <motion.div
-          style={{ y: headlineY, opacity: headlineOpacity }}
-          className="relative z-10 col-span-1 lg:col-span-7"
-        >
-          <motion.div
-            initial={{ opacity: 0, y: 12 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.9, ease: EASE_CINEMA, delay: 0.2 }}
-            className="font-mono text-[11px] tracking-[0.2em] uppercase text-ink/55 mb-7"
+      <div className="relative mx-auto grid w-full max-w-[1400px] grid-cols-1 gap-y-8 px-6 md:px-10 lg:grid-cols-12 lg:gap-x-12 lg:gap-y-10">
+        <div className="lg:col-span-7 lg:row-start-1 lg:self-end">
+          <p
+            className={`mb-5 font-mono text-[11px] uppercase tracking-[0.2em] text-ink/70 md:mb-7 ${styles.fade}`}
+            style={{ animationDelay: "0.05s" }}
           >
             {copy.hero.eyebrow}
-          </motion.div>
-
-          <h1
-            className="font-display text-ink leading-[0.93] tracking-[-0.04em]"
-            style={{ fontSize: "clamp(40px, 11vw, 144px)" }}
-          >
-            <Line delay={0.0}>{copy.hero.line1}</Line>
+          </p>
+          <h1 className="font-display text-[length:clamp(40px,11vw,76px)] leading-[0.95] tracking-[-0.04em] text-ink lg:text-[length:clamp(56px,5.4vw,96px)]">
+            <Line delay={0.1}>{copy.hero.line1}</Line>{" "}
             <Line delay={0.2}>
               {copy.hero.line2Pre}
-              <em
-                className="italic"
-                style={{
-                  color: "var(--color-ember)",
-                  fontVariationSettings: "'SOFT' 50, 'WONK' 1",
-                }}
-              >
+              <em className="italic" style={{ color: "var(--color-ember)", fontVariationSettings: "'SOFT' 50, 'WONK' 1" }}>
                 {copy.hero.line2Italic}
               </em>
               {copy.hero.line2Post}
-            </Line>
-            <Line delay={0.4}>{copy.hero.line3}</Line>
+            </Line>{" "}
+            <Line delay={0.3}>{copy.hero.line3}</Line>
           </h1>
+        </div>
 
-          <motion.p
-            initial={{ opacity: 0, y: 22 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ delay: 1.4, duration: 1.05, ease: EASE_CINEMA }}
-            className="mt-8 md:mt-10 max-w-[52ch] text-[17px] md:text-[19px] leading-[1.55] text-ink/70"
+        <HeroFrame className="lg:col-span-5 lg:col-start-8 lg:row-span-2 lg:row-start-1 lg:self-center" />
+
+        <div className="lg:col-span-7 lg:row-start-2 lg:self-start">
+          <p
+            className={`max-w-[52ch] text-[17px] leading-[1.55] text-ink/70 md:text-[19px] ${styles.fade}`}
+            style={{ animationDelay: "0.45s" }}
           >
             {copy.hero.subhead}
-          </motion.p>
+          </p>
 
-          <motion.div
-            initial={{ opacity: 0, y: 22 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ delay: 1.65, duration: 1, ease: EASE_CINEMA }}
-            className="mt-10 md:mt-12 flex flex-col gap-5"
+          <div
+            className={`mt-8 flex flex-col gap-4 sm:flex-row sm:items-center sm:gap-8 md:mt-10 ${styles.fade}`}
+            style={{ animationDelay: "0.55s" }}
           >
-            <div className="flex flex-col sm:flex-row sm:items-center gap-5 sm:gap-7">
-              <Link
-                href={copy.hero.primaryCta.href}
-                className="group inline-flex items-center justify-between gap-6 px-7 py-5 rounded-full text-[15px] tracking-[-0.01em] text-bone-soft transition-all duration-500 ease-cinema hover:gap-9"
-                style={{ backgroundColor: "var(--color-ember)" }}
-              >
-                <span>{copy.hero.primaryCta.label}</span>
-                <ArrowRight size={18} strokeWidth={1.6} />
-              </Link>
-              <Link
-                href={copy.hero.secondaryCta.href}
-                className="group relative inline-flex items-center gap-2 py-3 -my-3 text-[15px] tracking-[-0.01em] text-ink"
-              >
-                <span className="relative">
-                  {copy.hero.secondaryCta.label}
-                  <span
-                    aria-hidden="true"
-                    className="absolute left-0 right-0 -bottom-1 h-px bg-ink origin-left scale-x-100 transition-transform duration-500 ease-cinema group-hover:scale-x-0"
-                  />
-                  <span
-                    aria-hidden="true"
-                    className="absolute left-0 right-0 -bottom-1 h-px bg-ember origin-right scale-x-0 transition-transform duration-500 ease-cinema group-hover:scale-x-100"
-                  />
-                </span>
-              </Link>
-            </div>
-            <p className="font-mono text-[11px] tracking-[0.16em] uppercase text-ink/55 max-w-[42ch]">
-              {copy.hero.note}
-            </p>
-          </motion.div>
-        </motion.div>
-
-        <motion.div
-          initial={{ opacity: 0, y: 60 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ delay: 0.7, duration: 1.6, ease: EASE_CINEMA }}
-          style={{ y: cupY, rotate: cupRotate }}
-          className="relative col-span-1 lg:col-span-5 hidden lg:flex items-center justify-center"
-        >
-          <div className="relative">
-            {/* Soft glow under cup */}
-            <div
-              aria-hidden="true"
-              className="absolute -inset-12 rounded-full blur-3xl opacity-60"
-              style={{
-                background:
-                  "radial-gradient(circle at center, rgba(208,72,100,0.22) 0%, rgba(208,72,100,0) 70%)",
-              }}
-            />
-            <div className="w-full max-w-[300px] sm:max-w-[360px] lg:max-w-[420px] mx-auto">
-              <CupGlyph
-                size={420}
-                showLabels
-                layers={[
-                  { label: "Base", color: "#a86060", height: 22 },
-                  { label: "Cream", color: "#fde0e6", height: 38 },
-                  { label: "Flavour", color: "#d04864", height: 18 },
-                  { label: "Finish", color: "#a82a48", height: 18 },
-                ]}
-              />
-            </div>
-
-            {/* Floating tag */}
-            <div
-              className="absolute -left-2 md:-left-12 bottom-4 md:bottom-12 max-w-[60%] md:max-w-none px-4 py-3 rounded-2xl bg-bone-soft border border-ink/10"
-              style={{ boxShadow: "0 24px 60px -20px rgba(58,29,40,0.18)" }}
+            <Link
+              href={copy.cta.primary.href}
+              className="group inline-flex min-h-14 w-full items-center justify-between gap-6 rounded-full bg-berry px-7 py-4 text-[15px] tracking-[-0.01em] text-bone-soft transition-colors duration-500 ease-cinema hover:bg-ink focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-ember sm:w-auto"
             >
-              <div className="font-mono text-[10px] tracking-[0.18em] uppercase text-ink/55 mb-1">
-                Made fresh
-              </div>
-              <div className="font-display text-[20px] tracking-[-0.02em] text-ink leading-none">
-                The morning of pickup
-              </div>
-            </div>
+              <span>{copy.cta.primary.label}</span>
+              <ArrowRight
+                aria-hidden="true"
+                size={18}
+                strokeWidth={1.6}
+                className="transition-transform duration-500 ease-cinema group-hover:translate-x-1.5"
+              />
+            </Link>
+            <Link
+              href={copy.hero.secondaryCta.href}
+              className="group relative inline-flex min-h-11 items-center self-start text-[15px] tracking-[-0.01em] text-ink focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-ember sm:self-auto"
+            >
+              <span className="relative">
+                {copy.hero.secondaryCta.label}
+                <span
+                  aria-hidden="true"
+                  className="absolute -bottom-1 left-0 right-0 h-px origin-left scale-x-100 bg-ink transition-transform duration-500 ease-cinema group-hover:scale-x-0"
+                />
+                <span
+                  aria-hidden="true"
+                  className="absolute -bottom-1 left-0 right-0 h-px origin-right scale-x-0 bg-ember transition-transform duration-500 ease-cinema group-hover:scale-x-100"
+                />
+              </span>
+            </Link>
           </div>
-        </motion.div>
+
+          <p
+            className={`mt-6 max-w-[46ch] font-mono text-[11px] uppercase leading-[1.7] tracking-[0.16em] text-ink/70 ${styles.fade}`}
+            style={{ animationDelay: "0.65s" }}
+          >
+            {copy.hero.note}
+          </p>
+        </div>
       </div>
 
-      {/* Scroll cue */}
-      <motion.div
-        initial={{ opacity: 0 }}
-        animate={{ opacity: 1 }}
-        transition={{ delay: 2, duration: 1.2, ease: EASE_CINEMA }}
-        style={{ opacity: cueOpacity }}
-        className="absolute bottom-10 left-1/2 -translate-x-1/2 flex flex-col items-center gap-3"
-      >
-        <span className="font-mono text-[10px] tracking-[0.22em] uppercase text-ink/45">
-          Scroll
-        </span>
-        <span className="block w-px h-10 bg-ink/30" />
-      </motion.div>
+      <ScrollCue />
     </section>
   );
 }
 
-function Line({
-  children,
-  delay,
-}: {
-  children: React.ReactNode;
-  delay: number;
-}) {
+function Line({ children, delay }: { children: React.ReactNode; delay: number }) {
   return (
     <span className="line-mask">
-      <motion.span
-        className="block will-change-transform"
-        initial={{ y: "115%" }}
-        animate={{ y: "0%" }}
-        transition={{ duration: 1.4, ease: EASE_CINEMA, delay }}
-      >
+      <span className={`block text-balance ${styles.rise}`} style={{ animationDelay: `${delay}s` }}>
         {children}
-      </motion.span>
+      </span>
     </span>
   );
 }
 
-function BackgroundFlair() {
+function Backdrop() {
   return (
     <>
       <div
         aria-hidden="true"
-        className="absolute inset-0 pointer-events-none opacity-[0.55]"
+        className="pointer-events-none absolute inset-0"
         style={{
           background:
             "radial-gradient(ellipse 60% 40% at 80% 20%, rgba(208,72,100,0.10) 0%, transparent 60%), radial-gradient(ellipse 50% 40% at 10% 80%, rgba(234,130,152,0.10) 0%, transparent 60%)",
         }}
       />
-      <div
-        aria-hidden="true"
-        className="absolute right-6 md:right-10 top-32 hidden md:flex flex-col items-end gap-1"
-      >
-        <span className="font-mono text-[10px] tracking-[0.22em] uppercase text-ink/40">
-          ◇ Est. 2024
+      <div className="pointer-events-none absolute bottom-9 left-10 hidden gap-6 font-mono text-[10px] uppercase tracking-[0.22em] text-ink/70 lg:flex">
+        <span>
+          <span aria-hidden="true">◇ </span>Est. {BUSINESS.founded}
         </span>
-        <span className="font-mono text-[10px] tracking-[0.22em] uppercase text-ink/40">
-          ◇ {BUSINESS.location.city}, {BUSINESS.location.provinceShort}
+        <span>
+          <span aria-hidden="true">◇ </span>
+          {BUSINESS.location.city}, {BUSINESS.location.provinceShort}
         </span>
       </div>
     </>
+  );
+}
+
+/** Desktop only: on phones the hero runs past the fold and the video already invites the scroll. */
+function ScrollCue() {
+  return (
+    <div
+      aria-hidden="true"
+      className={`pointer-events-none absolute bottom-7 left-1/2 hidden -translate-x-1/2 flex-col items-center gap-3 lg:flex ${styles.fade}`}
+      style={{ animationDelay: "1.1s" }}
+    >
+      <span className="font-mono text-[10px] uppercase tracking-[0.22em] text-ink/70">Scroll</span>
+      <span className="relative block h-10 w-px overflow-hidden bg-ink/20">
+        <span className={`absolute inset-x-0 top-0 block h-1/2 bg-ink ${styles.cue}`} />
+      </span>
+    </div>
   );
 }

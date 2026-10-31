@@ -101,3 +101,49 @@ One line each: decision — why. Newest at the bottom of each phase.
 - The 48-pack price anomaly stays as is: the owner wants an admin page to manage prices, which is a separate piece of work.
 - Rush fee confirmed (`copy.order.urgent` stays as is). "Real fruit, real cream" and "made the morning of / nothing sits overnight" confirmed and kept.
 - Tiramisu shows "Dessert Cups (5 oz) only" on its flavour card, in the order form and in the drafts that suggest it, so nobody plans a Mini Shots box around it. The homepage's "pressed crumb base" line now reads "a base pressed or soaked by hand"; "Four layers, no shortcuts." stays as the brand line the brief asks to keep.
+
+## Owner answers, round 2 (2026-10-30)
+- **Design direction: keep blush pink** (chosen in chat), not the brief's warm cream. Step 4 builds S1–S9 on today's pink base and rose accent; the warm-cream generated photos sit on it as photographs. The brief's palette tokens stay available for accents.
+- **Process footage is generated** (owner: no phone clips; use Higgsfield from the existing photos). This overrides the brief's "do not fake process footage" rule for "The Morning Of" (S5), which will use generated clips, quoted before any spend.
+- **A 96 needs 7 days' notice, and shorter is refused** (owner in chat), unlike 24s and 48s, where under 48 hours is accepted as urgent. One shared rule (`orderTiming` with the pack size) drives the form, the server and the summary.
+- **Presentation tray is an extra-cost option; cups come in boxes of 24 with no lids.** The 96 perk now reads "Presentation tray (extra cost)"; "Then a lid" is gone; copy tests reject "lid" and "tray included".
+- **A deposit is required** (only the owner can waive it). The site says so without an amount or method, which are still open.
+- **Confirmation can come by email, text or Instagram**, and the delivery fee is part of the quoted total.
+- **Custom orders are a separate order**: /order points people to email, not to the notes field.
+- **Business phone (438) 700-3223** shown in the footer and the order section (`telLink`).
+- **/open-a-shop published** (owner: "Publish"): its draft moved from `content/private/` (gitignored) to `content/drafts/`; the page gets a footer link only (brief §6).
+
+## Brand name (2026-10-30)
+
+- **The brand is "Dessert Shot by Farhana"** (user correction during Step 4; the brief only ever said "Dessert Shot"). "Dessert Shot" is the accepted short name.
+- `BUSINESS.name` is the full name and `BUSINESS.shortName` the short one. Full name: the wordmark (`components/ui/Wordmark.tsx`, "by Farhana" signed under "Dessert Shot" in navbar and footer), the homepage title, og:site_name, the footer copyright, email from-name, header and sign-off, and the first mention on every draft page (a test enforces it).
+- Short name: the per-page title suffix ("FAQ · Dessert Shot"), so titles stay within 70 characters, and later mentions in running copy. The trailing "." after "Shot" in the old wordmark is gone, since the name now continues.
+- The logo image beside the wordmark is decorative (`alt=""`), so screen readers hear the name once.
+
+## Step 4 — browser check
+
+- Checked every route at 360, 768 and 1280 px (plus the homepage at 375 and 1440): no horizontal scroll, one h1 per page, every image has alt text, no app console or server errors.
+- **Lenis and ScrollTrigger stay unwired.** Lenis scrolls the real window, so ScrollTrigger hears every scroll event; both pinned sections are CSS `sticky` with a smoothed scrub, so there is no pin to jitter. Wiring them together would put GSAP in the site-wide scroll provider and so in every page's bundle.
+- Navbar glass is now 92% opaque: at 72% the text scrolling under it stayed readable through the blur.
+- Draft-page h1s cap at 84 px and balance their lines (long event headlines ran three lines at 96 px).
+- The cups helper says "You need about 40 for 40 guests; this leaves 8 spare." instead of "About 40 for 40 guests, with 8 to spare."
+
+## Step 4 — five-lens review (accessibility, content, layout, performance, correctness)
+
+Every finding went to an independent skeptic; all of the first 32 held (31 confirmed, 1 plausible). Fixed:
+
+- **Notice deadlines match the form.** Pages promised "the Saturday before, at the same time of day as your delivery", but the form counts notice to 9 AM on the date, so it would refuse those 96s (and mark those 48s urgent). Every page now says "by 9 AM ..." (two days before; a week before for a 96), and `orderTiming` counts **whole calendar days to 9 AM** (`noticeDeadline`) instead of raw hours, so the stated deadline holds across a clock change. A drafts test bans the old phrasings.
+- **Price tables render.** The draft renderer gained `| table |` support (header, rule, rows; row labels as `th`); a test pins the /packages tables to `lib/pricing.ts`.
+- **The dietary-claim switch reaches /faq.** Its answer uses `{{dietaryClaim}}`, and its meta title, description and intro no longer name the claim, so switching it off removes it everywhere. The test no longer exempts /faq.
+- **Confirmation channels.** The thanks page names email, text or Instagram, as `copy.order.confirmation` does.
+- **"Premium" chip = the Premium tier** (five flavours, as on the badges and in the FAQ), not Dubai's category alone.
+- **Pinned sections pin only when there's room and a script.** New `pin:` / `unpinned:` variants (`lib/pin.ts`, app/globals.css): reduced motion off, at least 35rem tall, and `html.js` (an inline script in the root layout sets it before first paint; `(scripting)` would leave Safari < 17 matching neither). Landscape phones, 400% zoom and no-JS visitors get the plain list layout; GSAP uses the same query.
+- **No-JS reveals.** Without a script, elements server-rendered at `opacity:0` by motion/react are shown (`html:not(.js)` rule).
+- **Reduced motion everywhere.** One `MotionConfig reducedMotion="user"` in the root layout (`MotionPreferences`).
+- **Phone menu.** It's a `<nav aria-label="Main">`, `inert` and `invisible` when closed, with `aria-expanded`/`aria-controls` on the toggle; it focuses the first link on open, closes on Escape (focus back to the toggle) or when focus leaves it, scrolls on short screens, and uses the blush surface.
+- **Pause control.** Looping videos get a 44 px pause button once they play (WCAG 2.2.2); the hero's endless float is gone and the scroll cue runs twice.
+- **Contrast.** Small labels moved to ink/70 (draft kickers, order-section labels, thanks page), footer labels to bone-soft/60, the allergen title to 75%, ordered-list markers to berry, the Build's inactive steps to 0.7. Draft-page CTAs and the menu's Instagram pill are berry, not rose (bone on rose is 3.97:1).
+- **Focus and keyboard.** Same-page "Order the 48"/"Order this" now land focus in the order form (and don't glide with reduced motion); the cups helper's minus button uses `aria-disabled` so focus survives at 1; its suggestion is announced as one short line after typing settles; the Layers toggle precedes its panel; a lineup card lifts above the stack only for keyboard focus (a mouse click no longer pins it); draft FAQ rows are 44 px targets; the navbar Instagram link's name includes its visible handle.
+- **Smaller fixes.** "Est. 2024" is readable by screen readers; the footer email wraps on tablets; the drip divider no longer clips past ~2,400 px wide.
+- **Performance.** "The morning of" re-measures its scroll positions when the page height changes (the desktop lineup filter moved it by ~3,000 px and left the timeline on stale positions). The hero poster and flavour photos ask for `fetchpriority="high"`. Image `sizes` follow the real rendered widths (Build photo, Morning Of media in both layouts, lineup cards on small tablets).
+- **Not done, noted in code:** once Build phase clips exist, mount only the current phase's video (`components/experience/build/plan.ts`).

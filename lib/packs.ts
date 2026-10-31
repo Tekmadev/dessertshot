@@ -51,9 +51,11 @@ export const PACKAGES: readonly Pack[] = [
     size: 96,
     label: "The 96",
     description: "Weddings, baby showers, corporate events.",
-    perks: [mixUpTo(96), "Custom label option", "Event day pickup", "Presentation tray included"],
+    // The presentation tray is an extra-cost option (owner, 2026-10-30).
+    perks: [mixUpTo(96), "Custom label option", "Event day pickup", "Presentation tray (extra cost)", "7 days' notice"],
     featured: false,
   },
 ];
 
-export const PACK_RULES_LINE = `Minimum order ${MIN_ORDER_CUPS} cups · ${minPerFlavour} · Mix Classic and Premium in the same box`;
+// Cups come in boxes of 24 with no lids, so a 96 is four boxes (owner, 2026-10-30).
+export const PACK_RULES_LINE = `Minimum order ${MIN_ORDER_CUPS} cups · ${minPerFlavour} · Mix Classic and Premium in the same pack · Packed in boxes of 24`;

@@ -1,0 +1,37 @@
+{
+  "slug": "open-a-shop",
+  "path": "/open-a-shop",
+  "status": "awaiting-owner-review",
+  "metaTitle": "Help us open our first shop",
+  "metaDescription": "Dessert Shot by Farhana makes hand-layered dessert cups in Hamilton, Ontario, with no storefront yet. If you'd like to help us open our first shop, let's talk.",
+  "h1": "Help us open our first shop",
+  "intro": "Dessert Shot by Farhana is a Hamilton, Ontario business making hand-layered dessert cups and mini dessert shots for events and parties. We started in 2024, and we don't have a storefront yet. We'd like to open our first one, and we're looking for an investor to help.",
+  "sections": [
+    {
+      "heading": "What we make",
+      "body": "Eight flavours: three Classic fruit cups and five Premium cups: chocolate, caramel, pistachio and a cocoa-dusted Tiramisu. Dubai Chocolate stacks pistachio cream, golden kunafa, more pistachio cream and dark ganache, each layer added by hand. [See all eight flavours](/menu)."
+    },
+    {
+      "heading": "How it works today",
+      "body": "Every order starts as a request: a pack of 24, 48 or 96, in 2 oz Mini Shots or 5 oz Dessert Cups. A 24 or 48 needs 48 hours' notice, and a 96 needs 7 days. We confirm within the day and make the cups fresh the morning of pickup or delivery. Pickup in Hamilton is free, by arrangement. We deliver on Saturdays to Hamilton, Burlington, Oakville, Mississauga and Toronto, with the fee quoted in the total when we confirm."
+    },
+    {
+      "heading": "Let's talk",
+      "body": "We'd rather start with a conversation than a pitch. If you'd like to help Dessert Shot open its first shop, email us at {{contactEmail}} and tell us a little about yourself. Meanwhile, the cups are on Instagram at @dessertshot.ca."
+    }
+  ],
+  "faqs": [
+    {
+      "q": "Is this an offer to invest?",
+      "a": "No. This page only invites a conversation, so you won't find figures or forecasts here."
+    },
+    {
+      "q": "Can I try the cups first?",
+      "a": "Yes. The smallest order is a pack of 24, with up to four flavours and at least six of each. Choose 2 oz Mini Shots, the tasting size, and [send a request](/order?pack=24&size=2oz)."
+    }
+  ],
+  "cta": {
+    "label": "Email us about the shop",
+    "href": "{{mailto}}?subject=Opening%20a%20Dessert%20Shot%20shop"
+  }
+}

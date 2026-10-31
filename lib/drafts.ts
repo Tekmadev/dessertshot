@@ -20,6 +20,7 @@ import hamilton from "@/content/drafts/dessert-cups-hamilton.json";
 import events from "@/content/drafts/events.json";
 import faq from "@/content/drafts/faq.json";
 import graduations from "@/content/drafts/graduations.json";
+import openAShop from "@/content/drafts/open-a-shop.json";
 import packages from "@/content/drafts/packages.json";
 import weddings from "@/content/drafts/weddings.json";
 
@@ -40,8 +41,8 @@ export type PageDraft = {
 
 export const DRAFT_TOKENS = ["contactEmail", "mailto", "dietaryClaim"] as const;
 
-// The /open-a-shop draft is kept in content/private/ (gitignored) until the
-// owner approves publishing it: the repo is public.
+// /open-a-shop: the owner approved publishing it (2026-10-30). Linked from
+// the footer only (brief §6).
 export const PAGE_DRAFTS = [
   events,
   weddings,
@@ -55,6 +56,7 @@ export const PAGE_DRAFTS = [
   gta,
   faq,
   packages,
+  openAShop,
 ] as PageDraft[];
 
 export function getDraft(slug: string): PageDraft | undefined {

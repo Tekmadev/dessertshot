@@ -9,7 +9,7 @@ export function AllergenNotice({ className = "" }: { className?: string }) {
   const dietary = dietaryClaim();
   return (
     <aside aria-label={ALLERGEN_NOTICE.title} className={className}>
-      <p className="font-mono text-[10px] tracking-[0.2em] uppercase opacity-60 mb-2">
+      <p className="font-mono text-[10px] tracking-[0.2em] uppercase opacity-75 mb-2">
         {ALLERGEN_NOTICE.title}
       </p>
       <p className="text-[14px] leading-[1.6] opacity-75 max-w-[60ch]">

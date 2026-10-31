@@ -6,11 +6,16 @@
 // Public business contact (brief §2.5). The owner's personal address must never
 // appear in the UI or the client bundle.
 export const CONTACT_EMAIL = "dessertshot.ca@gmail.com";
-// Placeholder until the owner supplies a business phone (brief §10.2).
-export const CONTACT_PHONE: string | null = null;
+// Business phone, supplied by the owner (2026-10-30).
+export const CONTACT_PHONE: string | null = "(438) 700-3223";
 
 export const BUSINESS = {
-  name: "Dessert Shot",
+  // The brand is always "Dessert Shot by Farhana" (owner, 2026-10-30): the
+  // wordmark, home title, share cards, emails, footer and each page's first
+  // mention. "Dessert Shot" is the accepted short form: title suffixes and
+  // later mentions in running copy.
+  name: "Dessert Shot by Farhana",
+  shortName: "Dessert Shot",
   founded: 2024,
   tagline: "Layered cups, made by hand in Hamilton.",
   description:
@@ -50,7 +55,7 @@ export const BUSINESS = {
   fulfillment: {
     pickup: "Pickup free in Hamilton.",
     delivery: "Delivery Saturdays across the GTA.",
-    notice: "48 hours minimum notice.",
+    notice: "48 hours minimum notice (7 days for a 96).",
     confirmation: "We confirm within the day.",
   },
 
@@ -79,7 +84,11 @@ export const BUSINESS = {
 export const SERVICE_AREA = {
   pickupCity: "Hamilton",
   deliveryCities: ["Hamilton", "Burlington", "Oakville", "Mississauga", "Toronto"],
-  needsOwnerReview: true,
+  // Confirmed by the owner (2026-10-30).
+  needsOwnerReview: false,
 } as const;
 
 export const mailtoLink = `mailto:${CONTACT_EMAIL}`;
+
+/** "tel:+14387003223", or null without a phone. */
+export const telLink = CONTACT_PHONE ? `tel:+1${CONTACT_PHONE.replace(/\D/g, "")}` : null;

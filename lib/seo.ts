@@ -41,7 +41,8 @@ export function pageMetadata({
   noindex = false,
   image = DEFAULT_OG_IMAGE,
 }: PageMetadataInput): Metadata {
-  const fullTitle = absoluteTitle ? title : `${title}${TITLE_SEPARATOR}${BUSINESS.name}`;
+  // Matches the layout's title template: the short name keeps titles within search-result length.
+  const fullTitle = absoluteTitle ? title : `${title}${TITLE_SEPARATOR}${BUSINESS.shortName}`;
   return {
     title: absoluteTitle ? { absolute: title } : title,
     description,

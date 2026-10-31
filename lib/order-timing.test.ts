@@ -5,6 +5,7 @@ import {
   hoursOfNotice,
   isRealCalendarDate,
   isSaturday,
+  noticeDeadline,
   orderTiming,
   torontoTimeOn,
   torontoToday,
@@ -64,6 +65,25 @@ describe("orderTiming (48 hours' notice, brief §7.4)", () => {
     const at48 = new Date("2026-12-10T14:00:00Z"); // 09:00 EST, two days before 12 Dec
     expect(orderTiming("2026-12-12", at48)).toBe("standard");
     expect(orderTiming("2026-12-12", new Date(at48.getTime() + 60_000))).toBe("urgent");
+  });
+
+  it("needs 7 days for a 96 (refused, not just urgent), and keeps 48 hours for smaller packs", () => {
+    // 09:00 on 5 Nov is 146 hours away; 6 Nov is 170 (the clocks go back on 1 Nov).
+    expect(orderTiming("2026-11-05", NOW, 96)).toBe("too-soon");
+    expect(orderTiming("2026-11-06", NOW, 96)).toBe("standard");
+    expect(orderTiming("2026-11-05", NOW, 48)).toBe("standard");
+    expect(orderTiming("2026-10-31", NOW, 24)).toBe("urgent");
+    expect(orderTiming("2026-10-31", NOW, 96)).toBe("too-soon");
+  });
+
+  it("counts whole days to 9 AM, so the deadline the pages state holds across a clock change", () => {
+    // Saturday 20 Mar 2027: DST starts on 14 Mar, so 9 AM on the 13th is only 167 hours before 9 AM on the 20th.
+    expect(noticeDeadline("2027-03-20", 7).toISOString()).toBe("2027-03-13T14:00:00.000Z"); // 09:00 EST
+    expect(orderTiming("2027-03-20", new Date("2027-03-13T13:30:00Z"), 96)).toBe("standard"); // 08:30, before 9 AM
+    expect(orderTiming("2027-03-20", new Date("2027-03-13T14:01:00Z"), 96)).toBe("too-soon");
+    // A Saturday 48: on time until 9 AM on Thursday.
+    expect(orderTiming("2026-12-12", new Date("2026-12-10T13:59:00Z"), 48)).toBe("standard");
+    expect(orderTiming("2026-12-12", new Date("2026-12-10T15:00:00Z"), 48)).toBe("urgent"); // 10 AM Thursday
   });
 
   it("flags dates more than two years out as likely typos", () => {

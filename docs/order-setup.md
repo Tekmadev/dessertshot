@@ -23,7 +23,7 @@ Nothing here changes what the live site does.
      <div>{{{order_summary_html}}}</div>
      <p>{{next_steps}}</p>
      <p>{{allergen_notice}}</p>
-     <p>Questions or changes? Just reply to this email.<br>Dessert Shot · {{business_email}}</p>
+     <p>Questions or changes? Just reply to this email.<br>Dessert Shot by Farhana · {{business_email}}</p>
      ```
    - Don't also use the owner template's "Auto-Reply / Linked Template" tab: the site sends this email itself, and a linked template would send a second one.
 5. Optional: in each template's settings, turn off **Email History** if you'd rather EmailJS didn't keep a copy of customer details (7 days on the free plan).

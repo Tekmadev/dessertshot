@@ -100,7 +100,7 @@ export function buildOrderSummary(order: OrderFormValues, orderId: string, now: 
     estimatedTotal: calcMixTotal(cupSize, packQty, items),
     date: order.date,
     dateLabel: formatOrderDate(order.date),
-    urgent: orderTiming(order.date, now) === "urgent",
+    urgent: orderTiming(order.date, now, packQty) === "urgent",
     fulfillment: order.fulfillment,
     deliveryAddress: delivery ? clean(order.deliveryAddress) : null,
     deliveryPostalCode: delivery ? normalizePostalCode(order.deliveryPostalCode ?? "") : null,

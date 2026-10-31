@@ -60,7 +60,7 @@ export default function OrderThanks() {
             ) : (
               "If you've just sent an order request, it's with us. "
             )}
-            {copy.order.confirmation} The reply comes from {BUSINESS.email}.
+            {copy.order.confirmation} Emails from us come from {BUSINESS.email}.
           </p>
         </div>
 
@@ -121,16 +121,16 @@ export default function OrderThanks() {
         ) : null}
 
         <div className="flex flex-col gap-4">
-          <h2 className="font-mono text-[10px] tracking-[0.22em] uppercase text-ink/55">What happens next</h2>
+          <h2 className="font-mono text-[10px] tracking-[0.22em] uppercase text-ink/70">What happens next</h2>
           <ol className="flex flex-col gap-3 text-[16px] leading-[1.6] text-ink/75 list-decimal pl-5">
             <li>
               {stored?.confirmationEmailSent
                 ? `We've emailed this summary to ${s!.email}.`
                 : s
-                ? "Keep your reference handy: our confirmation email will repeat the details."
-                : "Watch your inbox for our confirmation."}
+                ? "Keep your reference handy: our confirmation will repeat the details."
+                : "Watch for our confirmation by email, text or Instagram."}
             </li>
-            <li>Your order is booked once we confirm it.</li>
+            <li>Your order is booked once we confirm it. {copy.order.deposit}</li>
             <li>
               {s?.fulfillment === "delivery"
                 ? copy.order.deliveryFee

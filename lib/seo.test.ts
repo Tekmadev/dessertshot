@@ -3,12 +3,13 @@ import { join } from "node:path";
 import { fileURLToPath } from "node:url";
 import { describe, expect, it } from "vitest";
 import { BUSINESS } from "./business";
-import { ROUTES, type RouteMeta } from "./routes";
+import { allRoutes, type RouteMeta } from "./routes";
 import { DEFAULT_OG_IMAGE, TITLE_SEPARATOR, pageMetadata } from "./seo";
 
 const ROOT = fileURLToPath(new URL("..", import.meta.url));
-const routes: RouteMeta[] = Object.values(ROUTES);
-const fullTitle = (r: RouteMeta) => (r.absoluteTitle ? r.title : `${r.title}${TITLE_SEPARATOR}${BUSINESS.name}`);
+// Fixed pages, draft pages and flavour pages alike.
+const routes: RouteMeta[] = allRoutes();
+const fullTitle = (r: RouteMeta) => (r.absoluteTitle ? r.title : `${r.title}${TITLE_SEPARATOR}${BUSINESS.shortName}`);
 
 describe("pageMetadata()", () => {
   it("sets a self-referencing canonical and matching og:url", () => {
@@ -20,7 +21,14 @@ describe("pageMetadata()", () => {
   it("lets the layout template brand a normal title, and brands the share title itself", () => {
     const meta = pageMetadata({ title: "Menu", description: "d", path: "/menu" });
     expect(meta.title).toBe("Menu");
-    expect(meta.openGraph?.title).toBe(`Menu${TITLE_SEPARATOR}${BUSINESS.name}`);
+    expect(meta.openGraph?.title).toBe(`Menu${TITLE_SEPARATOR}${BUSINESS.shortName}`);
+    // Share cards still carry the full brand as the site name.
+    expect(meta.openGraph?.siteName).toBe("Dessert Shot by Farhana");
+  });
+
+  it("puts the full brand in the homepage title", () => {
+    const home = routes.find((r) => r.path === "/");
+    expect(home?.title.startsWith(`${BUSINESS.name}${TITLE_SEPARATOR}`)).toBe(true);
   });
 
   it("uses an absolute title when asked (homepage)", () => {
@@ -49,7 +57,8 @@ describe("route map", () => {
 
   it.each(routes)("$path has a search-friendly title and description length", (r) => {
     expect(r.path.startsWith("/")).toBe(true);
-    expect(fullTitle(r).length).toBeLessThanOrEqual(65);
+    // 70 with the " · Dessert Shot" short-name suffix (DECISIONS.md: drafts cap at 55 before it).
+    expect(fullTitle(r).length).toBeLessThanOrEqual(70);
     expect(r.description.length).toBeGreaterThanOrEqual(70);
     expect(r.description.length).toBeLessThanOrEqual(160);
   });
@@ -66,13 +75,14 @@ describe("site-wide SEO conventions", () => {
 
   it.each(pageFiles)("%s builds its metadata from the route map", (file) => {
     const source = readFileSync(join(ROOT, file), "utf8");
-    expect(source).toMatch(/pageMetadata\(ROUTES\.\w+\)/);
+    expect(source).toMatch(/pageMetadata\((ROUTES\.\w+|draftRoute\(|flavorRoute\()/);
   });
 
   it("has a page file for every route in the map", () => {
     for (const r of routes) {
-      const file = r.path === "/" ? "app/page.tsx" : `app${r.path}/page.tsx`;
-      expect(existsSync(join(ROOT, file)), file).toBe(true);
+      const exact = r.path === "/" ? "app/page.tsx" : `app${r.path}/page.tsx`;
+      const dynamic = exact.replace(/\/[^/]+\/page\.tsx$/, "/[slug]/page.tsx");
+      expect(existsSync(join(ROOT, exact)) || existsSync(join(ROOT, dynamic)), r.path).toBe(true);
     }
   });
 

@@ -1,4 +1,4 @@
-# Dessert Shot — EmailJS Templates
+# Dessert Shot by Farhana — EmailJS Templates
 
 This folder holds the HTML email templates we paste into the EmailJS
 dashboard. The files here are **not** loaded by the app — they're
@@ -19,7 +19,7 @@ customer auto-reply template: [`docs/order-setup.md`](../docs/order-setup.md).
 | ------------ | --------------------------------------------------------- |
 | Subject      | `{{subject}}` (e.g. "Order request DS-1A2B3C4D: 48 Dessert Cups (5 oz), Saturday, December 12, 2026") |
 | To email     | `dessertshot.ca@gmail.com`, typed in (see the setup doc)  |
-| From name    | `Dessert Shot Website`                                    |
+| From name    | `Dessert Shot by Farhana`                                 |
 | Reply-to     | `{{reply_to}}`                                            |
 
 ### Template variables

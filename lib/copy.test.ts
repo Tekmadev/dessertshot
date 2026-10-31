@@ -31,6 +31,8 @@ const BANNED: [RegExp, string][] = [
   [/reply by tomorrow/i, "the brief promises confirmation within the day"],
   [/flavou?r recommendation|recommend a mix/i, "the owner doesn't offer flavour recommendations (2026-10-30)"],
   [/labell?ed by flavou?r/i, "no flavour labels on the cups for now (owner, 2026-10-30)"],
+  [/presentation tray included|tray included/i, "the presentation tray is an extra-cost option (owner, 2026-10-30)"],
+  [/\blids?\b/i, "the cups have no lids; they come in boxes (owner, 2026-10-30)"],
   [/farhanaakter/i, "the owner's personal email"],
 ];
 // Copy-only: superlatives (source files legitimately say "best-effort" in comments).
@@ -96,7 +98,7 @@ describe("packs (brief §2.2, §2.3)", () => {
     expect(p48.featured).toBe(true);
     expect(p48.perks).toContain("Priority preparation");
     expect(p96.perks).toEqual(
-      expect.arrayContaining(["Custom label option", "Event day pickup", "Presentation tray included"])
+      expect.arrayContaining(["Custom label option", "Event day pickup", "Presentation tray (extra cost)"])
     );
     expect(PACKAGES.filter((p) => p.featured)).toHaveLength(1);
   });
