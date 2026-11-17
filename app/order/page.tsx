@@ -1,6 +1,7 @@
 import Navbar from "@/components/layout/Navbar";
 import Footer from "@/components/layout/Footer";
 import OrderCTA from "@/components/sections/OrderCTA";
+import OrderSteps from "@/components/sections/OrderSteps";
 import Packages from "@/components/sections/Packages";
 import type { Metadata } from "next";
 import { ROUTES } from "@/lib/routes";
@@ -45,6 +46,7 @@ export default function OrderPage() {
           </div>
         </section>
         <Packages />
+        <OrderSteps />
         <OrderCTA />
       </main>
       <Footer />

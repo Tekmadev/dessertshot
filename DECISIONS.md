@@ -170,3 +170,9 @@ Every finding went to an independent skeptic; all of the first 32 held (31 confi
 - **The home URL has no trailing slash everywhere** (canonical, sitemap, JSON-LD), as Next renders it.
 - **Not changed, on purpose:** motion/react reveals still server-render at `opacity:0` (Googlebot renders the page; no-JS visitors get the `html:not(.js)` fallback). The rose "Shot" in the wordmark fails a 4.5:1 check at 22 px, but logotypes are exempt from WCAG contrast.
 - **Lighthouse (mobile, production build, 4 pages)**: SEO 100 everywhere, CLS 0. With Lighthouse's simulated throttling Performance is 79–89 and LCP 3.8–5.6 s, but the observed LCP equals first paint on every page (55–103 ms locally); the simulation charges every script and preloaded font that ran before it. With real (DevTools) throttling: home 91 (LCP 2.5 s), Dubai Chocolate 95 (LCP 2.8 s). Field data (Search Console's Core Web Vitals) is the measure after launch.
+
+## Deposit section (user, 2026-11-17)
+
+- **"How ordering works"** (`components/sections/OrderSteps.tsx`, copy in `copy.orderSteps`) sits just before the order form on / and /order: send the request, we confirm within the day, **pay the deposit (required: it's what confirms the order)**, made the morning of. The deposit step is outlined in berry with a "Required" tag.
+- The deposit line under the form's total, on the thanks page and in the confirmation email now reads "A deposit is required to confirm your order. We'll tell you the amount and how to pay it when we confirm." (it was 55% grey at 12 px under the total; now 80% at 13 px).
+- No amount or payment method anywhere: both are still open with the owner (CONTENT-REVIEW.md, `q-d-payment` follow-up). A test fails if a figure or method appears before they're confirmed.

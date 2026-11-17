@@ -626,7 +626,7 @@ export default function OrderForm() {
           <span className="font-display text-[36px] tracking-[-0.035em] text-ink leading-tight tabular-nums">
             {formatCad(price)}
           </span>
-          <span className="text-[12px] leading-[1.5] text-ink/55 mt-1 max-w-[34ch]">{copy.order.deposit}</span>
+          <span className="text-[13px] leading-[1.5] text-ink/80 mt-1 max-w-[36ch]">{copy.order.deposit}</span>
           {timing === "urgent" || fulfillment === "delivery" ? (
             <span className="font-mono text-[9px] tracking-[0.16em] uppercase mt-1 text-ember">
               {timing === "urgent" && fulfillment === "delivery"

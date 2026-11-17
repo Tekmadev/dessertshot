@@ -10,6 +10,7 @@ import Packages from "@/components/sections/Packages";
 import EventsGrid from "@/components/sections/EventsGrid";
 import Instagram from "@/components/sections/Instagram";
 import HomeFaq from "@/components/sections/HomeFaq";
+import OrderSteps from "@/components/sections/OrderSteps";
 import OrderCTA from "@/components/sections/OrderCTA";
 import { ROUTES } from "@/lib/routes";
 import { pageMetadata } from "@/lib/seo";
@@ -18,7 +19,8 @@ export const metadata: Metadata = pageMetadata(ROUTES.home);
 
 // The scroll experience (brief §5): S1 hero, S2 the build, S3 the lineup,
 // S4 pour dividers, S5 the morning of, S6 packages, S7 events,
-// S8 Instagram (hidden while empty), S9 FAQ, then the order form.
+// S8 Instagram (hidden while empty), S9 FAQ, then how ordering works (the
+// deposit confirms an order) and the order form.
 export default function HomePage() {
   return (
     <>
@@ -35,6 +37,7 @@ export default function HomePage() {
         <Instagram />
         <PourDivider variant="pistachio" />
         <HomeFaq />
+        <OrderSteps />
         <OrderCTA />
       </main>
       <Footer />

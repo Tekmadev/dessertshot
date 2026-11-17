@@ -103,3 +103,17 @@ describe("packs (brief §2.2, §2.3)", () => {
     expect(PACKAGES.filter((p) => p.featured)).toHaveLength(1);
   });
 });
+
+describe("deposit (owner, 2026-10-30: required; amount and method still open)", () => {
+  it("says a deposit is required to confirm an order, wherever the order flow mentions it", () => {
+    expect(copy.order.deposit).toMatch(/deposit is required to confirm your order/i);
+    expect(copy.orderSteps.body).toMatch(/confirmed once the deposit is paid/i);
+    const required = copy.orderSteps.steps.filter((s) => s.required);
+    expect(required.map((s) => s.title)).toEqual(["Pay the deposit"]);
+  });
+
+  it("names no amount or payment method until the owner gives them", () => {
+    const text = `${JSON.stringify(copy.orderSteps)} ${copy.order.deposit}`;
+    expect(text).not.toMatch(/\$\s?\d|\d\s?%|e-?transfer|interac|cash|credit card|paypal|stripe/i);
+  });
+});
