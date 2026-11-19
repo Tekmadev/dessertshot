@@ -98,6 +98,13 @@ describe("page drafts", () => {
     );
   });
 
+  it.each(PAGE_DRAFTS)("$path states the deposit as 50% wherever it mentions one", (d) => {
+    for (const s of draftStrings(d)) {
+      const text = s.replace("Is there a deposit?", "").replace("**Deposit:**", "");
+      expect(text, d.slug).not.toMatch(/(?<!50% )\bdeposit\b/i);
+    }
+  });
+
   it.each(PAGE_DRAFTS)("$path names the brand in full the first time (Dessert Shot by Farhana)", (d) => {
     // What a visitor reads, top to bottom; "Dessert Shot" alone is fine after that.
     const body = [d.h1, d.intro, ...d.sections.flatMap((s) => [s.heading, s.body]), ...d.faqs.flatMap((f) => [f.q, f.a])].join("\n");

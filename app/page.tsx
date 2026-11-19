@@ -20,7 +20,7 @@ export const metadata: Metadata = pageMetadata(ROUTES.home);
 // The scroll experience (brief §5): S1 hero, S2 the build, S3 the lineup,
 // S4 pour dividers, S5 the morning of, S6 packages, S7 events,
 // S8 Instagram (hidden while empty), S9 FAQ, then how ordering works (the
-// deposit confirms an order) and the order form.
+// 50% deposit confirms an order) and the order form.
 export default function HomePage() {
   return (
     <>

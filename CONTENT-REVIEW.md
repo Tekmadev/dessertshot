@@ -136,7 +136,7 @@ Nine answers came in through the review page. What each one changed:
 | 96 tray (`q-d-96-tray`) and its follow-up in chat | Cups come in boxes of 24; a tray is extra cost | "Presentation tray included" became "Presentation tray (extra cost)"; packs say "Packed in boxes of 24". |
 | Lead time (`q-d-lead-time`) and its follow-up in chat | Bigger orders need more notice; then "seven days at least for a 96" | A 96 now needs 7 days' notice: the form and server refuse shorter. 24s and 48s keep 48 hours. |
 | Packaging (`q-d-packaging`) | Boxes, no lids | "Then a lid" removed; copy tests now reject "lid". |
-| Payment (`q-d-payment`) | A deposit is mandatory; only the owner can waive it | The form, thanks page and auto-reply say a deposit confirms the order, with how to pay explained at confirmation. |
+| Payment (`q-d-payment`) | A 50% deposit is mandatory (amount set 2026-11-18); only the owner can waive it | The form, thanks page, auto-reply and pages say a 50% deposit confirms the order, with the exact amount and how to pay sent in the reply. |
 | Confirmation (`q-d-confirm`) | Any channel; delivery is part of the quoted total | Confirmation "by email, text or Instagram"; delivery fee "quoted as part of your total". |
 | Delivery time (`q-d-delivery-time`) | Customers can ask; someone must be there | The delivery note in the form says so. |
 | Storage (`q-d-storage`) | Refrigerated; about 2 hours out | Added to the FAQ and event drafts. |
@@ -144,7 +144,7 @@ Nine answers came in through the review page. What each one changed:
 
 ### Still open after round 2
 
-- **Deposit:** how much, and how is it paid (e-transfer, cash...)? Pages say only that a deposit confirms the order.
+- **Deposit:** how is it paid (e-transfer, cash...), and is the 50% taken on the total with the delivery fee? Pages say a 50% deposit confirms the order and that the exact amount comes with the reply.
 - **Pickup hours:** "anytime while it's open": what are the hours?
 - **Tiramisu:** what the coffee-soaked layer is made of; its filter (Chocolate for now); its allergens beyond dairy.
 - **Gluten-free and eggless** (question 2), the **allergen notice** (question 3), the **96 custom label**, and the **reshoot** (question 17, likely unneeded now that product photos are generated).

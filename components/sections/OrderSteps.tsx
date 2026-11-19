@@ -4,9 +4,9 @@ const pad = (n: number) => String(n).padStart(2, "0");
 
 /**
  * "How ordering works", just before the order form on / and /order: the four
- * steps from request to cups, with the deposit marked as the step that
- * confirms an order. No amount or payment method: both are still open with
- * the owner (CONTENT-REVIEW.md), so the copy says we tell you at confirmation.
+ * steps from request to cups, with the 50% deposit marked as the step that
+ * confirms an order. No payment method: that's still open with the owner
+ * (CONTENT-REVIEW.md), so the copy says it comes with our reply.
  */
 export default function OrderSteps() {
   const s = copy.orderSteps;

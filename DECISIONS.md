@@ -174,5 +174,6 @@ Every finding went to an independent skeptic; all of the first 32 held (31 confi
 ## Deposit section (user, 2026-11-17)
 
 - **"How ordering works"** (`components/sections/OrderSteps.tsx`, copy in `copy.orderSteps`) sits just before the order form on / and /order: send the request, we confirm within the day, **pay the deposit (required: it's what confirms the order)**, made the morning of. The deposit step is outlined in berry with a "Required" tag.
-- The deposit line under the form's total, on the thanks page and in the confirmation email now reads "A deposit is required to confirm your order. We'll tell you the amount and how to pay it when we confirm." (it was 55% grey at 12 px under the total; now 80% at 13 px).
-- No amount or payment method anywhere: both are still open with the owner (CONTENT-REVIEW.md, `q-d-payment` follow-up). A test fails if a figure or method appears before they're confirmed.
+- The deposit line under the form's total, on the thanks page and in the confirmation email now says the deposit is required (it was 55% grey at 12 px under the total; now 80% at 13 px).
+- No payment method anywhere: it's still open with the owner (CONTENT-REVIEW.md, `q-d-payment` follow-up). A test fails if a dollar figure or method appears before it's confirmed.
+- **The deposit is 50%** (user, 2026-11-18), stated on the form, in "How ordering works", on the thanks page, in the confirmation email and on every page that mentions it (a drafts test enforces it). No dollar figure: the form's total is before delivery, so the exact amount comes with the reply, along with how to pay.

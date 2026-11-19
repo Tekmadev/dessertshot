@@ -104,16 +104,17 @@ describe("packs (brief §2.2, §2.3)", () => {
   });
 });
 
-describe("deposit (owner, 2026-10-30: required; amount and method still open)", () => {
-  it("says a deposit is required to confirm an order, wherever the order flow mentions it", () => {
-    expect(copy.order.deposit).toMatch(/deposit is required to confirm your order/i);
-    expect(copy.orderSteps.body).toMatch(/confirmed once the deposit is paid/i);
+describe("deposit (50%, required; how to pay is still open)", () => {
+  it("says a 50% deposit is required to confirm an order, wherever the order flow mentions it", () => {
+    expect(copy.order.deposit).toMatch(/50% deposit is required to confirm your order/i);
+    expect(copy.orderSteps.heading).toBe("A 50% deposit");
+    expect(copy.orderSteps.body).toMatch(/confirmed once the 50% deposit is paid/i);
     const required = copy.orderSteps.steps.filter((s) => s.required);
-    expect(required.map((s) => s.title)).toEqual(["Pay the deposit"]);
+    expect(required.map((s) => s.title)).toEqual(["Pay the 50% deposit"]);
   });
 
-  it("names no amount or payment method until the owner gives them", () => {
+  it("names no dollar figure or payment method until the owner gives one", () => {
     const text = `${JSON.stringify(copy.orderSteps)} ${copy.order.deposit}`;
-    expect(text).not.toMatch(/\$\s?\d|\d\s?%|e-?transfer|interac|cash|credit card|paypal|stripe/i);
+    expect(text).not.toMatch(/\$\s?\d|e-?transfer|interac|cash|credit card|paypal|stripe/i);
   });
 });

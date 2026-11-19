@@ -118,12 +118,12 @@ export const copy = {
   },
 
   // "How ordering works", just before the order form on / and /order
-  // (components/sections/OrderSteps.tsx): the deposit is what confirms an order.
+  // (components/sections/OrderSteps.tsx): the 50% deposit is what confirms an order.
   orderSteps: {
     kicker: "How ordering works",
-    heading: "A deposit",
+    heading: "A 50% deposit",
     headingItalic: "confirms your order.",
-    body: "Sending the form doesn't book your cups. Your order is confirmed once the deposit is paid.",
+    body: "Sending the form doesn't book your cups. Your order is confirmed once the 50% deposit is paid.",
     steps: [
       { title: "Send your request", body: "Your pack, size, flavours and date. The form takes no payment.", required: false },
       {
@@ -132,8 +132,8 @@ export const copy = {
         required: false,
       },
       {
-        title: "Pay the deposit",
-        body: "Required to confirm your order. We'll tell you the amount and how to pay it when we confirm.",
+        title: "Pay the 50% deposit",
+        body: "Required to confirm your order. We'll send the exact amount and how to pay with our reply.",
         required: true,
       },
       { title: "Made the morning of", body: "Your cups are made fresh the morning of pickup or delivery.", required: false },
@@ -147,9 +147,9 @@ export const copy = {
     deliveryTime: "Ask for a delivery time in your notes. Someone needs to be there to receive the cups.",
     standard: "48 hours' notice or more.",
     noticeDefault: "Standard orders need 48 hours' notice, and a 96 needs 7 days. Under 48 hours is urgent, subject to availability.",
-    // A deposit is required; only the owner can waive it (2026-10-30). The
-    // amount and how to pay are still open (CONTENT-REVIEW.md), so no figure.
-    deposit: "A deposit is required to confirm your order. We'll tell you the amount and how to pay it when we confirm.",
+    // A 50% deposit is required (2026-11-18); only the owner can waive it
+    // (2026-10-30). How to pay is still open (CONTENT-REVIEW.md).
+    deposit: "A 50% deposit is required to confirm your order. We'll send the exact amount and how to pay with our reply.",
     custom: "Something custom? That's a separate order: email us the details and we'll quote it.",
     // Rush fee confirmed by the owner (2026-10-30); "subject to availability"
     // is the brief's.

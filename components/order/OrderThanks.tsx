@@ -130,7 +130,7 @@ export default function OrderThanks() {
                 ? "Keep your reference handy: our confirmation will repeat the details."
                 : "Watch for our confirmation by email, text or Instagram."}
             </li>
-            <li>Your order is booked once we confirm it. {copy.order.deposit}</li>
+            <li>{copy.order.deposit}</li>
             <li>
               {s?.fulfillment === "delivery"
                 ? copy.order.deliveryFee
