@@ -78,6 +78,11 @@ export type Database = {
           fulfillment_method: FulfillmentMethod;
           total_price: number;
           admin_notes: string | null;
+          // Migration 004
+          event_type: string | null;
+          delivery_address: string | null;
+          delivery_postal_code: string | null;
+          source: string | null;
         };
         Insert: Omit<Database["public"]["Tables"]["orders"]["Row"], "id" | "created_at" | "updated_at">;
         Update: Partial<Database["public"]["Tables"]["orders"]["Insert"]>;
@@ -92,6 +97,8 @@ export type Database = {
           flavor_name: string;
           quantity: number;
           price_per_cup: number;
+          // Migration 004
+          flavor_id: string | null;
         };
         Insert: Omit<Database["public"]["Tables"]["order_items"]["Row"], "id">;
         Update: Partial<Database["public"]["Tables"]["order_items"]["Insert"]>;

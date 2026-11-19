@@ -1,4 +1,4 @@
-# Dessert Shot — EmailJS Templates
+# Dessert Shot by Farhana — EmailJS Templates
 
 This folder holds the HTML email templates we paste into the EmailJS
 dashboard. The files here are **not** loaded by the app — they're
@@ -7,33 +7,37 @@ version-control and edit them locally.
 
 ## order-request.html
 
-Notification email sent to the business inbox when a customer submits
-the order form on the site.
+The owner's notification for each order request. Since Step 3 it is sent by
+the **server** (`lib/server/emailjs.ts`), with variables built in
+[`lib/order-email.ts`](../lib/order-email.ts). The variable names this
+template uses are unchanged, so it keeps working. Full setup, including the
+customer auto-reply template: [`docs/order-setup.md`](../docs/order-setup.md).
 
 ### EmailJS dashboard settings
 
-| Field        | Value                                          |
-| ------------ | ---------------------------------------------- |
-| Subject      | `New order request from {{from_name}}`         |
-| To email     | `{{to_email}}`                                 |
-| From name    | `Dessert Shot Website`                         |
-| Reply-to     | `{{reply_to}}`                                 |
+| Field        | Value                                                     |
+| ------------ | --------------------------------------------------------- |
+| Subject      | `{{subject}}` (e.g. "Order request DS-1A2B3C4D: 48 Dessert Cups (5 oz), Saturday, December 12, 2026") |
+| To email     | `dessertshot.ca@gmail.com`, typed in (see the setup doc)  |
+| From name    | `Dessert Shot by Farhana`                                 |
+| Reply-to     | `{{reply_to}}`                                            |
 
 ### Template variables
 
-Sent by [`components/sections/OrderCTA.tsx`](../components/sections/OrderCTA.tsx):
-
-| Variable           | Meaning                                           |
-| ------------------ | ------------------------------------------------- |
-| `{{to_email}}`     | Business inbox (defaults to `BUSINESS.email`)     |
-| `{{from_name}}`    | Customer name                                     |
-| `{{from_email}}`   | Customer email                                    |
-| `{{phone}}`        | Customer phone (or `—` if blank)                  |
-| `{{package_size}}` | Human label, e.g. "12 cups"                       |
-| `{{flavors}}`      | Flavour notes                                     |
-| `{{desired_date}}` | YYYY-MM-DD                                        |
-| `{{notes}}`        | Additional notes (or `—`)                         |
-| `{{reply_to}}`     | Same as `from_email`                              |
+| Variable             | Meaning                                                   |
+| -------------------- | --------------------------------------------------------- |
+| `{{from_name}}`      | Customer name                                             |
+| `{{from_email}}`     | Customer email                                            |
+| `{{phone}}`          | Customer phone (or `—`)                                   |
+| `{{cup_size}}`       | e.g. "Dessert Cups (5 oz)"                                |
+| `{{tier}}`           | Classic, Premium or Mixed                                 |
+| `{{package_size}}`   | e.g. "48 cups · $229" (estimated total, before delivery)  |
+| `{{flavors}}`        | e.g. "Mango Dream ×24 (Dairy), Dubai Chocolate ×24 (Dairy, Tree nuts)" |
+| `{{desired_date}}`   | e.g. "Saturday, December 12, 2026"                        |
+| `{{urgency}}`        | Standard or urgent, worked out from the date              |
+| `{{fulfillment}}`    | Pickup, or delivery with the address and postal code      |
+| `{{notes}}`          | Customer notes (or `—`)                                   |
+| `{{order_ref}}`, `{{event_type}}`, `{{estimated_total}}`, `{{delivery_address}}`, `{{postal_code}}`, `{{order_summary}}`, `{{{order_summary_html}}}` | New since Step 3 |
 
 ### Brand palette (matches [`globals.css`](../app/globals.css))
 

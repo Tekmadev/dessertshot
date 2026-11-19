@@ -32,7 +32,7 @@ export async function proxy(request: NextRequest) {
     }
   );
 
-  // Refresh session on each request
+  // Refresh the session for guarded routes
   const { data: { user } } = await supabase.auth.getUser();
 
   // Protect /account and /admin routes
@@ -51,8 +51,9 @@ export async function proxy(request: NextRequest) {
   return supabaseResponse;
 }
 
+// Only the guarded areas. Running on every request meant a Supabase auth
+// round-trip before every page view, slowing TTFB/LCP site-wide, for routes
+// that don't exist yet.
 export const config = {
-  matcher: [
-    "/((?!_next/static|_next/image|favicon.ico|.*\\.(?:svg|png|jpg|jpeg|gif|webp|mp4|webm)$).*)",
-  ],
+  matcher: ["/account/:path*", "/admin/:path*"],
 };
